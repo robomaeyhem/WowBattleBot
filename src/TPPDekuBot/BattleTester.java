@@ -43,7 +43,7 @@ public class BattleTester {
     }
 
     private static HashMap<Integer, ArrayList<String>> reloadPokemonMoveList() {
-        try (FileInputStream fileIn = new FileInputStream("D:\\a\\TPPStatsBot\\pokemonMovesList.dat"); ObjectInputStream in = new ObjectInputStream(fileIn)) {
+        try (FileInputStream fileIn = new FileInputStream(BattleBot.BASE_PATH+"/pokemonMovesList.dat"); ObjectInputStream in = new ObjectInputStream(fileIn)) {
             HashMap<Integer, ArrayList<String>> pokemon = (HashMap<Integer, ArrayList<String>>) in.readObject();
             return pokemon;
         } catch (Exception ex) {
