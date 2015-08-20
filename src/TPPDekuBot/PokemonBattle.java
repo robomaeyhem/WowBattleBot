@@ -9,17 +9,7 @@ public class PokemonBattle {
     private BattleBot b;
     private String channel;
     public static BattleStatus status = BattleStatus.NO_BATTLE;
-    private String player;
-
-    public final boolean isBannedPokemon(int poke) {
-        int[] banned = {0, 132, 202, 235, 292, 360, 665};
-        for (int el : banned) {
-            if (poke == el) {
-                return true;
-            }
-        }
-        return false;
-    }
+    private String player;    
 
     public PokemonBattle(BattleBot b, String channel, boolean bigBrother, boolean fromChef, String player) {
         this.b = b;
@@ -32,7 +22,7 @@ public class PokemonBattle {
         while (rand2 == rand1) {
             rand2 = rand.nextInt(718);
         }
-        if (isBannedPokemon(rand1) || isBannedPokemon(rand2)) {
+        if (Pokemon.isBannedPokemon(rand1) || Pokemon.isBannedPokemon(rand2)) {
             rand1 = rand.nextInt(718);
             rand2 = rand1;
             while (rand2 == rand1) {

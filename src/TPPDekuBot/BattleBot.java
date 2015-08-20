@@ -36,12 +36,14 @@ public class BattleBot extends PircBot {
     public String lastMessage = "";
     public boolean inMultiBattle = false;
     public boolean waitingPlayer = false;
+    public boolean inSafariBattle = false;
     public String waitingOn = "";
     public static LinkedBlockingQueue<String> pokemonMessages = new LinkedBlockingQueue<>();
     public final LinkedBlockingQueue<String> player = new LinkedBlockingQueue<>();
     public final LinkedBlockingQueue<String> p1 = new LinkedBlockingQueue<>();
     public final LinkedBlockingQueue<String> p2 = new LinkedBlockingQueue<>();
     public MultiplayerBattle mpB = null;
+    public SafariBattle sB = null;
     public static String BASE_PATH = "";
     public String oAuth;
 
@@ -87,7 +89,7 @@ public class BattleBot extends PircBot {
 //    }
     @Override
     public void onWhisper(String hostname, String sender, String target, String message) {
-        if ((message.toLowerCase().startsWith("!accept") || message.toLowerCase().startsWith("!reject")) && waitingPlayer && sender.equalsIgnoreCase(waitingOn)) {
+        if ((message.toLowerCase().startsWith("!accept")) && waitingPlayer && sender.equalsIgnoreCase(waitingOn)) {
             try {
                 player.put(sender);
             } catch (Exception ex) {
@@ -150,6 +152,9 @@ public class BattleBot extends PircBot {
 
     @Override
     public void onMessage(String channel, String sender, String login, String hostname, String message) {
+        if (sender.equalsIgnoreCase("minhs2")) {
+            return;
+        }
         //System.out.println(DekuBot.getDateTime() + " " + sender + ": " + message);
         while (Character.isWhitespace(message.charAt(0)) && message.length() > 2) {
             message = message.substring(1);
@@ -161,7 +166,7 @@ public class BattleBot extends PircBot {
             this.sendMessage(channel, longMessage("FUNgineer"));
             return;
         }
-        if ((message.toLowerCase().startsWith("!accept") || message.toLowerCase().startsWith("!reject")) && waitingPlayer && sender.equalsIgnoreCase(waitingOn)) {
+        if ((message.toLowerCase().startsWith("!accept")) && waitingPlayer && sender.equalsIgnoreCase(waitingOn)) {
             try {
                 player.put(sender);
             } catch (Exception ex) {
@@ -251,10 +256,31 @@ public class BattleBot extends PircBot {
                 this.sendMessage(channel, "/w " + sender + " Type !list to see a list of your Pokemon. Type !checkx where x is the number of the Pokemon from !list to see it's moves. Type !switchx where x is number of the Pokemon from !list to switch to a Pokemon.");
             }
         }
+        if (inSafariBattle) {
+            if (sender.equalsIgnoreCase(sB.user.getTrainerName())) {
+                if (message.toLowerCase().startsWith("!rock") || message.toLowerCase().startsWith("!bait") || message.toLowerCase().startsWith("!ball") || message.toLowerCase().startsWith("!run")) {
+                    sB.msg.add(message.split(" ", 2)[0].toLowerCase());
+                }
+            }
+        }
+        if (!inMultiBattle && !waitingPlayer && !inPokemonBattle) {
+            if (message.startsWith("!safari")) {
+                inSafariBattle = true;
+                Thread t = new Thread(() -> {
+                    int level = new SecureRandom().nextInt(100 - 20 + 1) + 20;
+                    int id = new SecureRandom().nextInt(721 - 1 + 1) + 1;
+                    sB = new SafariBattle(sender, new Pokemon(id, level));
+                    sB.doBattle(this, channel);
+                    sB = null;
+                    inSafariBattle = false;
+                });
+                t.start();
+            }
+        }
         if (message.toLowerCase().startsWith("!help") && !inMultiBattle) {
             this.sendMessage(channel, "http://pastebin.com/raw.php?i=HqQwhcSQ");
         }
-        if ((message.toLowerCase().startsWith("!challenge @") || message.toLowerCase().startsWith("!multibattle @")) && !inMultiBattle && !inPokemonBattle) {
+        if ((message.toLowerCase().startsWith("!challenge @") || message.toLowerCase().startsWith("!multibattle @")) && !inMultiBattle && !inPokemonBattle && !inSafariBattle) {
             final String messageFinal = message;
             Thread t = new Thread(() -> {
                 try {
@@ -296,9 +322,9 @@ public class BattleBot extends PircBot {
                             }
                         }
                         if (!isHere) {
-                            BattleBot.sendAnInvite(target, "_keredau_1423645868201",oAuth);
+                            BattleBot.sendAnInvite(target, "_keredau_1423645868201", oAuth);
                         }
-                        this.sendWhisper(channel, target, "You have been challenged to a Pokemon Battle by " + sender + "! To accept, go to the Battle Dungeon and type !accept. You have one minute. If you don't want to fight, simply ignore this whisper or whisper back !reject");
+                        this.sendWhisper(channel, target, "You have been challenged to a Pokemon Battle by " + sender + "! To accept, go to the Battle Dungeon and type !accept. You have one minute.");
                         String player2 = player.poll(60, TimeUnit.SECONDS);
                         if (player2 == null) {
                             this.sendMessage(channel, target + " did not respond to the challenge BibleThump");
@@ -306,14 +332,6 @@ public class BattleBot extends PircBot {
                             inPokemonBattle = false;
                             waitingPlayer = false;
                             waitingOn = "";
-                            return;
-                        }
-                        if (player2.toLowerCase().startsWith("!reject")) {
-                            inMultiBattle = false;
-                            inPokemonBattle = false;
-                            waitingPlayer = false;
-                            waitingOn = "";
-                            this.sendMessage(channel, target + " rejected the challenge. FUNgineer");
                             return;
                         }
                         inMultiBattle = true;
@@ -337,7 +355,7 @@ public class BattleBot extends PircBot {
             t.start();
 
         }
-        if (message.toLowerCase().startsWith("!battle") && !inMultiBattle && !waitingPlayer) {
+        if (message.toLowerCase().startsWith("!battle") && !inMultiBattle && !waitingPlayer && !inSafariBattle) {
             boolean bigbrother = false, fromChef = false;
             if (message.contains("BigBrother") || sender.equalsIgnoreCase("dewgong98") || sender.equalsIgnoreCase("mad_king98") || sender.equalsIgnoreCase("Starmiewaifu")) {
                 bigbrother = true;
@@ -430,6 +448,7 @@ public class BattleBot extends PircBot {
             this.sendMessage(channel, toSend);
         }
     }
+
     public static void sendAnInvite(String name, String channel, String oAuth) {
         try {
             ArrayList<NameValuePair> params = new ArrayList<>();
@@ -444,6 +463,7 @@ public class BattleBot extends PircBot {
             ex.printStackTrace();
         };
     }
+
     public static String sendPost(String url, List<NameValuePair> params, List<NameValuePair> header) throws IOException {
         HttpClient httpclient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(url);

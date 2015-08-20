@@ -17,7 +17,7 @@ import java.util.HashMap;
  * @author Michael
  */
 public class Pokemon implements Serializable {
-
+    
     private int id;
     private int level;
     private int hp, attack, defense, spAttack, spDefense, speed;
@@ -59,7 +59,7 @@ public class Pokemon implements Serializable {
         this.experience = 1;
         this.maxHP = calculateStats(id, Stats.HP, level);
     }
-
+    
     public Pokemon(int id, int level) {
         this.id = id;
         this.name = getPokemonName(id);
@@ -82,7 +82,7 @@ public class Pokemon implements Serializable {
         this.experience = ExpLevel.getExp(level);
         this.maxHP = calculateStats(id, Stats.HP, level);
     }
-
+    
     public Pokemon(int id, String name, int hp, int attack, int defense, int spAttack, int spDefense, int speed, Type type1, Type type2) {
         this.id = id;
         this.name = name;
@@ -101,7 +101,7 @@ public class Pokemon implements Serializable {
         this.experience = ExpLevel.getExp(level);
         this.maxHP = calculateStats(id, Stats.HP, level);
     }
-
+    
     public Pokemon(int id, String name, int hp, int attack, int defense, int spAttack, int spDefense, int speed, int exp, Type type1, Type type2) {
         this.id = id;
         this.name = name;
@@ -120,13 +120,13 @@ public class Pokemon implements Serializable {
         sleepLeft = 0;
         this.maxHP = hp;
     }
-
+    
     public void goToSleep() {
         this.status = Status.SLEEP;
         SecureRandom r = new SecureRandom();
         sleepLeft = r.nextInt((5 - 1) + 1) + 1;
     }
-
+    
     public boolean isStillSleeping() {
         if (sleepLeft > 0) {
             sleepLeft--;
@@ -136,39 +136,39 @@ public class Pokemon implements Serializable {
             return false;
         }
     }
-
+    
     public Status getStatus() {
         return status;
     }
-
+    
     public void setStatus(Status status) {
         this.status = status;
     }
-
+    
     public void setConfused(boolean confused) {
         this.confused = confused;
     }
-
+    
     public void setAttracted(boolean attracted) {
         this.attracted = attracted;
     }
-
+    
     public boolean isConfused() {
         return confused;
     }
-
+    
     public boolean isAttracted() {
         return attracted;
     }
-
+    
     public int getExperience() {
         return experience;
     }
-
+    
     public void setExperience(int experience) {
         this.experience = experience;
     }
-
+    
     public void addExperience(int exp) {
         if (this.level == 100) {
             return;
@@ -189,8 +189,8 @@ public class Pokemon implements Serializable {
             this.maxHP = newHP;
         }
     }
-
-    public static int calculateExperience(boolean trainer, Pokemon user, Pokemon fainted) {        
+    
+    public static int calculateExperience(boolean trainer, Pokemon user, Pokemon fainted) {
         double exp = -1;
         double a = (trainer) ? 1.5 : 1.0;
         int t = 1;
@@ -210,15 +210,15 @@ public class Pokemon implements Serializable {
         exp = (a * t * b * e * l * p * f * v) / 7 * s;
         return (int) exp;
     }
-
+    
     public int getMaxHP() {
         return this.maxHP;
     }
-
+    
     public String attack(Pokemon opponent, Move move) {
         return attack(opponent, move, false);
     }
-
+    
     public String attack(Pokemon opponent, Move move, boolean confused) {
         int attack = this.attack;
         int defense = opponent.getStat(Stats.DEFENSE);
@@ -756,71 +756,71 @@ public class Pokemon implements Serializable {
         }
         return toReturn;
     }
-
+    
     public Type getType1() {
         return type1;
     }
-
+    
     public Type getType2() {
         return type2;
     }
-
+    
     public Move getMove1() {
         return move1;
     }
-
+    
     public void setMove1(Move move1) {
         this.move1 = move1;
     }
-
+    
     public Move getMove2() {
         return move2;
     }
-
+    
     public void setMove2(Move move2) {
         this.move2 = move2;
     }
-
+    
     public Move getMove3() {
         return move3;
     }
-
+    
     public void setMove3(Move move3) {
         this.move3 = move3;
     }
-
+    
     public Move getMove4() {
         return move4;
     }
-
+    
     public void setMove4(Move move4) {
         this.move4 = move4;
     }
-
+    
     public int getId() {
         return id;
     }
-
+    
     public int getLevel() {
         return level;
     }
-
+    
     public void setLevel(int level) {
         this.level = level;
     }
-
+    
     public void setHP(int hp) {
         this.hp = hp;
     }
-
+    
     public void resetHP() {
         this.hp = maxHP;
     }
-
+    
     public void heal() {
         resetHP();
     }
-
+    
     public void damage(int hp) {
         this.hp = this.hp - hp;
         if (this.hp <= 0) {
@@ -828,14 +828,14 @@ public class Pokemon implements Serializable {
             this.hp = 0;
         }
     }
-
+    
     public boolean isFainted() {
         if (this.hp <= 0) {
             this.fainted = true;
         }
         return fainted;
     }
-
+    
     public String setStage(Stats stat, int amt) {
         String result = this.getName() + "\'s ";
         boolean max = false;
@@ -936,7 +936,7 @@ public class Pokemon implements Serializable {
         }
         return result;
     }
-
+    
     public int getStage(Stats stat) {
         int toReturn = 0;
         switch (stat) {
@@ -965,7 +965,7 @@ public class Pokemon implements Serializable {
         }
         return toReturn;
     }
-
+    
     public int getStat(Stats stat) {
         int toReturn = 0;
         switch (stat) {
@@ -993,11 +993,11 @@ public class Pokemon implements Serializable {
         }
         return toReturn;
     }
-
+    
     public String getName() {
         return name;
     }
-
+    
     public static int calculateStats(int pokemonID, Stats stat, int level) {
         int iv = 31;
         int base = getBaseStat(pokemonID, stat);
@@ -1010,7 +1010,7 @@ public class Pokemon implements Serializable {
             return result;
         }
     }
-
+    
     public static String getPokemonName(int id) {
         HashMap<Integer, String> pokemon = reloadNameList();
         while (pokemon == null) {
@@ -1018,7 +1018,7 @@ public class Pokemon implements Serializable {
         }
         return pokemon.get(id);
     }
-
+    
     private static HashMap<Integer, String> reloadNameList() {
         try (FileInputStream fileIn = new FileInputStream(BattleBot.BASE_PATH + "pokemon.dat"); ObjectInputStream in = new ObjectInputStream(fileIn)) {
             HashMap<Integer, String> pokemon = (HashMap<Integer, String>) in.readObject();
@@ -1028,7 +1028,7 @@ public class Pokemon implements Serializable {
             return null;
         }
     }
-
+    
     private static HashMap<Integer, Pokemon> reloadPokemonList() {
         try (FileInputStream fileIn = new FileInputStream(BattleBot.BASE_PATH + "pokemonData.dat"); ObjectInputStream in = new ObjectInputStream(fileIn)) {
             HashMap<Integer, Pokemon> pokemon = (HashMap<Integer, Pokemon>) in.readObject();
@@ -1038,7 +1038,7 @@ public class Pokemon implements Serializable {
             return null;
         }
     }
-
+    
     private static HashMap<Integer, ArrayList<String>> reloadPokemonMoveList() {
         try (FileInputStream fileIn = new FileInputStream(BattleBot.BASE_PATH + "pokemonMovesList.dat"); ObjectInputStream in = new ObjectInputStream(fileIn)) {
             HashMap<Integer, ArrayList<String>> pokemon = (HashMap<Integer, ArrayList<String>>) in.readObject();
@@ -1048,7 +1048,7 @@ public class Pokemon implements Serializable {
             return null;
         }
     }
-
+    
     private static HashMap<String, Move> reloadMoves() {
         try (FileInputStream fileIn = new FileInputStream(BattleBot.BASE_PATH + "pokemonMoves.dat"); ObjectInputStream in = new ObjectInputStream(fileIn)) {
             HashMap<String, Move> pokemon = (HashMap<String, Move>) in.readObject();
@@ -1058,7 +1058,7 @@ public class Pokemon implements Serializable {
             return null;
         }
     }
-
+    
     private static Type getFirstType(int id) {
         HashMap<Integer, Pokemon> pokemon = reloadPokemonList();
         while (pokemon == null) {
@@ -1066,7 +1066,7 @@ public class Pokemon implements Serializable {
         }
         return pokemon.get(id).getType1();
     }
-
+    
     private static Type getSecondType(int id) {
         HashMap<Integer, Pokemon> pokemon = reloadPokemonList();
         while (pokemon == null) {
@@ -1074,7 +1074,7 @@ public class Pokemon implements Serializable {
         }
         return pokemon.get(id).getType2();
     }
-
+    
     public static int getBaseStat(int id, Stats stat) {
         HashMap<Integer, Pokemon> pokemon = reloadPokemonList();
         while (pokemon == null) {
@@ -1083,7 +1083,7 @@ public class Pokemon implements Serializable {
         Pokemon mod = pokemon.get(id);
         return mod.getStat(stat);
     }
-
+    
     public static Type typeConverter(String type) {
         type = type.toLowerCase();
         Type toReturn = Type.NONE;
@@ -1148,7 +1148,7 @@ public class Pokemon implements Serializable {
         }
         return toReturn;
     }
-
+    
     public static MoveCategory moveConverter(String type) {
         type = type.toLowerCase();
         MoveCategory toReturn = MoveCategory.PHYSICAL;
@@ -1166,7 +1166,7 @@ public class Pokemon implements Serializable {
         }
         return toReturn;
     }
-
+    
     public static ArrayList<String> getCompatableMoves(int id) {
         HashMap<Integer, ArrayList<String>> pokemonMoves = reloadPokemonMoveList();
         while (pokemonMoves == null) {
@@ -1174,7 +1174,7 @@ public class Pokemon implements Serializable {
         }
         return pokemonMoves.get(id);
     }
-
+    
     public static Move getMove(String name) {
         HashMap<String, Move> moves = reloadMoves();
         while (moves == null) {
@@ -1182,7 +1182,7 @@ public class Pokemon implements Serializable {
         }
         return moves.get(name);
     }
-
+    
     public void setMove(int id, Move move) {
         switch (id) {
             case 1:
@@ -1199,7 +1199,7 @@ public class Pokemon implements Serializable {
                 break;
         }
     }
-
+    
     public void assignMoves() {
         ArrayList<String> compatableMoves = getCompatableMoves(this.id);
         if (compatableMoves.size() < 4) {
@@ -1237,9 +1237,9 @@ public class Pokemon implements Serializable {
             int index = rand.nextInt(compatableMoves.size());
             this.setMove4(getMove(compatableMoves.get(index)));
         }
-
+        
     }
-
+    
     public void setStat(Stats stat, int level) {
         switch (stat) {
             case HP:
@@ -1261,5 +1261,25 @@ public class Pokemon implements Serializable {
                 this.speed = level;
                 return;
         }
+    }
+    
+    public static final boolean isBannedPokemon(int poke) {
+        int[] banned = {0, 132, 202, 235, 292, 360, 665};
+        for (int el : banned) {
+            if (poke == el) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public static final int getCatchRate(String poke) {
+        int toReturn = -1;
+        try (FileInputStream f = new FileInputStream(BattleBot.BASE_PATH + "/pokemoncatchrate.wdu"); ObjectInputStream o = new ObjectInputStream(f)) {
+            HashMap<String, Integer> c = (HashMap<String, Integer>) o.readObject();
+            toReturn = c.get(poke);
+        } catch (Exception ex) {
+        }
+        return toReturn;
     }
 }
