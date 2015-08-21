@@ -10,11 +10,11 @@ public class SafariBattle {
     private Pokemon wild;
     private int angry = 0, eat = 0;
     public LinkedBlockingQueue<String> msg = new LinkedBlockingQueue<>();
-    private double hpMax = wild.getMaxHP();
-    private double hpCurrent = wild.getStat(Stats.HP);
-    private double rate = Pokemon.getCatchRate(wild.getName());
-    private double catchChance = (((3 * hpMax - (2 * hpCurrent)) * rate * 1.5) / 3 * hpMax);
-    private double shakeProbability = 1048560.0 / Math.sqrt(Math.sqrt(16711680 / catchChance));
+    private double hpMax;
+    private double hpCurrent;
+    private double rate;
+    private double catchChance;
+    private double shakeProbability;
 
     public SafariBattle(String user, Pokemon wild) {
         this.user = new Trainer(user);
@@ -30,12 +30,16 @@ public class SafariBattle {
         hpMax = wild.getMaxHP();
         hpCurrent = wild.getStat(Stats.HP);
         rate = Pokemon.getCatchRate(wild.getName());
-        catchChance = (((3 * hpMax - (2 * hpCurrent)) * rate * 1.5) / 3 * hpMax);
-        shakeProbability = 1048560.0 / Math.sqrt(Math.sqrt(16711680 / catchChance));
+        catchChance = ((((3 * hpMax) - (2 * hpCurrent)) * rate * 1.5) / (3 * hpMax));
+        if (catchChance > 255) {
+            catchChance = 255;
+        }
+        shakeProbability = 1048560.0 / (Math.sqrt(Math.sqrt(16711680.0 / catchChance)));
     }
 
     public void doBattle(BattleBot b, String channel) {
-        b.sendMessage(channel, "A Wild " + wild.getName() + " Appeared!");
+        b.sendMessage(channel, "A Wild " + wild.getName() + " (Level " + wild.getLevel() + ") Appeared!");
+        recalcCatch();
         boolean caught = false;
         String lastTurn = "";
         while (true) {
@@ -59,7 +63,6 @@ public class SafariBattle {
                 } else if (move.startsWith("!ball")) {
                     lastTurn = "ball";
                     b.sendMessage(channel, user.getTrainerName() + " threw a Pokeball!");
-                    recalcCatch();
                     int shake1 = new SecureRandom().nextInt(65536);
                     if (shake1 >= shakeProbability) {
                         b.sendMessage(channel, "Oh no! The Pokemon broke free! RuleFive");
@@ -94,7 +97,7 @@ public class SafariBattle {
                 }
             } catch (Exception ex) {
             } finally {
-                if (caught || lastTurn.equalsIgnoreCase("run") || lastTurn.equalsIgnoreCase("ball")) {
+                if (caught || lastTurn.equalsIgnoreCase("run")) {
                     return;
                 }
                 if (angry > 0) {

@@ -269,6 +269,7 @@ public class BattleBot extends PircBot {
                 Thread t = new Thread(() -> {
                     int level = new SecureRandom().nextInt(100 - 20 + 1) + 20;
                     int id = new SecureRandom().nextInt(721 - 1 + 1) + 1;
+                    System.err.println("Attempting Pokemon ID " + id + " level " + level);
                     sB = new SafariBattle(sender, new Pokemon(id, level));
                     sB.doBattle(this, channel);
                     sB = null;
