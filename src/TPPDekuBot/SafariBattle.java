@@ -41,6 +41,7 @@ public class SafariBattle {
         b.sendMessage(channel, "A Wild " + wild.getName() + " (Level " + wild.getLevel() + ") Appeared!");
         recalcCatch();
         boolean caught = false;
+        boolean end = false;
         String lastTurn = "";
         while (true) {
             msg = new LinkedBlockingQueue<>();
@@ -49,6 +50,7 @@ public class SafariBattle {
                 String move = msg.poll(60, TimeUnit.SECONDS);
                 if (move == null) {
                     b.sendMessage(channel, user.getTrainerName() + " did not select an action in time, the Pokemon was stolen by Team Flare WutFace");
+                    end = true;
                     return;
                 }
                 if (move.startsWith("!bait")) {
@@ -63,6 +65,7 @@ public class SafariBattle {
                 } else if (move.startsWith("!ball")) {
                     lastTurn = "ball";
                     b.sendMessage(channel, user.getTrainerName() + " threw a Pokeball!");
+                    System.err.println("catchChance = " + catchChance + "\nshakeProb = " + shakeProbability);
                     int shake1 = new SecureRandom().nextInt(65536);
                     if (shake1 >= shakeProbability) {
                         b.sendMessage(channel, "Oh no! The Pokemon broke free! RuleFive");
@@ -97,8 +100,30 @@ public class SafariBattle {
                 }
             } catch (Exception ex) {
             } finally {
-                if (caught || lastTurn.equalsIgnoreCase("run")) {
+                if (caught || lastTurn.equalsIgnoreCase("run") || end) {
                     return;
+                }
+                if (eat > angry) {
+                    b.sendMessage(channel, wild.getName() + " is eating!");
+                    int random = new SecureRandom().nextInt(256);
+                    if (random < (wild.getStat(Stats.SPEED) / 2)) {
+                        b.sendMessage(channel, "The wild " + wild.getName() + " ran away!");
+                        return;
+                    }
+                } else if (angry > eat) {
+                    b.sendMessage(channel, wild.getName() + " is pissed off!");
+                    int random = new SecureRandom().nextInt(256);
+                    if (random < (wild.getStat(Stats.SPEED) * 4)) {
+                        b.sendMessage(channel, "The wild " + wild.getName() + " ran away!");
+                        return;
+                    }
+                } else {
+                    b.sendMessage(channel, wild.getName() + " is watching carefully...");
+                    int random = new SecureRandom().nextInt(256);
+                    if (random < (wild.getStat(Stats.SPEED) * 2)) {
+                        b.sendMessage(channel, "The wild " + wild.getName() + " ran away!");
+                        return;
+                    }
                 }
                 if (angry > 0) {
                     angry--;
@@ -111,33 +136,17 @@ public class SafariBattle {
                 }
                 switch (lastTurn) {
                     case "bait":
-                        b.sendMessage(channel, wild.getName() + " is eating!");
                         catchChance = catchChance / 2;
-                        int random = new SecureRandom().nextInt(256);
-                        if (random < (wild.getStat(Stats.SPEED) / 2)) {
-                            b.sendMessage(channel, "The wild " + wild.getName() + " ran away!");
-                            return;
-                        }
+                        shakeProbability = 1048560.0 / (Math.sqrt(Math.sqrt(16711680.0 / catchChance)));
                         continue;
                     case "rock":
-                        b.sendMessage(channel, wild.getName() + " is pissed off!");
                         catchChance = catchChance * 2;
+                        shakeProbability = 1048560.0 / (Math.sqrt(Math.sqrt(16711680.0 / catchChance)));
                         if (catchChance > 255) {
                             catchChance = 255;
                         }
-                        random = new SecureRandom().nextInt(256);
-                        if (random > (wild.getStat(Stats.SPEED) * 4)) {
-                            b.sendMessage(channel, "The wild " + wild.getName() + " ran away!");
-                            return;
-                        }
                         continue;
                     default:
-                        b.sendMessage(channel, wild.getName() + " is watching carefully...");
-                        random = new SecureRandom().nextInt(256);
-                        if (random > (wild.getStat(Stats.SPEED) * 2)) {
-                            b.sendMessage(channel, "The wild " + wild.getName() + " ran away!");
-                            return;
-                        }
                         continue;
                 }
 

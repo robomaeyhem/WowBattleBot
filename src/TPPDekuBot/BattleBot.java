@@ -263,7 +263,7 @@ public class BattleBot extends PircBot {
                 }
             }
         }
-        if (!inMultiBattle && !waitingPlayer && !inPokemonBattle) {
+        if (!inMultiBattle && !waitingPlayer && !inPokemonBattle && !inSafariBattle) {
             if (message.startsWith("!safari")) {
                 inSafariBattle = true;
                 Thread t = new Thread(() -> {
