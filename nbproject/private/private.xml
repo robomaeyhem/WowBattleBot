@@ -3,23 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/BattleStatus.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/Move.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/Status.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/BattleTester.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/Stats.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/MoveCategory.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/MultiplayerBattle.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/ExpLevel.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/Gender.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/Pokemon.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/Trainer.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/BattleBotRunner.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/GymLeader.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/PokemonBattle.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/SafariBattle.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/Type.java</file>
-            <file>file:/C:/Users/Michael/Documents/NetBeansProjects/WowBattleBot/src/TPPDekuBot/BattleBot.java</file>
+            <file>file:/home/pi/Wow_Deku/WowBattleBot/src/TPPDekuBot/SafariBattle.java</file>
+            <file>file:/home/pi/Wow_Deku/WowBattleBot/src/TPPDekuBot/Pokemon.java</file>
+            <file>file:/home/pi/Wow_Deku/WowBattleBot/src/TPPDekuBot/BattleBot.java</file>
         </group>
     </open-files>
 </project-private>

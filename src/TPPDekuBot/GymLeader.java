@@ -5,9 +5,12 @@ import java.util.ArrayList;
 public class GymLeader extends Trainer {
 
     private int prizeMoney;
+    private GymBadge badge;
 
-    public GymLeader(ArrayList<Pokemon> pokemon, String name) {
-        super(pokemon, name);
+    public GymLeader(String name, ArrayList<Pokemon> pokemon, ArrayList<Item> items, int prizeMoney, GymBadge badge) {
+        super(name, pokemon, items);
+        this.prizeMoney = prizeMoney;
+        this.badge = badge;
     }
 
 }

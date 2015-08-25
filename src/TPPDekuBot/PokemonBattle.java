@@ -8,14 +8,12 @@ public class PokemonBattle {
 
     private BattleBot b;
     private String channel;
-    public static BattleStatus status = BattleStatus.NO_BATTLE;
     private String player;    
 
     public PokemonBattle(BattleBot b, String channel, boolean bigBrother, boolean fromChef, String player) {
         this.b = b;
         this.channel = channel;
         SecureRandom rand = new SecureRandom();
-        status = BattleStatus.SELECTING_POKEMON;
         int rand1 = rand.nextInt(718);
         int rand2 = rand1;
         this.player = player;
@@ -54,7 +52,6 @@ public class PokemonBattle {
         System.out.println("Generated userID " + rand1 + ", level " + level1 + " and computerID " + rand2 + ", level " + level2);
         Pokemon user = new Pokemon(rand1, level1);
         Pokemon computer = new Pokemon(rand2, level2);
-        status = BattleStatus.ASSIGNING_MOVES;
         try {
             if (bigBrother) {
                 if (fromChef) {
@@ -96,7 +93,6 @@ public class PokemonBattle {
             b.inPokemonBattle = false;
             return;
         }
-        status = BattleStatus.IN_BATTLE;
         b.sendMessage(channel, "A wild " + computer.getName() + " (level " + level2 + ") appeared! Go " + user.getName() + "! (Level " + level1 + ")");
         System.err.println("User moves = " + user.getMove1().getName() + ", " + user.getMove2().getName() + ", " + user.getMove3().getName() + ", " + user.getMove4().getName() + ", ");
         System.err.println("Computer moves = " + computer.getMove1().getName() + ", " + computer.getMove2().getName() + ", " + computer.getMove3().getName() + ", " + computer.getMove4().getName() + ", ");
@@ -105,7 +101,6 @@ public class PokemonBattle {
                 BattleBot.pokemonMessages = new LinkedBlockingQueue<>();
                 b.sendMessage(channel, "What will " + user.getName() + " do? (!move1)" + user.getMove1().getName() + ", (!move2)" + user.getMove2().getName() + ", (!move3)" + user.getMove3().getName() + ", (!move4)" + user.getMove4().getName());
                 if (user.getStat(Stats.SPEED) > computer.getStat(Stats.SPEED)) {
-                    status = BattleStatus.AWAITING_USER_MOVE;
                     String move = BattleBot.pokemonMessages.poll(60, TimeUnit.SECONDS);
                     if (move == null) {
                         b.sendMessage(channel, player + " did not select a move in time and got their Pokemon stolen by Team Rocket! RuleFive");
@@ -120,7 +115,6 @@ public class PokemonBattle {
                         doComputerMove(user, computer);
                     }
                 } else if (user.getStat(Stats.SPEED) < computer.getStat(Stats.SPEED)) {
-                    status = BattleStatus.AWAITING_USER_MOVE;
                     String move = BattleBot.pokemonMessages.poll(60, TimeUnit.SECONDS);
                     if (move == null) {
                         b.sendMessage(channel, player + " did not select a move in time and got their Pokemon stolen by Team Rocket! RuleFive");
@@ -138,7 +132,6 @@ public class PokemonBattle {
                     rand = new SecureRandom();
                     int chance = rand.nextInt(2);
                     if (chance == 1) {
-                        status = BattleStatus.AWAITING_USER_MOVE;
                         String move = BattleBot.pokemonMessages.poll(60, TimeUnit.SECONDS);
                         if (move == null) {
                             b.sendMessage(channel, player + " did not select a move in time and got their Pokemon stolen by Team Rocket! RuleFive");
@@ -153,7 +146,6 @@ public class PokemonBattle {
                             doComputerMove(user, computer);
                         }
                     } else {
-                        status = BattleStatus.AWAITING_USER_MOVE;
                         String move = BattleBot.pokemonMessages.poll(60, TimeUnit.SECONDS);
                         if (move == null) {
                             b.sendMessage(channel, player + " did not select a move in time and got their Pokemon stolen by Team Rocket! RuleFive");
@@ -188,12 +180,10 @@ public class PokemonBattle {
         } catch (Exception ex) {
 
         }
-        status = BattleStatus.NO_BATTLE;
         b.inPokemonBattle = false;
     }
 
     private void doComputerMove(Pokemon user, Pokemon computer) {
-        status = BattleStatus.SELECTING_AI_MOVE;
         b.sendMessage(channel, computer.attack(user, Move.selectBestMove(computer, user)).replace("\n", " "));
     }
 

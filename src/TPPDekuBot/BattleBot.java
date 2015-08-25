@@ -256,7 +256,7 @@ public class BattleBot extends PircBot {
                 this.sendMessage(channel, "/w " + sender + " Type !list to see a list of your Pokemon. Type !checkx where x is the number of the Pokemon from !list to see it's moves. Type !switchx where x is number of the Pokemon from !list to switch to a Pokemon.");
             }
         }
-        if (inSafariBattle) {
+        if (inSafariBattle && sB != null) {
             if (sender.equalsIgnoreCase(sB.user.getTrainerName())) {
                 if (message.toLowerCase().startsWith("!rock") || message.toLowerCase().startsWith("!bait") || message.toLowerCase().startsWith("!ball") || message.toLowerCase().startsWith("!run")) {
                     sB.msg.add(message.split(" ", 2)[0].toLowerCase());
@@ -281,7 +281,8 @@ public class BattleBot extends PircBot {
         if (message.toLowerCase().startsWith("!help") && !inMultiBattle) {
             this.sendMessage(channel, "http://pastebin.com/raw.php?i=HqQwhcSQ");
         }
-        if ((message.toLowerCase().startsWith("!challenge @") || message.toLowerCase().startsWith("!multibattle @")) && !inMultiBattle && !inPokemonBattle && !inSafariBattle) {
+        if ((message.toLowerCase().startsWith("!randbat @") || message.toLowerCase().startsWith("!randombattle @") && !inMultiBattle && !inPokemonBattle && !inSafariBattle)) {
+            //if ((message.toLowerCase().startsWith("!challenge @") || message.toLowerCase().startsWith("!multibattle @")) && !inMultiBattle && !inPokemonBattle && !inSafariBattle) {
             final String messageFinal = message;
             Thread t = new Thread(() -> {
                 try {
@@ -422,32 +423,7 @@ public class BattleBot extends PircBot {
                     pokemonMessages.add("" + message.charAt(5));
                 }
             }
-        }
-
-        if (message.toLowerCase().startsWith("!battlestatus")) {
-            String toSend = "Current Battle Status: ";
-            switch (PokemonBattle.status) {
-                case NO_BATTLE:
-                    toSend += "No battle in progress.";
-                    break;
-                case SELECTING_POKEMON:
-                    toSend += "Selecting Pokemon for Battle.";
-                    break;
-                case ASSIGNING_MOVES:
-                    toSend += "Assigning Moves to Selected Pokemon.";
-                    break;
-                case IN_BATTLE:
-                    toSend += "In battle.";
-                    break;
-                case SELECTING_AI_MOVE:
-                    toSend += "Selecting best AI move against User.";
-                    break;
-                case AWAITING_USER_MOVE:
-                    toSend += "Awaiting User Move Selection.";
-                    break;
-            }
-            this.sendMessage(channel, toSend);
-        }
+        }        
     }
 
     public static void sendAnInvite(String name, String channel, String oAuth) {

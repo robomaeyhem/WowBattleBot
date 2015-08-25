@@ -9,14 +9,29 @@ import java.util.*;
 public class Trainer {
 
     private ArrayList<Pokemon> pokemon;
+    private ArrayList<Item> items;
     private String name;
     private String trnClass;
     private int pokemonLeft;
+    private int money;
+    private ArrayList<Item> badges;
+    private boolean defeatedChampion = false;
 
-    public Trainer(ArrayList<Pokemon> pokemon, String name) {
+    public Trainer(String name, ArrayList<Pokemon> pokemon, ArrayList<Item> items) {
         this.pokemon = pokemon;
+        this.items = items;
         this.name = name;
         this.pokemonLeft = pokemon.size();
+        money = 0;
+        getTrainerClass();
+    }
+
+    public Trainer(String name, ArrayList<Pokemon> pokemon, ArrayList<Item> items, int money) {
+        this.pokemon = pokemon;
+        this.items = items;
+        this.name = name;
+        this.pokemonLeft = pokemon.size();
+        this.money = money;
         getTrainerClass();
     }
 
@@ -24,6 +39,7 @@ public class Trainer {
         this.name = user.getNick();
         this.pokemon = pokemon;
         this.pokemonLeft = pokemon.size();
+        money = 0;
         getTrainerClass();
     }
 
@@ -31,6 +47,7 @@ public class Trainer {
         this.name = name;
         this.pokemon = generatePokemon(1);
         this.pokemonLeft = 1;
+        money = 0;
         getTrainerClass();
     }
 
@@ -38,6 +55,7 @@ public class Trainer {
         this.name = name;
         this.pokemon = generatePokemon(amt);
         this.pokemonLeft = amt;
+        money = 0;
         getTrainerClass();
     }
 
@@ -45,7 +63,16 @@ public class Trainer {
         this.name = name;
         this.pokemon = generatePokemon(amt, level);
         this.pokemonLeft = amt;
+        money = 0;
         getTrainerClass();
+    }
+
+    public boolean hasDefeatedChampion() {
+        return defeatedChampion;
+    }
+
+    public void setDefeatedChampion(boolean defeated) {
+        this.defeatedChampion = defeated;
     }
 
     private void getTrainerClass() {
@@ -119,6 +146,22 @@ public class Trainer {
 
     public Pokemon getPokemon(int pos) {
         return this.pokemon.get(pos);
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
+    public void addMoney(int money) {
+        this.money += money;
+    }
+
+    public void subtractMoney(int money) {
+        this.money -= money;
     }
 
     public String getPokemonList() {

@@ -1264,7 +1264,7 @@ public class Pokemon implements Serializable {
     }
     
     public static final boolean isBannedPokemon(int poke) {
-        int[] banned = {0, 132, 202, 235, 292, 360, 665};
+        int[] banned = {0, 132, 202, 235, 292, 360, 665, 606};
         for (int el : banned) {
             if (poke == el) {
                 return true;
