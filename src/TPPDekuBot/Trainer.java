@@ -99,7 +99,7 @@ public class Trainer {
         ArrayList<Pokemon> toReturn = new ArrayList<>();
         for (int i = 0; i < amt; i++) {
             int pokemon = new SecureRandom().nextInt(721);
-            while (pokemon == 0 || pokemon == 132 || pokemon == 202 || pokemon == 235 || pokemon == 292 || pokemon == 360 || pokemon == 665) {
+            while (Pokemon.isBannedPokemon(pokemon)) {
                 pokemon = new SecureRandom().nextInt(721);
             }
             Pokemon pkm = new Pokemon(pokemon, level);

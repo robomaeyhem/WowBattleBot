@@ -30,6 +30,7 @@ import org.apache.http.message.BasicNameValuePair;
  * @author Michael
  */
 public class BattleBot extends PircBot {
+//valid starters = Bulbasaur, Charmander, Squirtle, Chikorita, Cyndaquil, Totodile, Treecko, Torchic, Mudkip, Turtwig, Chimchar, Piplup, Snivy, Tepig, Oshawott, Chespin, Fennekin, Froakie
 
     public boolean inPokemonBattle = false;
     public String personInBattle = "";
@@ -95,7 +96,7 @@ public class BattleBot extends PircBot {
             } catch (Exception ex) {
             }
         }
-        if (inMultiBattle) {
+        if (inMultiBattle && mpB != null) {
             String channel = "#_keredau_1423645868201";
             if (message.toLowerCase().startsWith("!run") || (message.toLowerCase().startsWith("!switch") && message.length() >= 8 && Character.isDigit(message.charAt(7))) || Move.isValidMove(message)) {
                 if (sender.equalsIgnoreCase(mpB.getPlayer1())) {
@@ -184,7 +185,7 @@ public class BattleBot extends PircBot {
             while (Character.isWhitespace(newClass.charAt(0))) {
                 newClass = newClass.substring(1);
             }
-            if (newClass.equalsIgnoreCase("Gym Leader") || newClass.equalsIgnoreCase("Leader") || newClass.equalsIgnoreCase("Champion") || newClass.equalsIgnoreCase("Elite Four")) {
+            if (newClass.toLowerCase().contains("gym leader") || newClass.toLowerCase().contains("leader") || newClass.toLowerCase().contains("champion") || newClass.toLowerCase().contains("elite four")) {
                 this.sendMessage(channel, "@" + sender + " Invalid Trainer Class FUNgineer");
                 return;
             }
@@ -281,7 +282,7 @@ public class BattleBot extends PircBot {
         if (message.toLowerCase().startsWith("!help") && !inMultiBattle) {
             this.sendMessage(channel, "http://pastebin.com/raw.php?i=HqQwhcSQ");
         }
-        if ((message.toLowerCase().startsWith("!randbat @") || message.toLowerCase().startsWith("!randombattle @") && !inMultiBattle && !inPokemonBattle && !inSafariBattle)) {
+        if (message.toLowerCase().startsWith("!randbat @") || message.toLowerCase().startsWith("!randombattle @") && !inMultiBattle && !inPokemonBattle && !inSafariBattle && !waitingPlayer) {
             //if ((message.toLowerCase().startsWith("!challenge @") || message.toLowerCase().startsWith("!multibattle @")) && !inMultiBattle && !inPokemonBattle && !inSafariBattle) {
             final String messageFinal = message;
             Thread t = new Thread(() -> {
@@ -303,7 +304,8 @@ public class BattleBot extends PircBot {
                         this.sendMessage(channel, "You cannot challenge yourself FUNgineer");
                         return;
                     }
-                    if (target.equalsIgnoreCase("frunky5")) {
+                    if (target.equalsIgnoreCase("frunky5") || target.equalsIgnoreCase("wallbot303")) {
+                        target = "wallbot303";
                     } else if (target.equalsIgnoreCase("wow_deku_onehand") || target.equalsIgnoreCase("wow_battlebot_onehand") || User.isBot(target)) {
                         this.sendMessage(channel, "FUNgineer");
                         return;
@@ -423,7 +425,7 @@ public class BattleBot extends PircBot {
                     pokemonMessages.add("" + message.charAt(5));
                 }
             }
-        }        
+        }
     }
 
     public static void sendAnInvite(String name, String channel, String oAuth) {
