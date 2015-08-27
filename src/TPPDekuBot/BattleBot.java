@@ -210,7 +210,7 @@ public class BattleBot extends PircBot {
             //}
             return;
         }
-        if (inMultiBattle) {
+        if (inMultiBattle && mpB != null) {
             if (message.toLowerCase().startsWith("!run") || (message.toLowerCase().startsWith("!switch") && message.length() >= 8 && Character.isDigit(message.charAt(7))) || Move.isValidMove(message)) {
                 if (sender.equalsIgnoreCase(mpB.getPlayer1())) {
                     try {
@@ -270,9 +270,10 @@ public class BattleBot extends PircBot {
                 Thread t = new Thread(() -> {
                     int level = new SecureRandom().nextInt(100 - 20 + 1) + 20;
                     int id = new SecureRandom().nextInt(721 - 1 + 1) + 1;
-                    System.err.println("Attempting Pokemon ID " + id + " level " + level);
+                    System.err.println("Attempting Pokemon ID " + id + " level " + level);                    
                     sB = new SafariBattle(sender, new Pokemon(id, level));
                     sB.doBattle(this, channel);
+                    System.err.println("Now out of Safari Battle");
                     sB = null;
                     inSafariBattle = false;
                 });
@@ -306,7 +307,7 @@ public class BattleBot extends PircBot {
                     }
                     if (target.equalsIgnoreCase("frunky5") || target.equalsIgnoreCase("wallbot303")) {
                         target = "wallbot303";
-                    } else if (target.equalsIgnoreCase("wow_deku_onehand") || target.equalsIgnoreCase("wow_battlebot_onehand") || User.isBot(target)) {
+                    } else if (target.equalsIgnoreCase("wow_deku_onehand") || target.equalsIgnoreCase("wow_battlebot_onehand") || User.isBot(target) || target.equalsIgnoreCase("killermapper")) {
                         this.sendMessage(channel, "FUNgineer");
                         return;
                     }
@@ -343,11 +344,13 @@ public class BattleBot extends PircBot {
                         waitingPlayer = false;
                         waitingOn = "";
                         this.sendMessage(channel, "Generating Pokemon, give me a minute...");
-                        mpB = new MultiplayerBattle(sender, target, level, pkmAmt);
+                        System.err.println("Going into Multiplayer Battle");
+                        mpB = new MultiplayerBattle(sender, target, level, pkmAmt);                       
                         mpB.doBattle(this, channel);
                         inMultiBattle = false;
                         inPokemonBattle = false;
                         mpB = null;
+                        System.err.println("Now out of Multiplayer Battle");
                     }
                 } catch (Exception ex) {
                     inMultiBattle = false;
@@ -359,7 +362,7 @@ public class BattleBot extends PircBot {
             t.start();
 
         }
-        if (message.toLowerCase().startsWith("!battle") && !inMultiBattle && !waitingPlayer && !inSafariBattle) {
+        if (message.toLowerCase().startsWith("!battle") && !inMultiBattle && !waitingPlayer && !inSafariBattle && !inPokemonBattle) {
             boolean bigbrother = false, fromChef = false;
             if (message.contains("BigBrother") || sender.equalsIgnoreCase("dewgong98") || sender.equalsIgnoreCase("mad_king98") || sender.equalsIgnoreCase("Starmiewaifu")) {
                 bigbrother = true;
@@ -373,13 +376,15 @@ public class BattleBot extends PircBot {
                 return;
             } else {
                 final String senderFinal = sender;
-                if (!inPokemonBattle && !inMultiBattle) {
+                if (!inPokemonBattle && !inMultiBattle && !inSafariBattle && !waitingPlayer) {
                     Thread t = new Thread(() -> {
                         try {
                             inPokemonBattle = true;
                             pokemonMessages = new LinkedBlockingQueue<>();
                             personInBattle = senderFinal;
+                            System.err.println("Going into Pokemon Battle");
                             PokemonBattle a = new PokemonBattle(this, channel, bbrother, fChef, sender);
+                            System.err.println("Now out of Pokemon Battle");
                             inPokemonBattle = false;
                             pokemonMessages = new LinkedBlockingQueue<>();
                             personInBattle = "";

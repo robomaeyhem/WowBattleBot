@@ -254,7 +254,7 @@ public class MultiplayerBattle {
         do {
             singlebattle:
             while (!pokemon1.isFainted() && !pokemon2.isFainted()) {
-                if (player1.getPokemon().isEmpty() && player2.getPokemon().isEmpty() && !hasSent && numberOfMon>1) {
+                if (player1.getPokemon().isEmpty() && player2.getPokemon().isEmpty() && !hasSent && numberOfMon > 1) {
                     hasSent = true;
                     String toSend = (new SecureRandom().nextBoolean()) ? "PRChase The battle has reached it's final stage! And the tension is peaking ThunBeast" : "PRChase The Last Pokemon from Each Team takes the field. Will the Outcome of the battle be decided in the next turn? ThunBeast";
                     b.sendMessage(channel, toSend);
