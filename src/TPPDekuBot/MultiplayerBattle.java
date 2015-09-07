@@ -16,6 +16,7 @@ public class MultiplayerBattle {
     private boolean p2switch = false;
     private boolean endBattle = false;
     private int numberOfMon = 1;
+    private boolean randomBattle;
 
     private MultiplayerBattle() {
     }
@@ -38,6 +39,7 @@ public class MultiplayerBattle {
         this.player1.removePokemon(0);
         this.player2.removePokemon(0);
         this.numberOfMon = pokemonNumber;
+        randomBattle = true;
     }
 
     public MultiplayerBattle(String player1, String player2, int level) {
@@ -47,6 +49,18 @@ public class MultiplayerBattle {
         this.pokemon2 = this.player2.getPokemon(0);
         this.player1.removePokemon(0);
         this.player2.removePokemon(0);
+        randomBattle = true;
+    }
+
+    public MultiplayerBattle(Trainer player1, Trainer player2) {
+        randomBattle = false;
+        this.player1 = player1;
+        this.player2 = player2;
+        this.pokemon1 = this.player1.getPokemon(0);
+        this.pokemon2 = this.player2.getPokemon(0);
+        this.player1.removePokemon(0);
+        this.player2.removePokemon(0);
+        numberOfMon = (this.player1.getPokemon().size() >= this.player2.getPokemon().size()) ? this.player1.getPokemon().size() : this.player2.getPokemon().size();
     }
 
     public String getPlayer1() {

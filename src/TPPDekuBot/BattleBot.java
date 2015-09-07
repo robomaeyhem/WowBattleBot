@@ -38,6 +38,8 @@ public class BattleBot extends PircBot {
     public boolean inMultiBattle = false;
     public boolean waitingPlayer = false;
     public boolean inSafariBattle = false;
+    public boolean waitingOnNewMove = false;
+    public String waitingOnMove = "";
     public String waitingOn = "";
     public static LinkedBlockingQueue<String> pokemonMessages = new LinkedBlockingQueue<>();
     public final LinkedBlockingQueue<String> player = new LinkedBlockingQueue<>();
@@ -153,7 +155,7 @@ public class BattleBot extends PircBot {
 
     @Override
     public void onMessage(String channel, String sender, String login, String hostname, String message) {
-        if (sender.equalsIgnoreCase("minhs2")) {
+        if (sender.equalsIgnoreCase("minhs2") || sender.equalsIgnoreCase("minhs3")) {
             return;
         }
         //System.out.println(DekuBot.getDateTime() + " " + sender + ": " + message);
@@ -171,6 +173,17 @@ public class BattleBot extends PircBot {
             try {
                 player.put(sender);
             } catch (Exception ex) {
+            }
+        }
+        if (waitingOnNewMove && sender.equalsIgnoreCase(waitingOnMove)) {
+            if (inMultiBattle && mpB != null) {
+                if(sender.equalsIgnoreCase(mpB.getPlayer1())){
+                    
+                }else if(sender.equalsIgnoreCase(mpB.getPlayer2())){
+                    
+                }
+            } else if (inPokemonBattle) {
+
             }
         }
         if ((message.toLowerCase().startsWith("!changeclass ") || message.toLowerCase().startsWith("!selectclass ")) && !inMultiBattle) {
@@ -270,7 +283,7 @@ public class BattleBot extends PircBot {
                 Thread t = new Thread(() -> {
                     int level = new SecureRandom().nextInt(100 - 20 + 1) + 20;
                     int id = new SecureRandom().nextInt(721 - 1 + 1) + 1;
-                    System.err.println("Attempting Pokemon ID " + id + " level " + level);                    
+                    System.err.println("Attempting Pokemon ID " + id + " level " + level);
                     sB = new SafariBattle(sender, new Pokemon(id, level));
                     sB.doBattle(this, channel);
                     System.err.println("Now out of Safari Battle");
@@ -345,7 +358,7 @@ public class BattleBot extends PircBot {
                         waitingOn = "";
                         this.sendMessage(channel, "Generating Pokemon, give me a minute...");
                         System.err.println("Going into Multiplayer Battle");
-                        mpB = new MultiplayerBattle(sender, target, level, pkmAmt);                       
+                        mpB = new MultiplayerBattle(sender, target, level, pkmAmt);
                         mpB.doBattle(this, channel);
                         inMultiBattle = false;
                         inPokemonBattle = false;
