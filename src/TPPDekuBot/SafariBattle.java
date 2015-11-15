@@ -68,7 +68,7 @@ public class SafariBattle {
                     System.err.println("catchChance = " + catchChance + "\nshakeProb = " + shakeProbability);
                     int shake1 = new SecureRandom().nextInt(65536);
                     if (shake1 >= shakeProbability) {
-                        b.sendMessage(channel, "Oh no! The Pokemon broke free! RuleFive");
+                        b.sendMessage(channel, "You missed the Pokemon! RuleFive Good Job, Dumbass. FUNgineer");
                         continue;
                     }
                     b.sendMessage(channel, "Shake...");
