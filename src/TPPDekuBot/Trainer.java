@@ -11,11 +11,12 @@ public class Trainer {
     private ArrayList<Pokemon> pokemon;
     private ArrayList<Item> items;
     private String name;
-    private String trnClass;
+    protected String trnClass;
     private int pokemonLeft;
     private int money;
     private ArrayList<Item> badges;
     private boolean defeatedChampion = false;
+    private int eliteFour;
 
     public Trainer(String name, ArrayList<Pokemon> pokemon, ArrayList<Item> items) {
         this.pokemon = pokemon;
@@ -32,6 +33,17 @@ public class Trainer {
         this.name = name;
         this.pokemonLeft = pokemon.size();
         this.money = money;
+        getTrainerClass();
+    }
+
+    public Trainer(String name, ArrayList<Pokemon> pokemon, ArrayList<Item> items, int pokemonLeft, int money, ArrayList<Item> badges, int eliteFour) {
+        this.pokemon = pokemon;
+        this.items = items;
+        this.name = name;
+        this.pokemonLeft = pokemonLeft;
+        this.money = money;
+        this.badges = badges;
+        this.eliteFour = eliteFour;
         getTrainerClass();
     }
 

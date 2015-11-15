@@ -8,7 +8,7 @@ public enum ExpLevel {
     SLOW, MEDIUM_SLOW, MEDIUM_FAST, FAST, ERRATIC, FLUCTUATING;
 
     public static int getLevel(int exp/*,ExpLevel explevel*/) {
-        return (int)Math.cbrt(exp);
+        return (int) Math.cbrt(exp);
     }
 
     public static int getExp(int level) {
