@@ -2,3 +2,4 @@
 /build/
 /src/TPPDekuBot/Test.java
 *.wdu
+/src/TPPDekuBot/PokemonImporter.java

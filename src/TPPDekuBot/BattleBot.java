@@ -126,16 +126,16 @@ public class BattleBot extends PircBot {
                 if (sender.getNick().equalsIgnoreCase(mpB.getPlayer1())) {
                     try {
                         String pokemon = mpB.player1.getPokemonList();
-                        this.sendMessage(channel, "/w " + sender + " Your pokemon are: " + pokemon);
+                        this.sendMessage(channel, "/w " + sender.getNick() + " Your pokemon are: " + pokemon);
                     } catch (Exception ex) {
-                        this.sendMessage(channel, "/w " + sender + " You have no other Pokemon in your party!");
+                        this.sendMessage(channel, "/w " + sender.getNick() + " You have no other Pokemon in your party!");
                     }
                 } else if (sender.getNick().equalsIgnoreCase(mpB.getPlayer2())) {
                     try {
                         String pokemon = mpB.player2.getPokemonList();
-                        this.sendMessage(channel, "/w " + sender + " Your pokemon are: " + pokemon);
+                        this.sendMessage(channel, "/w " + sender.getNick() + " Your pokemon are: " + pokemon);
                     } catch (Exception ex) {
-                        this.sendMessage(channel, "/w " + sender + " You have no other Pokemon in your party!");
+                        this.sendMessage(channel, "/w " + sender.getNick() + " You have no other Pokemon in your party!");
                     }
                 }
                 return;
@@ -144,14 +144,14 @@ public class BattleBot extends PircBot {
                 int check = Integer.parseInt(message.charAt(6) + "");
                 if (sender.getNick().equalsIgnoreCase(mpB.getPlayer1())) {
                     Pokemon p = mpB.player1.getPokemon(check);
-                    this.sendMessage(channel, "/w " + sender + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
+                    this.sendMessage(channel, "/w " + sender.getNick() + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
                 } else if (sender.getNick().equalsIgnoreCase(mpB.getPlayer2())) {
                     Pokemon p = mpB.player2.getPokemon(check);
-                    this.sendMessage(channel, "/w " + sender + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
+                    this.sendMessage(channel, "/w " + sender.getNick() + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
                 }
             }
             if (message.toLowerCase().startsWith("!help") && inMultiBattle && (sender.getNick().equalsIgnoreCase(mpB.getPlayer1()) || sender.getNick().equalsIgnoreCase(mpB.getPlayer2()))) {
-                this.sendMessage(channel, "/w " + sender + " Type !list to see a list of your Pokemon. Type !checkx where x is the number of the Pokemon from !list to see it's moves. Type !switchx where x is number of the Pokemon from !list to switch to a Pokemon.");
+                this.sendMessage(channel, "/w " + sender.getNick() + " Type !list to see a list of your Pokemon. Type !checkx where x is the number of the Pokemon from !list to see it's moves. Type !switchx where x is number of the Pokemon from !list to switch to a Pokemon.");
             }
         }
     }
@@ -199,14 +199,14 @@ public class BattleBot extends PircBot {
                 newClass = newClass.substring(0, 19);
             }
             if (newClass.isEmpty()) {
-                this.sendMessage(channel, "@" + sender + " Invalid Trainer Class FUNgineer");
+                this.sendMessage(channel, "@" + sender.getNick() + " Invalid Trainer Class FUNgineer");
                 return;
             }
             while (Character.isWhitespace(newClass.charAt(0))) {
                 newClass = newClass.substring(1);
             }
             if (newClass.toLowerCase().contains("gym leader") || newClass.toLowerCase().contains("leader") || newClass.toLowerCase().contains("champion") || newClass.toLowerCase().contains("elite four") || (newClass.toLowerCase().charAt(0) == '/' || newClass.toLowerCase().charAt(0) == '.' || !Character.isLetter(newClass.toLowerCase().charAt(0))) || containsBannedChar(newClass)) {
-                this.sendMessage(channel, "@" + sender + " Invalid Trainer Class FUNgineer");
+                this.sendMessage(channel, "@" + sender.getNick() + " Invalid Trainer Class FUNgineer");
                 return;
             }
             //if (Trainer.isValidTrainerClass(newClass)) {
@@ -224,7 +224,7 @@ public class BattleBot extends PircBot {
                 System.err.println("[ERROR] Error writing new classes file! " + ex);
                 return;
             }
-            this.sendMessage(channel, "@" + sender + " updated your Trainer Class to " + newClass + "!");
+            this.sendMessage(channel, "@" + sender.getNick() + " updated your Trainer Class to " + newClass + "!");
             //} else {
             // this.sendMessage(channel, "@" + sender + " Invalid Trainer Class. FUNgineer For a list of valid classes, go here: http://pastebin.com/raw.php?i=rhA55Dd0");
             //}
@@ -249,16 +249,16 @@ public class BattleBot extends PircBot {
                 if (sender.getNick().equalsIgnoreCase(mpB.getPlayer1())) {
                     try {
                         String pokemon = mpB.player1.getPokemonList();
-                        this.sendMessage(channel, "/w " + sender + " Your pokemon are: " + pokemon);
+                        this.sendMessage(channel, "/w " + sender.getNick() + " Your pokemon are: " + pokemon);
                     } catch (Exception ex) {
-                        this.sendMessage(channel, "/w " + sender + " You have no other Pokemon in your party!");
+                        this.sendMessage(channel, "/w " + sender.getNick() + " You have no other Pokemon in your party!");
                     }
                 } else if (sender.getNick().equalsIgnoreCase(mpB.getPlayer2())) {
                     try {
                         String pokemon = mpB.player2.getPokemonList();
-                        this.sendMessage(channel, "/w " + sender + " Your pokemon are: " + pokemon);
+                        this.sendMessage(channel, "/w " + sender.getNick() + " Your pokemon are: " + pokemon);
                     } catch (Exception ex) {
-                        this.sendMessage(channel, "/w " + sender + " You have no other Pokemon in your party!");
+                        this.sendMessage(channel, "/w " + sender.getNick() + " You have no other Pokemon in your party!");
                     }
                 }
                 return;
@@ -267,14 +267,14 @@ public class BattleBot extends PircBot {
                 int check = Integer.parseInt(message.charAt(6) + "");
                 if (sender.getNick().equalsIgnoreCase(mpB.getPlayer1())) {
                     Pokemon p = mpB.player1.getPokemon(check);
-                    this.sendMessage(channel, "/w " + sender + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
+                    this.sendMessage(channel, "/w " + sender.getNick() + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
                 } else if (sender.getNick().equalsIgnoreCase(mpB.getPlayer2())) {
                     Pokemon p = mpB.player2.getPokemon(check);
-                    this.sendMessage(channel, "/w " + sender + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
+                    this.sendMessage(channel, "/w " + sender.getNick() + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
                 }
             }
             if (message.toLowerCase().startsWith("!help") && inMultiBattle && (sender.getNick().equalsIgnoreCase(mpB.getPlayer1()) || sender.getNick().equalsIgnoreCase(mpB.getPlayer2()))) {
-                this.sendMessage(channel, "/w " + sender + " Type !list to see a list of your Pokemon. Type !checkx where x is the number of the Pokemon from !list to see it's moves. Type !switchx where x is number of the Pokemon from !list to switch to a Pokemon.");
+                this.sendMessage(channel, "/w " + sender.getNick() + " Type !list to see a list of your Pokemon. Type !checkx where x is the number of the Pokemon from !list to see it's moves. Type !switchx where x is number of the Pokemon from !list to switch to a Pokemon.");
             }
         }
         if (inSafariBattle && sB != null) {
@@ -349,7 +349,7 @@ public class BattleBot extends PircBot {
                         if (!isHere) {
                             BattleBot.sendAnInvite(target, "_keredau_1423645868201", oAuth);
                         }
-                        this.sendWhisper(channel, target, "You have been challenged to a Pokemon Battle by " + sender + "! To accept, go to the Battle Dungeon and type !accept. You have one minute.");
+                        this.sendWhisper(channel, target, "You have been challenged to a Pokemon Battle by " + sender.getNick() + "! To accept, go to the Battle Dungeon and type !accept. You have one minute.");
                         String player2 = player.poll(60, TimeUnit.SECONDS);
                         if (player2 == null) {
                             this.sendMessage(channel, target + " did not respond to the challenge BibleThump");
