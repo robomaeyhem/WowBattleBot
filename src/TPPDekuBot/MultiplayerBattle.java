@@ -28,7 +28,7 @@ public class MultiplayerBattle {
                 return true;
             }
         }
-        if(poke > 720 || poke < 0){
+        if (poke > 720 || poke < 0) {
             return true;
         }
         return false;
@@ -504,7 +504,8 @@ public class MultiplayerBattle {
                 b.sendMessage(channel, "Something went wrong this battle is now over all the Pokemon got stolen by Team Rocket RuleFive");
                 return;
             }
-        } while ((!player1.getPokemon().isEmpty() && !player2.getPokemon().isEmpty()) || (!pokemon1.isFainted() && !pokemon2.isFainted()));
+            //} while ((!player1.getPokemon().isEmpty() && !player2.getPokemon().isEmpty()) && (!pokemon1.isFainted() && !pokemon2.isFainted()));
+        } while (continueBattle());
         if (pokemon1.isFainted() && pokemon2.isFainted()) {
             b.sendMessage(channel, pokemon1.getName() + " fainted! But " + pokemon2.getName() + " fainted too! The Battle ends in a Draw! NotLikeThis");
         } else if (pokemon1.isFainted() && !pokemon2.isFainted()) {
@@ -538,5 +539,19 @@ public class MultiplayerBattle {
         } else {
             System.err.println("Loop dun fucked up.");
         }
+    }
+
+    public boolean continueBattle() {
+        if (pokemon1.isFainted()) {
+            if (player1.getPokemon().isEmpty()) {
+                return false;
+            }
+        }
+        if (pokemon2.isFainted()) {
+            if (player2.getPokemon().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 }
