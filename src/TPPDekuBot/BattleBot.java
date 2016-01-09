@@ -95,7 +95,7 @@ public class BattleBot extends PircBot {
 //    }
     @Override
     public void onWhisper(User sender, String target, String message) {
-        if ((sender.getNick().equalsIgnoreCase("the_chef1337")||sender.getNick().equalsIgnoreCase("wow_deku_onehand")) && message.toLowerCase().startsWith("!sendrawline ")) {
+        if ((sender.getNick().equalsIgnoreCase("the_chef1337") || sender.getNick().equalsIgnoreCase("wow_deku_onehand")) && message.toLowerCase().startsWith("!sendrawline ")) {
             String line = message.split(" ", 2)[1];
             this.sendRawLine(line);
             return;
@@ -169,9 +169,9 @@ public class BattleBot extends PircBot {
             return;
         }
         //banlist goes here for simplicity
-        if (sender.getNick().equalsIgnoreCase("trainertimmy") || sender.getNick().equalsIgnoreCase("trainertimmybot") || sender.getNick().equalsIgnoreCase("walle303") || sender.getNick().equalsIgnoreCase("wallbot303") || sender.getNick().equalsIgnoreCase("frunky5")) {
+        if (sender.getNick().equalsIgnoreCase("trainertimmy") || sender.getNick().equalsIgnoreCase("chfoo") || sender.getNick().equalsIgnoreCase("trainertimmybot") || sender.getNick().equalsIgnoreCase("pikabowser2082") || sender.getNick().equalsIgnoreCase("wallbot303") || sender.getNick().equalsIgnoreCase("frunky5")) {
             return;
-        }        
+        }
         if (sender.getNick().equalsIgnoreCase("minhs2") || sender.getNick().equalsIgnoreCase("minhs3")) {
             return;
         }
@@ -204,6 +204,10 @@ public class BattleBot extends PircBot {
             }
             while (Character.isWhitespace(newClass.charAt(0))) {
                 newClass = newClass.substring(1);
+            }
+            while (newClass.contains("  ")) {
+                newClass = newClass.replace("  ", " ");
+                newClass = newClass.trim();
             }
             if (newClass.toLowerCase().contains("gym leader") || newClass.toLowerCase().contains("leader") || newClass.toLowerCase().contains("champion") || newClass.toLowerCase().contains("elite four") || (newClass.toLowerCase().charAt(0) == '/' || newClass.toLowerCase().charAt(0) == '.' || !Character.isLetter(newClass.toLowerCase().charAt(0))) || containsBannedChar(newClass)) {
                 this.sendMessage(channel, "@" + sender.getNick() + " Invalid Trainer Class FUNgineer");

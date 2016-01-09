@@ -32,6 +32,7 @@ public class Pokemon implements Serializable {
     private Status status;
     private static final long serialVersionUID = -8670060699743627504L;
     private final Pokemon baseStatPokemon;
+    private final ArrayList<PokemonBaseStat> baseStat;
 
     /**
      * Returns a level 1 Pokemon with ID.
@@ -60,6 +61,15 @@ public class Pokemon implements Serializable {
         this.status = Status.NORMAL;
         sleepLeft = 0;
         this.experience = 1;
+        ArrayList<PokemonBaseStat> toLoad = null;
+        while (toLoad == null) {
+            try (FileInputStream f = new FileInputStream(BattleBot.BASE_PATH + "pokemonBaseStats.dat"); ObjectInputStream o = new ObjectInputStream(f)) {
+                toLoad = (ArrayList<PokemonBaseStat>) o.readObject();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        baseStat = toLoad;
     }
 
     public Pokemon(int id, int level) {
@@ -92,6 +102,15 @@ public class Pokemon implements Serializable {
         this.experience = 1;
         this.maxHP = hp;
         baseStatPokemon = this;
+        ArrayList<PokemonBaseStat> toLoad = null;
+        while (toLoad == null) {
+            try (FileInputStream f = new FileInputStream(BattleBot.BASE_PATH + "pokemonBaseStats.dat"); ObjectInputStream o = new ObjectInputStream(f)) {
+                toLoad = (ArrayList<PokemonBaseStat>) o.readObject();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        baseStat = toLoad;
     }
 
 //    public Pokemon(int id, String name, int hp, int attack, int defense, int spAttack, int spDefense, int speed, int exp, Type type1, Type type2) {
@@ -113,7 +132,6 @@ public class Pokemon implements Serializable {
 //        this.maxHP = hp;
 //        baseStatPokemon = this;
 //    }
-
     public void goToSleep() {
         this.status = Status.SLEEP;
         SecureRandom r = new SecureRandom();
@@ -171,9 +189,9 @@ public class Pokemon implements Serializable {
         this.level = ExpLevel.getLevel(experience);
         int newLevel = this.level;
         if (oldLevel != newLevel) {
-            this.attack = calculateStats(level,Stats.ATTACK);
-            this.defense = calculateStats(level,Stats.DEFENSE);
-            this.spAttack = calculateStats(level,Stats.SP_ATTACK);
+            this.attack = calculateStats(level, Stats.ATTACK);
+            this.defense = calculateStats(level, Stats.DEFENSE);
+            this.spAttack = calculateStats(level, Stats.SP_ATTACK);
             this.spDefense = calculateStats(level, Stats.SP_DEFENSE);
             this.speed = calculateStats(level, Stats.SPEED);
             int oldHP = calculateStats(oldLevel, Stats.HP);
@@ -994,9 +1012,9 @@ public class Pokemon implements Serializable {
     private int calculateStats(int level, Stats stat) {
         int iv = 31;
         int ev = 85;
-        int base = baseStatPokemon.getStat(stat);
+        int base = baseStat.get(this.id).getStat(stat);
         if (stat == Stats.HP) {
-            int result = (((iv + (2 * base) + (ev / 4)) * level) / 100) + 10;
+            int result = (((iv + (2 * base) + (ev / 4)) * level) / 100) + level + 10;
             return result;
         } else {
             int result = (((iv + (2 * base) + (ev / 4)) * level) / 100) + 5;

@@ -28,6 +28,9 @@ public class MultiplayerBattle {
                 return true;
             }
         }
+        if(poke > 720 || poke < 0){
+            return true;
+        }
         return false;
     }
 
