@@ -355,7 +355,7 @@ public class BattleBot extends PircBot {
                         if (!isHere) {
                             BattleBot.sendAnInvite(target, "_keredau_1423645868201", oAuth);
                         }
-                        this.sendWhisper(channel.getChannelName(), target, "You have been challenged to a Pokemon Battle by " + sender.getNick() + "! To accept, go to the Battle Dungeon and type !accept. You have one minute.");
+                        this.sendWhisper(target, "You have been challenged to a Pokemon Battle by " + sender.getNick() + "! To accept, go to the Battle Dungeon and type !accept. You have one minute.");
                         String player2 = player.poll(60, TimeUnit.SECONDS);
                         if (player2 == null) {
                             this.sendMessage(channel.getChannelName(), target + " did not respond to the challenge BibleThump");
