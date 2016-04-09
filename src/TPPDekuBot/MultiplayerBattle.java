@@ -122,7 +122,7 @@ public class MultiplayerBattle {
             }
             b.sendMessage(channel, "What Pokemon will " + player1.getTrainerName() + " switch to?");
         }
-        b.sendWhisper(channel, player1.getTrainerName(), "Type !list to get a list of your Pokemon. Type !switch<number> to switch to that Pokemon (for example, the if you want to switch to the first Pokemon, type !switch0 )");
+        b.sendWhisper(player1.getTrainerName(), "Type !list to get a list of your Pokemon. Type !switch<number> to switch to that Pokemon (for example, the if you want to switch to the first Pokemon, type !switch0 )");
         String p1move = "";
         int p1switchto = -1;
         try {
@@ -200,7 +200,7 @@ public class MultiplayerBattle {
             }
             b.sendMessage(channel, "What Pokemon will " + player2.getTrainerName() + " switch to?");
         }
-        b.sendWhisper(channel, player2.getTrainerName(), "Type !list to get a list of your Pokemon. Type !switch<number> to switch to that Pokemon (for example, the if you want to switch to the first Pokemon, type !switch0 )");
+        b.sendWhisper(player2.getTrainerName(), "Type !list to get a list of your Pokemon. Type !switch<number> to switch to that Pokemon (for example, the if you want to switch to the first Pokemon, type !switch0 )");
         String p2move = "";
         int p2switchto = -1;
         try {
@@ -277,8 +277,8 @@ public class MultiplayerBattle {
                     b.sendMessage(channel, toSend);
                 }
                 b.sendMessage(channel, "Waiting on communication...");
-                b.sendWhisper(channel, player1.getTrainerName(), "What will " + pokemon1.getName() + " do? (!move1)" + pokemon1.getMove1().getName() + ", (!move2)" + pokemon1.getMove2().getName() + ", (!move3)" + pokemon1.getMove3().getName() + ", (!move4)" + pokemon1.getMove4().getName() + " (!help)Additional Commands (reply in Battle Dungeon)");
-                b.sendWhisper(channel, player2.getTrainerName(), "What will " + pokemon2.getName() + " do? (!move1)" + pokemon2.getMove1().getName() + ", (!move2)" + pokemon2.getMove2().getName() + ", (!move3)" + pokemon2.getMove3().getName() + ", (!move4)" + pokemon2.getMove4().getName() + " (!help)Additional Commands (reply in Battle Dungeon)");
+                b.sendWhisper(player1.getTrainerName(), "What will " + pokemon1.getName() + " do? (!move1)" + pokemon1.getMove1().getName() + ", (!move2)" + pokemon1.getMove2().getName() + ", (!move3)" + pokemon1.getMove3().getName() + ", (!move4)" + pokemon1.getMove4().getName() + " (!help)Additional Commands (reply in Battle Dungeon)");
+                b.sendWhisper(player2.getTrainerName(), "What will " + pokemon2.getName() + " do? (!move1)" + pokemon2.getMove1().getName() + ", (!move2)" + pokemon2.getMove2().getName() + ", (!move3)" + pokemon2.getMove3().getName() + ", (!move4)" + pokemon2.getMove4().getName() + " (!help)Additional Commands (reply in Battle Dungeon)");
                 String p1move = "", p2move = "";
                 int p1switchto = -1;
                 int p2switchto = -1;
