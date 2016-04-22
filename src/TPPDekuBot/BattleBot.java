@@ -1,8 +1,11 @@
 package TPPDekuBot;
 
 import PircBot.*;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -12,9 +15,14 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.security.SecureRandom;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpResponse;
@@ -52,6 +60,12 @@ public class BattleBot extends PircBot {
     public SafariBattle sB = null;
     public static String BASE_PATH = "";
     public String oAuth;
+    private static DateFormat ISO_8601_DATE_TIME = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ");
+
+    static {
+        ISO_8601_DATE_TIME.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
+    private static File logFile = new File(BASE_PATH + "BattleBot_Log.log");
 
     public BattleBot(String BASE_PATH, String oAuth) {
         this.setName("Wow_BattleBot_OneHand");
@@ -60,6 +74,7 @@ public class BattleBot extends PircBot {
         personInBattle = "";
         lastMessage = "";
         this.BASE_PATH = BASE_PATH;
+        logFile = new File(BASE_PATH + "BattleBot_Log.log");
         this.oAuth = oAuth;
     }
 
@@ -72,13 +87,31 @@ public class BattleBot extends PircBot {
         return message;
     }
 
+    public static void append(String input) {
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        String outDate = ISO_8601_DATE_TIME.format(date);
+        try (BufferedWriter fw = new BufferedWriter(new FileWriter(logFile, true))) {
+            fw.append("["+outDate+"] " + input);
+            fw.newLine();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.err.println("Failed to write! " + ex);
+        }
+    }
+
     @Override
     public void onDisconnect() {
+        append("DISCONNECTED");
         System.err.println("Trying to reconnect...");
         try {
             this.reconnect();
+            append("RECONNECTED");
             this.joinChannel("#_keredau_1423645868201");
+            append("REJOIN BATTLE DUNGEON");
         } catch (Exception ex) {
+            append("RECONNECT FAIL");
             try {
                 Thread.sleep(10000);
             } catch (Exception ex2) {
@@ -94,7 +127,20 @@ public class BattleBot extends PircBot {
 //        }
 //    }
     @Override
+    public void sendMessage(String channel, String message) {
+        append(">>> MSG TO " + channel + ": " + message);
+        super.sendMessage(channel, message);
+    }
+
+    @Override
+    public void sendWhisper(String user, String message) {
+        append(">>>WHISPER TO " + user + ": " + message);
+        super.sendWhisper(user, message);
+    }
+
+    @Override
     public void onWhisper(User sender, String target, String message) {
+        append("WHISPER FROM " + sender.getNick() + ": " + message);
         if ((sender.getNick().equalsIgnoreCase("the_chef1337") || sender.getNick().equalsIgnoreCase("wow_deku_onehand")) && message.toLowerCase().startsWith("!sendrawline ")) {
             String line = message.split(" ", 2)[1];
             this.sendRawLine(line);
@@ -158,11 +204,13 @@ public class BattleBot extends PircBot {
 
     @Override
     public void onAction(User sender, Channel channel, String action) {
+        append("ACTION MSG " + sender.getNick() + ": " + action);
         onMessage(channel, sender, action);
     }
 
     @Override
     public void onMessage(Channel channel, User sender, String message) {
+        append(sender.getNick() + ": " + message);
         if (sender.getNick().equalsIgnoreCase("the_chef1337") && message.toLowerCase().startsWith("!sendrawline ")) {
             String line = message.split(" ", 2)[1];
             this.sendRawLine(line);
@@ -353,6 +401,7 @@ public class BattleBot extends PircBot {
                             }
                         }
                         if (!isHere) {
+                            append(sender.getNick() + " SENDING INVITE");
                             BattleBot.sendAnInvite(target, "_keredau_1423645868201", oAuth);
                         }
                         this.sendWhisper(target, "You have been challenged to a Pokemon Battle by " + sender.getNick() + "! To accept, go to the Battle Dungeon and type !accept. You have one minute.");
@@ -459,7 +508,18 @@ public class BattleBot extends PircBot {
         }
     }
 
+    @Override
+    public void onJoin(Channel channel, User sender) {
+        append(sender.getNick() + " JOIN " + channel.getChannelName());
+    }
+
+    @Override
+    public void onPart(Channel channel, User sender) {
+        append(sender.getNick() + " PART " + channel.getChannelName());
+    }
+
     public static void sendAnInvite(String name, String channel, String oAuth) {
+        append("INVITE SENT TO " + name + " TO " + channel);
         try {
             ArrayList<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair("irc_channel", channel));
