@@ -4,3 +4,4 @@
 *.wdu
 /src/TPPDekuBot/PokemonImporter.java
 nbproject/private/private.xml
+/src/TPPDekuBot/MoveImporter.java

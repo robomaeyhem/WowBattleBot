@@ -1,6 +1,8 @@
 package TPPDekuBot;
 
-public interface MoveEffect {
+import java.io.Serializable;
+
+public interface MoveEffect extends Serializable {
     void run(Pokemon user, Pokemon opponent);
 }
 

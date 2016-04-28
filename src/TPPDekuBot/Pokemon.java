@@ -400,8 +400,11 @@ public class Pokemon implements Serializable {
             toReturn += "\nCritical Hit!!";
         }
         rand = new SecureRandom();
-        if (rand.nextInt(move.getEffectChance()) == 0 && move.getEffect() != null) {
-            move.getEffect().run(this, opponent);
+        if (move.getEffectChance() != -1 && move.getEffect() != null) {
+            int chance = rand.nextInt(100) + 1;
+            if (chance <= move.getEffectChance() || move.getEffectChance() == 100) {
+                move.getEffect().run(this, opponent);
+            }
         }
         double randModifier = 0.85 + (1.0 - 0.85) * rand.nextDouble();
         double modifier = stab * effectiveness * critical * randModifier;
@@ -1068,7 +1071,7 @@ public class Pokemon implements Serializable {
         }
     }
 
-    private static HashMap<String, Move> reloadMoves() {
+    public static HashMap<String, Move> reloadMoves() {
         try (FileInputStream fileIn = new FileInputStream(BattleBot.BASE_PATH + "pokemonMoves.dat"); ObjectInputStream in = new ObjectInputStream(fileIn)) {
             HashMap<String, Move> pokemon = (HashMap<String, Move>) in.readObject();
             return pokemon;
