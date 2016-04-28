@@ -17,18 +17,23 @@ public /*abstract*/ class Move implements Serializable {
     private String name;
     private MoveCategory category;
     private Type type;
+    private MoveEffect effect;
     private int power;
     private int accuracy;
     private int pp;
+    private int effectChance;
     private static final long serialVersionUID = 8484288705595459692L;
 
-    public Move(String name, Type type, MoveCategory category, int power, int accuracy, int pp) {
+    public Move(String name, Type type, MoveCategory category, int power, int accuracy, int pp, MoveEffect effect, int effectChance) {
+        // Set effect to null for moves without effects
         this.name = name;
         this.type = type;
         this.category = category;
         this.power = power;
         this.accuracy = accuracy;
         this.pp = pp;
+        this.effect = effect;
+        this.effectChance = effectChance;
     }
 
     public static boolean isValidMove(String input) {
@@ -70,6 +75,14 @@ public /*abstract*/ class Move implements Serializable {
 
     public int getAccuracy() {
         return accuracy;
+    }
+
+    public int getEffectChance() {
+        return effectChance;
+    }
+
+    public MoveEffect getEffect() {
+        return effect;
     }
 
 //    public void doMove(Pokemon user, Pokemon opponent) {

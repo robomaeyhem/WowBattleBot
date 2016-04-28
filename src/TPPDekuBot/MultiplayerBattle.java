@@ -108,6 +108,11 @@ public class MultiplayerBattle {
         }
     }
 
+    private void doMove(BattleBot b, String channel, String move, Pokemon user, Pokemon opponent) {
+        int m = Integer.parseInt(move);
+        b.sendMessage(channel, user.attack(opponent, user.getMoveByNumber(m)).replace("\n", " "));
+    }
+
     private void switchPlayer1(BattleBot b, String channel) {
         if (pokemon2.getLevel() == 100) {
             b.sendMessage(channel, pokemon1.getName() + " fainted! What Pokemon will " + player1.getTrainerName() + " switch to?");
@@ -444,37 +449,52 @@ public class MultiplayerBattle {
                     continue;
                 }
                 //main battle
+                Pokemon first, second;
                 if (pokemon1.getStat(Stats.SPEED) > pokemon2.getStat(Stats.SPEED)) {
-                    doPlayer1Move(b, channel, p1move);
-                    if (!pokemon2.isFainted()) {
-                        doPlayer2Move(b, channel, p2move);
-                    } else {
-                        break singlebattle;
-                    }
+//                    doPlayer1Move(b, channel, p1move);
+//                    if (!pokemon2.isFainted()) {
+//                        doPlayer2Move(b, channel, p2move);
+//                    } else {
+//                        break singlebattle;
+//                    }
+                    first = pokemon1;
+                    second = pokemon2;
                 } else if (pokemon1.getStat(Stats.SPEED) < pokemon2.getStat(Stats.SPEED)) {
-                    doPlayer2Move(b, channel, p2move);
-                    if (!pokemon1.isFainted()) {
-                        doPlayer1Move(b, channel, p1move);
-                    } else {
-                        break singlebattle;
-                    }
+//                    doPlayer2Move(b, channel, p2move);
+//                    if (!pokemon1.isFainted()) {
+//                        doPlayer1Move(b, channel, p1move);
+//                    } else {
+//                        break singlebattle;
+//                    }
+                    first = pokemon2;
+                    second = pokemon1;
                 } else {
-                    boolean p1First = new SecureRandom().nextBoolean();
-                    if (p1First) {
-                        doPlayer1Move(b, channel, p1move);
-                        if (!pokemon2.isFainted()) {
-                            doPlayer2Move(b, channel, p2move);
-                        } else {
-                            break singlebattle;
-                        }
+                    if (new SecureRandom().nextBoolean()) {
+                        first = pokemon1;
+                        second = pokemon2;
                     } else {
-                        doPlayer2Move(b, channel, p2move);
-                        if (!pokemon1.isFainted()) {
-                            doPlayer1Move(b, channel, p1move);
-                        } else {
-                            break singlebattle;
-                        }
+                        first = pokemon2;
+                        second = pokemon1;
                     }
+//                    if (p1First) {
+//                        doPlayer1Move(b, channel, p1move);
+//                        if (!pokemon2.isFainted()) {
+//                            doPlayer2Move(b, channel, p2move);
+//                        } else {
+//                            break singlebattle;
+//                        }
+//                    } else {
+//                        doPlayer2Move(b, channel, p2move);
+//                        if (!pokemon1.isFainted()) {
+//                            doPlayer1Move(b, channel, p1move);
+//                        } else {
+//                            break singlebattle;
+//                        }
+//                    }
+                }
+                boolean braek = mainBattle(first, second, p1move, p2move, b, channel);
+                if (braek) {
+                    break singlebattle;
                 }
             }
             if (pokemon1.isFainted()) {
@@ -539,6 +559,22 @@ public class MultiplayerBattle {
         } else {
             System.err.println("Loop dun fucked up.");
         }
+    }
+
+    public boolean mainBattle(Pokemon p1, Pokemon p2, String move1, String move2, BattleBot b, String channel) {
+        boolean braek = false;
+        doMove(b, channel, move1, p1, p2);
+        if (p2.isFlinched()) {
+            b.sendMessage(channel, p2.getName()+" flinched!");
+            p2.setFlinch(false);
+            return braek;
+        }
+        if (!p2.isFainted()) {
+            doMove(b, channel, move2, p2, p1);
+        } else {
+            braek = true;
+        }
+        return braek;
     }
 
     public boolean continueBattle() {
