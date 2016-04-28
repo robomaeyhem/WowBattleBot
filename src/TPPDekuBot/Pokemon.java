@@ -29,6 +29,7 @@ public class Pokemon implements Serializable {
     private Move move1, move2, move3, move4;
     private Type type1, type2;
     private boolean fainted, confused, attracted;
+    private boolean flinched;
     private Status status;
     private static final long serialVersionUID = -8670060699743627504L;
     private final Pokemon baseStatPokemon;
@@ -178,6 +179,14 @@ public class Pokemon implements Serializable {
 
     public void setExperience(int experience) {
         this.experience = experience;
+    }
+
+    public void setFlinch(boolean flinch) {
+        this.flinched = flinch;
+    }
+
+    public boolean isFlinched() {
+        return this.flinched;
     }
 
     public void addExperience(int exp) {
@@ -391,6 +400,9 @@ public class Pokemon implements Serializable {
             toReturn += "\nCritical Hit!!";
         }
         rand = new SecureRandom();
+        if (rand.nextInt(move.getEffectChance()) == 0 && move.getEffect() != null) {
+            move.getEffect().run(this, opponent);
+        }
         double randModifier = 0.85 + (1.0 - 0.85) * rand.nextDouble();
         double modifier = stab * effectiveness * critical * randModifier;
         double damageBuf = 0.0;
@@ -806,6 +818,20 @@ public class Pokemon implements Serializable {
 
     public void setMove4(Move move4) {
         this.move4 = move4;
+    }
+
+    public Move getMoveByNumber(int move) {
+        switch (move) {
+            case 1:
+                return move1;
+            case 2:
+                return move2;
+            case 3:
+                return move3;
+            case 4:
+                return move4;
+        }
+        return null;
     }
 
     public int getId() {
