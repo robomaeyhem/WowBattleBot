@@ -450,6 +450,7 @@ public class MultiplayerBattle {
                 }
                 //main battle
                 Pokemon first, second;
+                String m1, m2;
                 if (pokemon1.getStat(Stats.SPEED) > pokemon2.getStat(Stats.SPEED)) {
 //                    doPlayer1Move(b, channel, p1move);
 //                    if (!pokemon2.isFainted()) {
@@ -458,7 +459,9 @@ public class MultiplayerBattle {
 //                        break singlebattle;
 //                    }
                     first = pokemon1;
+                    m1 = p1move;
                     second = pokemon2;
+                    m2 = p2move;
                 } else if (pokemon1.getStat(Stats.SPEED) < pokemon2.getStat(Stats.SPEED)) {
 //                    doPlayer2Move(b, channel, p2move);
 //                    if (!pokemon1.isFainted()) {
@@ -467,14 +470,20 @@ public class MultiplayerBattle {
 //                        break singlebattle;
 //                    }
                     first = pokemon2;
+                    m1 = p2move;
                     second = pokemon1;
+                    m2 = p1move;
                 } else {
                     if (new SecureRandom().nextBoolean()) {
                         first = pokemon1;
+                        m1 = p1move;
                         second = pokemon2;
+                        m2 = p2move;
                     } else {
                         first = pokemon2;
+                        m1 = p2move;
                         second = pokemon1;
+                        m2 = p1move;
                     }
 //                    if (p1First) {
 //                        doPlayer1Move(b, channel, p1move);
@@ -492,7 +501,7 @@ public class MultiplayerBattle {
 //                        }
 //                    }
                 }
-                boolean braek = mainBattle(first, second, p1move, p2move, b, channel);
+                boolean braek = mainBattle(first, second, m1, m2, b, channel);
                 if (braek) {
                     break singlebattle;
                 }
