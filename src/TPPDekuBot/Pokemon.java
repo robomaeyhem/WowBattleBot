@@ -186,6 +186,9 @@ public class Pokemon implements Serializable {
     }
 
     public boolean isFlinched() {
+        if (this.isFainted()) {
+            return false;
+        }
         return this.flinched;
     }
 
