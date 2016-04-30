@@ -107,13 +107,15 @@ public class PokemonBattle {
             computer.setMove3(moves.get("Petal-dance"));
             computer.setMove4(moves.get("Echoed-voice"));
         }
-        b.sendMessage(channel, "A wild " + computer.getName() + " (level " + level2 + ") appeared! Go " + user.getName() + "! (Level " + level1 + ")");
+        b.sendMessage(channel, "A wild " + computer.getName() + " (level " + (bigBrother&&!fromChef ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙":level2) + ") appeared! Go " + user.getName() + "! (Level " + (bigBrother&&fromChef&&user.getName().equalsIgnoreCase("Magikarp")&&user.getMove1().getName().equalsIgnoreCase("Shadow-force") ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙":level1) + ")");
         System.err.println("User moves = " + user.getMove1().getName() + ", " + user.getMove2().getName() + ", " + user.getMove3().getName() + ", " + user.getMove4().getName() + ", ");
         System.err.println("Computer moves = " + computer.getMove1().getName() + ", " + computer.getMove2().getName() + ", " + computer.getMove3().getName() + ", " + computer.getMove4().getName() + ", ");
         try {
             while (!user.isFainted() && !computer.isFainted()) {
                 BattleBot.pokemonMessages = new LinkedBlockingQueue<>();
                 b.sendMessage(channel, "What will " + user.getName() + " do? (!move1)" + user.getMove1().getName() + ", (!move2)" + user.getMove2().getName() + ", (!move3)" + user.getMove3().getName() + ", (!move4)" + user.getMove4().getName());
+                user.setFlinch(false);
+                computer.setFlinch(false);
                 if (user.getStat(Stats.SPEED) > computer.getStat(Stats.SPEED)) {
                     String move = BattleBot.pokemonMessages.poll(60, TimeUnit.SECONDS);
                     if (move == null) {
@@ -125,11 +127,13 @@ public class PokemonBattle {
                         return;
                     }
                     doUsersMove(user, computer, move);
-                    if (computer.isFlinched()) {
-                        b.sendMessage(channel, computer.getName() + " flinched!");
-                        computer.setFlinch(false);
-                    } else if (!computer.isFainted() && !user.isFainted()) {
-                        doComputerMove(user, computer);
+                    if (!computer.isFainted()) {
+                        if (computer.isFlinched()) {
+                            b.sendMessage(channel, computer.getName() + " flinched!");
+                            computer.setFlinch(false);
+                        } else {
+                            doComputerMove(user, computer);
+                        }
                     }
                 } else if (user.getStat(Stats.SPEED) < computer.getStat(Stats.SPEED)) {
                     String move = BattleBot.pokemonMessages.poll(60, TimeUnit.SECONDS);
@@ -138,15 +142,17 @@ public class PokemonBattle {
                         return;
                     }
                     doComputerMove(user, computer);
-                    if (user.isFlinched()) {
-                        b.sendMessage(channel, user.getName() + " flinched!");
-                        user.setFlinch(false);
-                    } else if (!user.isFainted()) {
-                        if (move.equalsIgnoreCase("run")) {
-                            b.sendMessage(channel, "You got away safely!");
-                            return;
+                    if (!user.isFainted()) {
+                        if (user.isFlinched()) {
+                            b.sendMessage(channel, user.getName() + " flinched!");
+                            user.setFlinch(false);
+                        } else {
+                            if (move.equalsIgnoreCase("run")) {
+                                b.sendMessage(channel, "You got away safely!");
+                                return;
+                            }
+                            doUsersMove(user, computer, move);
                         }
-                        doUsersMove(user, computer, move);
                     }
                 } else {
                     rand = new SecureRandom();
@@ -162,11 +168,13 @@ public class PokemonBattle {
                             return;
                         }
                         doUsersMove(user, computer, move);
-                        if (computer.isFlinched()) {
-                            b.sendMessage(channel, computer.getName() + " flinched!");
-                            computer.setFlinch(false);
-                        } else if (!computer.isFainted()) {
-                            doComputerMove(user, computer);
+                        if (!computer.isFainted()) {
+                            if (computer.isFlinched()) {
+                                b.sendMessage(channel, computer.getName() + " flinched!");
+                                computer.setFlinch(false);
+                            } else {
+                                doComputerMove(user, computer);
+                            }
                         }
                     } else {
                         String move = BattleBot.pokemonMessages.poll(60, TimeUnit.SECONDS);
@@ -175,15 +183,17 @@ public class PokemonBattle {
                             return;
                         }
                         doComputerMove(user, computer);
-                        if (user.isFlinched()) {
-                            b.sendMessage(channel, user.getName() + " flinched!");
-                            user.setFlinch(false);
-                        } else if (!user.isFainted()) {
-                            if (move.equalsIgnoreCase("run")) {
-                                b.sendMessage(channel, "You got away safely!");
-                                return;
+                        if (!user.isFainted()) {
+                            if (user.isFlinched()) {
+                                b.sendMessage(channel, user.getName() + " flinched!");
+                                user.setFlinch(false);
+                            } else {
+                                if (move.equalsIgnoreCase("run")) {
+                                    b.sendMessage(channel, "You got away safely!");
+                                    return;
+                                }
+                                doUsersMove(user, computer, move);
                             }
-                            doUsersMove(user, computer, move);
                         }
                     }
                 }

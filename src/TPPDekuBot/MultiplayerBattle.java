@@ -284,6 +284,8 @@ public class MultiplayerBattle {
                 b.sendMessage(channel, "Waiting on communication...");
                 b.sendWhisper(player1.getTrainerName(), "What will " + pokemon1.getName() + " do? (!move1)" + pokemon1.getMove1().getName() + ", (!move2)" + pokemon1.getMove2().getName() + ", (!move3)" + pokemon1.getMove3().getName() + ", (!move4)" + pokemon1.getMove4().getName() + " (!help)Additional Commands (reply in Battle Dungeon)");
                 b.sendWhisper(player2.getTrainerName(), "What will " + pokemon2.getName() + " do? (!move1)" + pokemon2.getMove1().getName() + ", (!move2)" + pokemon2.getMove2().getName() + ", (!move3)" + pokemon2.getMove3().getName() + ", (!move4)" + pokemon2.getMove4().getName() + " (!help)Additional Commands (reply in Battle Dungeon)");
+                pokemon1.setFlinch(false);
+                pokemon2.setFlinch(false);
                 String p1move = "", p2move = "";
                 int p1switchto = -1;
                 int p2switchto = -1;
