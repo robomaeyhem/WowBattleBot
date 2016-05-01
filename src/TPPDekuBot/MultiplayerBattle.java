@@ -184,7 +184,7 @@ public class MultiplayerBattle {
             p1msg = new LinkedBlockingQueue<>();
             this.pokemon1 = player1.getPokemon(p1switchto);
             player1.removePokemon(p1switchto);
-            b.sendMessage(channel, this.player1 + " sends out " + this.pokemon1.getName() + "!");
+            b.sendMessage(channel, this.player1 + " sends out " + this.pokemon1.getName() + " (level " + this.pokemon1.getLevel() + ")!");
 
         } catch (Exception ex) {
             System.err.println("[WARNING] Failed to Switch pokemon! " + ex);
@@ -262,7 +262,7 @@ public class MultiplayerBattle {
             p2msg = new LinkedBlockingQueue<>();
             this.pokemon2 = player2.getPokemon(p2switchto);
             player2.removePokemon(p2switchto);
-            b.sendMessage(channel, this.player2 + " sends out " + this.pokemon2.getName() + "!");
+            b.sendMessage(channel, this.player2 + " sends out " + this.pokemon2.getName() + " (level " + this.pokemon2.getLevel() + ")!");
         } catch (Exception ex) {
             System.err.println("[WARNING] Failed to Switch pokemon! " + ex);
             endBattle = true;
@@ -281,6 +281,9 @@ public class MultiplayerBattle {
                 if (player1.getPokemon().isEmpty() && player2.getPokemon().isEmpty() && !hasSent && numberOfMon > 1) {
                     hasSent = true;
                     String toSend = (new SecureRandom().nextBoolean()) ? "PRChase The battle has reached it's final stage! And the tension is peaking ThunBeast" : "PRChase The Last Pokemon from Each Team takes the field. Will the Outcome of the battle be decided in the next turn? ThunBeast";
+                    b.sendMessage(channel, toSend);
+                }
+                if (numberOfMon > 1) {
                     if ((player1.getTrnClass().equalsIgnoreCase("Gym Leader") && player1.getPokemon().isEmpty()) || (player2.getTrnClass().equalsIgnoreCase("Gym Leader") && player2.getPokemon().isEmpty())) {
                         String nowPlaying = b.music.getNowPlaying();
                         if (nowPlaying.contains("gen5-bw-gym")) {
@@ -292,7 +295,6 @@ public class MultiplayerBattle {
                             b.music.play(new File(b.ROOT_PATH + "gen5-b2w2-gym-final.mp3"));
                         }
                     }
-                    b.sendMessage(channel, toSend);
                 }
                 b.sendMessage(channel, "Waiting on communication...");
                 b.sendWhisper(player1.getTrainerName(), "What will " + pokemon1.getName() + " do? (!move1)" + pokemon1.getMove1().getName() + ", (!move2)" + pokemon1.getMove2().getName() + ", (!move3)" + pokemon1.getMove3().getName() + ", (!move4)" + pokemon1.getMove4().getName() + " (!help)Additional Commands (reply in Battle Dungeon)");
