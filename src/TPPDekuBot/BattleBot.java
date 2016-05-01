@@ -682,7 +682,7 @@ public class BattleBot extends PircBot {
             case "raikou":
                 toReturn = new File(ROOT_PATH + "gen4-hgss-raikou.mp3");
                 break;
-            case "kyruem":
+            case "kyurem":
                 toReturn = new File(ROOT_PATH + "gen5-bw-kyurem.mp3");
                 break;
             case "zekrom":
