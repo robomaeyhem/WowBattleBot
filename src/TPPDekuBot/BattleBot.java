@@ -248,7 +248,7 @@ public class BattleBot extends PircBot {
             } catch (Exception ex) {
             }
         }
-        if ((message.toLowerCase().startsWith("!changeclass ") || message.toLowerCase().startsWith("!selectclass ")) && !inMultiBattle) {
+        if ((message.toLowerCase().startsWith("!changeclass ") || message.toLowerCase().startsWith("!switchclass ")) && !inMultiBattle) {
             if (isForcedClass(sender.getNick())) {
                 this.sendMessage(channel, "@" + sender.getNick() + " You cannot change your Trainer Class.");
                 return;
@@ -459,7 +459,7 @@ public class BattleBot extends PircBot {
             inSafariBattle = true;
             Thread t = new Thread(() -> {
                 int level = new SecureRandom().nextInt(100 - 20 + 1) + 20;
-                int id = 150;
+                int id = 494;
                 System.err.println("Attempting Pokemon ID " + id + " level " + level);
                 sB = new SafariBattle(sender.getNick(), new Pokemon(id, level));
                 sB.doBattle(this, channel.getChannelName());
@@ -631,6 +631,12 @@ public class BattleBot extends PircBot {
         return false;
     }
 
+    /**
+     * Determines the music to play for Single Player battles.
+     *
+     * @param opponent Computer opponent
+     * @return File containing the music to play
+     */
     public File determineMusic(Pokemon opponent) {
         String name = opponent.getName();
         int id = opponent.getId();
@@ -682,7 +688,7 @@ public class BattleBot extends PircBot {
             case "raikou":
                 toReturn = new File(ROOT_PATH + "gen4-hgss-raikou.mp3");
                 break;
-            case "kyruem":
+            case "kyurem":
                 toReturn = new File(ROOT_PATH + "gen5-bw-kyurem.mp3");
                 break;
             case "zekrom":
@@ -713,9 +719,26 @@ public class BattleBot extends PircBot {
         return toReturn;
     }
 
+    /**
+     * Determines the music to play for Multiplayer battles.
+     *
+     * @param firstClass Trainer Class of the First Player (typically the
+     * Challenger)
+     * @param secondClass Trainer Class of the Second Player (typically the
+     * player being Challenged)
+     * @param firstUsername Username of the First Player (typically the
+     * Challenger)
+     * @param secondUsername Username of the Second Player (typically the player
+     * being Challenged)
+     * @return File containing the music to play
+     */
     public File determineMusic(String firstClass, String secondClass, String firstUsername, String secondUsername) {
         File toReturn = null;
-        if (firstClass.equalsIgnoreCase("Champion") || secondClass.equalsIgnoreCase("Champion")) {
+        if (firstClass.equalsIgnoreCase("World Champion") || secondClass.equalsIgnoreCase("World Champion")) {
+            toReturn = new SecureRandom().nextBoolean() ? new File(ROOT_PATH + "gen5-bw-worldchamp.mp3") : new File(ROOT_PATH + "gen6-xy-worldchamp.mp3");
+        } else if (firstUsername.equalsIgnoreCase("Cynthia") || secondUsername.equalsIgnoreCase("Cynthia")) {
+            toReturn = new SecureRandom().nextBoolean() ? new File(ROOT_PATH + "gen4-dppt-champion.mp3") : new File(ROOT_PATH + "gen5-bw-cynthia.mp3");
+        } else if (firstClass.equalsIgnoreCase("Champion") || secondClass.equalsIgnoreCase("Champion")) {
             File[] list = {new File(ROOT_PATH + "gen4-dppt-champion.mp3"), new File(ROOT_PATH + "gen4-hgss-champion.mp3"), new File(ROOT_PATH + "gen5-bw-champion.mp3"), new File(ROOT_PATH + "gen6-oras-champion.mp3")};
             toReturn = list[new SecureRandom().nextInt(list.length)];
         } else if (firstClass.equalsIgnoreCase("Elite Four") || secondClass.equalsIgnoreCase("Elite Four")) {
@@ -724,8 +747,6 @@ public class BattleBot extends PircBot {
         } else if (firstClass.equalsIgnoreCase("Gym Leader") || secondClass.equalsIgnoreCase("Gym Leader")) {
             File[] list = {new File(ROOT_PATH + "gen4-dppt-gym.mp3"), new File(ROOT_PATH + "gen4-hgss-gym-johto.mp3"), new File(ROOT_PATH + "gen4-hgss-gym-kanto.mp3"), new File(ROOT_PATH + "gen5-bw-gym.mp3"), new File(ROOT_PATH + "gen5-b2w2-gym.mp3"), new File(ROOT_PATH + "gen6-xy-gym.mp3"), new File(ROOT_PATH + "gen6-oras-gym.mp3")};
             toReturn = list[new SecureRandom().nextInt(list.length)];
-        } else if (firstUsername.equalsIgnoreCase("Cynthia") || secondUsername.equalsIgnoreCase("Cynthia")) {
-            toReturn = new SecureRandom().nextBoolean() ? new File(ROOT_PATH + "gen4-dppt-champion.mp3") : new File(ROOT_PATH + "gen5-bw-cynthia.mp3");
         } else if (firstClass.toLowerCase().contains("magma") || secondClass.toLowerCase().contains("magma") || firstClass.toLowerCase().contains("aqua") || secondClass.toLowerCase().contains("aqua")) {
             if (firstClass.toLowerCase().contains("boss") || secondClass.toLowerCase().contains("boss")) {
                 toReturn = new File(ROOT_PATH + "gen6-oras-trainer-team-boss.mp3");
@@ -740,12 +761,10 @@ public class BattleBot extends PircBot {
             if (firstClass.toLowerCase().contains("boss") || secondClass.toLowerCase().contains("boss")) {
                 toReturn = new File(ROOT_PATH + "gen4-dppt-trainer-team-boss.mp3");
             } else if (firstClass.toLowerCase().contains("commander") || secondClass.toLowerCase().contains("commander")) {
-                toReturn = new File(ROOT_PATH + "gen4-dppt-trainer-team-boss-commander.mp3");
+                toReturn = new File(ROOT_PATH + "gen4-dppt-trainer-team-commander.mp3");
             } else {
                 toReturn = new File(ROOT_PATH + "gen4-dppt-trainer-team.mp3");
             }
-        } else if (firstClass.equalsIgnoreCase("World Champion") || secondClass.equalsIgnoreCase("World Champion")) {
-            toReturn = new SecureRandom().nextBoolean() ? new File(ROOT_PATH + "gen5-bw-worldchamp.mp3") : new File(ROOT_PATH + "gen6-xy-worldchamp.mp3");
         } else {
             File[] list = {new File(ROOT_PATH + "gen4-dppt-trainer.mp3"), new File(ROOT_PATH + "gen4-hgss-trainer-johto.mp3"), new File(ROOT_PATH + "gen4-hgss-trainer-kanto.mp3"), new File(ROOT_PATH + "gen5-bw-trainer.mp3"), new File(ROOT_PATH + "gen5-b2w2-trainer.mp3"), new File(ROOT_PATH + "gen5-b2w2-trainer-hoenn.mp3"), new File(ROOT_PATH + "gen5-bw-trainer-subway.mp3"), new File(ROOT_PATH + "gen6-oras-trainer.mp3")};
             toReturn = list[new SecureRandom().nextInt(list.length)];

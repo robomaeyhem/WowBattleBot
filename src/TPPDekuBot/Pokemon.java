@@ -82,6 +82,7 @@ public class Pokemon implements Serializable {
         this.spDefense = calculateStats(level, Stats.SP_DEFENSE);
         this.speed = calculateStats(level, Stats.SPEED);
         this.hp = calculateStats(level, Stats.HP);
+        this.experience = ExpLevel.getExp(level);
         this.maxHP = this.hp;
     }
 
