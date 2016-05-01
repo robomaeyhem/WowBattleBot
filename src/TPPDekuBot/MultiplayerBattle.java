@@ -1,5 +1,6 @@
 package TPPDekuBot;
 
+import java.io.File;
 import java.security.SecureRandom;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -271,6 +272,7 @@ public class MultiplayerBattle {
 
     public void doBattle(BattleBot b, String channel) {
         boolean hasSent = false;
+        b.music.play(b.determineMusic(player1.getTrnClass(), player2.getTrnClass(), player1.getTrainerName(), player2.getTrainerName()));
         b.sendMessage(channel, player1 + " is issuing a challenge against " + player2 + "!");
         b.sendMessage(channel, player1.getTrainerName() + " sends out " + pokemon1.getName() + " (Level " + pokemon1.getLevel() + ")! " + player2.getTrainerName() + " sends out " + pokemon2.getName() + " (Level " + pokemon2.getLevel() + ")!");
         do {
@@ -279,6 +281,17 @@ public class MultiplayerBattle {
                 if (player1.getPokemon().isEmpty() && player2.getPokemon().isEmpty() && !hasSent && numberOfMon > 1) {
                     hasSent = true;
                     String toSend = (new SecureRandom().nextBoolean()) ? "PRChase The battle has reached it's final stage! And the tension is peaking ThunBeast" : "PRChase The Last Pokemon from Each Team takes the field. Will the Outcome of the battle be decided in the next turn? ThunBeast";
+                    if ((player1.getTrnClass().equalsIgnoreCase("Gym Leader") && player1.getPokemon().isEmpty()) || (player2.getTrnClass().equalsIgnoreCase("Gym Leader") && player2.getPokemon().isEmpty())) {
+                        String nowPlaying = b.music.getNowPlaying();
+                        if (nowPlaying.contains("gen5-bw-gym")) {
+                            b.music.clear();
+                            b.music.play(new File(b.ROOT_PATH + "gen5-bw-gym-final.mp3"));
+                        }
+                        if (nowPlaying.contains("gen5-b2w2-gym")) {
+                            b.music.clear();
+                            b.music.play(new File(b.ROOT_PATH + "gen5-b2w2-gym-final.mp3"));
+                        }
+                    }
                     b.sendMessage(channel, toSend);
                 }
                 b.sendMessage(channel, "Waiting on communication...");
@@ -293,6 +306,7 @@ public class MultiplayerBattle {
                     p1move = p1msg.poll(60, TimeUnit.SECONDS);
                     if (p1move == null) {
                         b.sendMessage(channel, player1.getTrainerName() + " did not select a move in time. " + player2.getTrainerName() + " wins!");
+                        b.music.clear();
                         return;
                     }
                     if (p1move.startsWith("!switch") && p1move.length() >= 8) {
@@ -343,6 +357,7 @@ public class MultiplayerBattle {
                     p2move = p2msg.poll(60, TimeUnit.SECONDS);
                     if (p2move == null) {
                         b.sendMessage(channel, player2.getTrainerName() + " did not select a move in time. " + player1.getTrainerName() + " wins!");
+                        b.music.clear();
                         return;
                     }
                     if (p2move.startsWith("!switch") && p2move.length() >= 8) {
@@ -395,14 +410,17 @@ public class MultiplayerBattle {
                 }
                 if (p1move.startsWith("!run") && !p2move.startsWith("!run")) {
                     b.sendMessage(channel, player1.getTrainerName() + " forfeits! " + player2.getTrainerName() + " wins!");
+                    b.music.clear();
                     return;
                 }
                 if (p2move.startsWith("!run") && !p1move.startsWith("!run")) {
                     b.sendMessage(channel, player2.getTrainerName() + " forfeits! " + player1.getTrainerName() + " wins!");
+                    b.music.clear();
                     return;
                 }
                 if (p1move.startsWith("!run") && p2move.startsWith("!run")) {
                     b.sendMessage(channel, player1.getTrainerName() + " forfeits! " + player2.getTrainerName() + " forfeits as well! The result of the Battle is a Draw! PipeHype");
+                    b.music.clear();
                     return;
                 }
                 if (Character.isDigit(p1move.charAt(5))) {
@@ -475,34 +493,31 @@ public class MultiplayerBattle {
                     m1 = p2move;
                     second = pokemon1;
                     m2 = p1move;
+                } else if (new SecureRandom().nextBoolean()) {
+                    first = pokemon1;
+                    m1 = p1move;
+                    second = pokemon2;
+                    m2 = p2move;
                 } else {
-                    if (new SecureRandom().nextBoolean()) {
-                        first = pokemon1;
-                        m1 = p1move;
-                        second = pokemon2;
-                        m2 = p2move;
-                    } else {
-                        first = pokemon2;
-                        m1 = p2move;
-                        second = pokemon1;
-                        m2 = p1move;
-                    }
-//                    if (p1First) {
-//                        doPlayer1Move(b, channel, p1move);
-//                        if (!pokemon2.isFainted()) {
-//                            doPlayer2Move(b, channel, p2move);
-//                        } else {
-//                            break singlebattle;
-//                        }
-//                    } else {
-//                        doPlayer2Move(b, channel, p2move);
-//                        if (!pokemon1.isFainted()) {
-//                            doPlayer1Move(b, channel, p1move);
-//                        } else {
-//                            break singlebattle;
-//                        }
-//                    }
-                }
+                    first = pokemon2;
+                    m1 = p2move;
+                    second = pokemon1;
+                    m2 = p1move;
+                } //                    if (p1First) {
+                //                        doPlayer1Move(b, channel, p1move);
+                //                        if (!pokemon2.isFainted()) {
+                //                            doPlayer2Move(b, channel, p2move);
+                //                        } else {
+                //                            break singlebattle;
+                //                        }
+                //                    } else {
+                //                        doPlayer2Move(b, channel, p2move);
+                //                        if (!pokemon1.isFainted()) {
+                //                            doPlayer1Move(b, channel, p1move);
+                //                        } else {
+                //                            break singlebattle;
+                //                        }
+                //                    }
                 boolean braek = mainBattle(first, second, m1, m2, b, channel);
                 if (braek) {
                     break singlebattle;
@@ -515,6 +530,7 @@ public class MultiplayerBattle {
                     switchPlayer1(b, channel);
                     if (endBattle) {
                         b.sendMessage(channel, "Something went wrong this battle is now over all the Pokemon got stolen by Team Rocket RuleFive");
+                        b.music.clear();
                         return;
                     }
                     continue;
@@ -526,6 +542,7 @@ public class MultiplayerBattle {
                     switchPlayer2(b, channel);
                     if (endBattle) {
                         b.sendMessage(channel, "Something went wrong this battle is now over all the Pokemon got stolen by Team Rocket RuleFive");
+                        b.music.clear();
                         return;
                     }
                     continue;
@@ -533,6 +550,7 @@ public class MultiplayerBattle {
             }
             if (endBattle) {
                 b.sendMessage(channel, "Something went wrong this battle is now over all the Pokemon got stolen by Team Rocket RuleFive");
+                b.music.clear();
                 return;
             }
             //} while ((!player1.getPokemon().isEmpty() && !player2.getPokemon().isEmpty()) && (!pokemon1.isFainted() && !pokemon2.isFainted()));
@@ -570,13 +588,14 @@ public class MultiplayerBattle {
         } else {
             System.err.println("Loop dun fucked up.");
         }
+        b.music.clear();
     }
 
     public boolean mainBattle(Pokemon p1, Pokemon p2, String move1, String move2, BattleBot b, String channel) {
         boolean braek = false;
         doMove(b, channel, move1, p1, p2);
         if (p2.isFlinched()) {
-            b.sendMessage(channel, p2.getName()+" flinched!");
+            b.sendMessage(channel, p2.getName() + " flinched!");
             p2.setFlinch(false);
             return braek;
         }

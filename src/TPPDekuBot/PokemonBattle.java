@@ -107,7 +107,8 @@ public class PokemonBattle {
             computer.setMove3(moves.get("Petal-dance"));
             computer.setMove4(moves.get("Echoed-voice"));
         }
-        b.sendMessage(channel, "A wild " + computer.getName() + " (level " + (bigBrother&&!fromChef ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙":level2) + ") appeared! Go " + user.getName() + "! (Level " + (bigBrother&&fromChef&&user.getName().equalsIgnoreCase("Magikarp")&&user.getMove1().getName().equalsIgnoreCase("Shadow-force") ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙":level1) + ")");
+        b.music.play(b.determineMusic(computer));
+        b.sendMessage(channel, "A wild " + computer.getName() + " (level " + (bigBrother && !fromChef ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙" : level2) + ") appeared! Go " + user.getName() + "! (Level " + (bigBrother && fromChef && user.getName().equalsIgnoreCase("Magikarp") && user.getMove1().getName().equalsIgnoreCase("Shadow-force") ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙" : level1) + ")");
         System.err.println("User moves = " + user.getMove1().getName() + ", " + user.getMove2().getName() + ", " + user.getMove3().getName() + ", " + user.getMove4().getName() + ", ");
         System.err.println("Computer moves = " + computer.getMove1().getName() + ", " + computer.getMove2().getName() + ", " + computer.getMove3().getName() + ", " + computer.getMove4().getName() + ", ");
         try {
@@ -120,10 +121,12 @@ public class PokemonBattle {
                     String move = BattleBot.pokemonMessages.poll(60, TimeUnit.SECONDS);
                     if (move == null) {
                         b.sendMessage(channel, player + " did not select a move in time and got their Pokemon stolen by Team Rocket! RuleFive");
+                        b.music.clear();
                         return;
                     }
                     if (move.equalsIgnoreCase("run")) {
                         b.sendMessage(channel, "You got away safely!");
+                        b.music.clear();
                         return;
                     }
                     doUsersMove(user, computer, move);
@@ -139,6 +142,7 @@ public class PokemonBattle {
                     String move = BattleBot.pokemonMessages.poll(60, TimeUnit.SECONDS);
                     if (move == null) {
                         b.sendMessage(channel, player + " did not select a move in time and got their Pokemon stolen by Team Rocket! RuleFive");
+                        b.music.clear();
                         return;
                     }
                     doComputerMove(user, computer);
@@ -149,6 +153,7 @@ public class PokemonBattle {
                         } else {
                             if (move.equalsIgnoreCase("run")) {
                                 b.sendMessage(channel, "You got away safely!");
+                                b.music.clear();
                                 return;
                             }
                             doUsersMove(user, computer, move);
@@ -161,10 +166,12 @@ public class PokemonBattle {
                         String move = BattleBot.pokemonMessages.poll(60, TimeUnit.SECONDS);
                         if (move == null) {
                             b.sendMessage(channel, player + " did not select a move in time and got their Pokemon stolen by Team Rocket! RuleFive");
+                            b.music.clear();
                             return;
                         }
                         if (move.equalsIgnoreCase("run")) {
                             b.sendMessage(channel, "You got away safely!");
+                            b.music.clear();
                             return;
                         }
                         doUsersMove(user, computer, move);
@@ -180,6 +187,7 @@ public class PokemonBattle {
                         String move = BattleBot.pokemonMessages.poll(60, TimeUnit.SECONDS);
                         if (move == null) {
                             b.sendMessage(channel, player + " did not select a move in time and got their Pokemon stolen by Team Rocket! RuleFive");
+                            b.music.clear();
                             return;
                         }
                         doComputerMove(user, computer);
@@ -190,6 +198,7 @@ public class PokemonBattle {
                             } else {
                                 if (move.equalsIgnoreCase("run")) {
                                     b.sendMessage(channel, "You got away safely!");
+                                    b.music.clear();
                                     return;
                                 }
                                 doUsersMove(user, computer, move);
@@ -217,6 +226,7 @@ public class PokemonBattle {
 
         }
         b.inPokemonBattle = false;
+        b.music.clear();
     }
 
     private void doComputerMove(Pokemon user, Pokemon computer) {

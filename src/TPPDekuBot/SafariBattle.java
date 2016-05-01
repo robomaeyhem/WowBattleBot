@@ -38,6 +38,7 @@ public class SafariBattle {
     }
 
     public void doBattle(BattleBot b, String channel) {
+        b.music.play(b.determineMusic(wild));
         b.sendMessage(channel, "A Wild " + wild.getName() + " (Level " + wild.getLevel() + ") Appeared!");
         recalcCatch();
         boolean caught = false;
@@ -50,6 +51,7 @@ public class SafariBattle {
                 String move = msg.poll(60, TimeUnit.SECONDS);
                 if (move == null) {
                     b.sendMessage(channel, user.getTrainerName() + " did not select an action in time, the Pokemon was stolen by Team Flare WutFace");
+                    b.music.clear();
                     end = true;
                     return;
                 }
@@ -90,11 +92,13 @@ public class SafariBattle {
                         continue;
                     }
                     b.sendMessage(channel, "Awright! " + wild.getName() + " was caught! Kreygasm");
+                    b.music.clear();
                     caught = true;
                     return;
 
                 } else if (move.startsWith("!run")) {
                     b.sendMessage(channel, "You got away safely!");
+                    b.music.clear();
                     lastTurn = "run";
                     return;
                 }
@@ -108,6 +112,7 @@ public class SafariBattle {
                     int random = new SecureRandom().nextInt(256);
                     if (random < (wild.getStat(Stats.SPEED) / 2)) {
                         b.sendMessage(channel, "The wild " + wild.getName() + " ran away!");
+                        b.music.clear();
                         return;
                     }
                 } else if (angry > eat) {
@@ -115,6 +120,7 @@ public class SafariBattle {
                     int random = new SecureRandom().nextInt(256);
                     if (random < (wild.getStat(Stats.SPEED) * 4)) {
                         b.sendMessage(channel, "The wild " + wild.getName() + " ran away!");
+                        b.music.clear();
                         return;
                     }
                 } else {
@@ -122,6 +128,7 @@ public class SafariBattle {
                     int random = new SecureRandom().nextInt(256);
                     if (random < (wild.getStat(Stats.SPEED) * 2)) {
                         b.sendMessage(channel, "The wild " + wild.getName() + " ran away!");
+                        b.music.clear();
                         return;
                     }
                 }

@@ -61,13 +61,15 @@ public class BattleBot extends PircBot {
     public static String BASE_PATH = "";
     public String oAuth;
     private static DateFormat ISO_8601_DATE_TIME = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ");
+    public BattleBotMusic music;
+    public static String ROOT_PATH = "";
 
     static {
         ISO_8601_DATE_TIME.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
     private static File logFile = new File(BASE_PATH + "BattleBot_Log.log");
 
-    public BattleBot(String BASE_PATH, String oAuth) {
+    public BattleBot(String BASE_PATH, String oAuth, String rootPath) {
         this.setName("Wow_BattleBot_OneHand");
         this.setMessageDelay(2500);
         inPokemonBattle = false;
@@ -76,6 +78,7 @@ public class BattleBot extends PircBot {
         this.BASE_PATH = BASE_PATH;
         logFile = new File(BASE_PATH + "BattleBot_Log.log");
         this.oAuth = oAuth;
+        this.ROOT_PATH = rootPath;
     }
 
     public String longMessage(String message) {
@@ -85,6 +88,10 @@ public class BattleBot extends PircBot {
         }
         lastMessage = message;
         return message;
+    }
+
+    public void setMusic(BattleBotMusic music) {
+        this.music = music;
     }
 
     public static void append(String input) {
@@ -217,7 +224,7 @@ public class BattleBot extends PircBot {
             return;
         }
         //banlist goes here for simplicity
-        if (sender.getNick().equalsIgnoreCase("trainertimmy") || sender.getNick().equalsIgnoreCase("trainertimmybot") || sender.getNick().equalsIgnoreCase("pikabowser2082") || sender.getNick().equalsIgnoreCase("wallbot303") || sender.getNick().equalsIgnoreCase("frunky5")) {
+        if (sender.getNick().equalsIgnoreCase("trainertimmy") || sender.getNick().equalsIgnoreCase("trainertimmybot") || sender.getNick().equalsIgnoreCase("pikabowser2082") || sender.getNick().equalsIgnoreCase("wallbot303")) {
             return;
         }
         if (sender.getNick().equalsIgnoreCase("minhs2") || sender.getNick().equalsIgnoreCase("minhs3")) {
@@ -242,6 +249,10 @@ public class BattleBot extends PircBot {
             }
         }
         if ((message.toLowerCase().startsWith("!changeclass ") || message.toLowerCase().startsWith("!selectclass ")) && !inMultiBattle) {
+            if (isForcedClass(sender.getNick())) {
+                this.sendMessage(channel, "@" + sender.getNick() + " You cannot change your Trainer Class.");
+                return;
+            }
             String newClass = message.split(" ", 2)[1];
             if (newClass.length() > 19) {
                 newClass = newClass.substring(0, 19);
@@ -366,6 +377,10 @@ public class BattleBot extends PircBot {
             Thread t = new Thread(() -> {
                 try {
                     String target = messageFinal.split("@", 2)[1].split(" ", 2)[0];
+                    if (target.isEmpty()) {
+                        this.sendMessage(channel, "FUNgineer");
+                        return;
+                    }
                     int pkmAmt = 1;
                     try {
                         pkmAmt = Integer.parseInt(messageFinal.split("@", 2)[1].split(" ", 2)[1].split(" ", 2)[0]);
@@ -382,7 +397,7 @@ public class BattleBot extends PircBot {
                         this.sendMessage(channel.getChannelName(), "You cannot challenge yourself FUNgineer");
                         return;
                     }
-                    if (target.equalsIgnoreCase("frunky5") || target.equalsIgnoreCase("wallbot303")) {
+                    if (target.equalsIgnoreCase("frunky5") || target.equalsIgnoreCase("23forces")) {
 
                     } else if (target.equalsIgnoreCase("wow_deku_onehand") || target.equalsIgnoreCase("wow_battlebot_onehand") || User.isBot(target) || target.equalsIgnoreCase("killermapper")) {
                         this.sendMessage(channel.getChannelName(), "FUNgineer");
@@ -441,25 +456,16 @@ public class BattleBot extends PircBot {
 
         }
         if (message.toLowerCase().startsWith("!test") && sender.getNick().equalsIgnoreCase("the_chef1337")) {
+            inSafariBattle = true;
             Thread t = new Thread(() -> {
-                try {
-                    inPokemonBattle = true;
-                    pokemonMessages = new LinkedBlockingQueue<>();
-                    personInBattle = sender.getNick();
-                    System.err.println("Going into Pokemon Battle");
-                    PokemonBattle a = new PokemonBattle(this, channel.getChannelName(), false, false, sender.getNick(), true);
-                    System.err.println("Now out of Pokemon Battle");
-                    inPokemonBattle = false;
-                    pokemonMessages = new LinkedBlockingQueue<>();
-                    personInBattle = "";
-                } catch (Exception ex) {
-                    inPokemonBattle = false;
-                    personInBattle = "";
-                    pokemonMessages = new LinkedBlockingQueue<>();
-                    this.sendMessage(channel.getChannelName(), "Something fucked up OneHand this battle is now over both Pokemon exploded violently KAPOW");
-                    System.err.println("[POKEMON] Uh oh " + ex);
-                    ex.printStackTrace();
-                }
+                int level = new SecureRandom().nextInt(100 - 20 + 1) + 20;
+                int id = 150;
+                System.err.println("Attempting Pokemon ID " + id + " level " + level);
+                sB = new SafariBattle(sender.getNick(), new Pokemon(id, level));
+                sB.doBattle(this, channel.getChannelName());
+                System.err.println("Now out of Safari Battle");
+                sB = null;
+                inSafariBattle = false;
             });
             t.start();
         }
@@ -597,4 +603,153 @@ public class BattleBot extends PircBot {
         return response.toString();
     }
 
+    /**
+     * Checks the list of usernames for a forced Trainer Class. Mainly to be
+     * used for bots with forced trainer classes, such as "Gym Leader" and
+     * "Elite Four". Users in this list cannot change their Trainer Class.
+     *
+     * @param input Username to check for
+     * @return True if name is on the unchangable list, false otherwise.
+     */
+    public boolean isForcedClass(String input) {
+        String[] forced = {"frunky5", "wow_deku_onehand", "23forces"};
+        for (String el : forced) {
+            if (el.equalsIgnoreCase(input)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isLegendary(int id) {
+        int[] legendaries = {144, 145, 146, 150, 151, 243, 244, 245, 249, 250, 251, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 386, 386, 386, 480, 481, 482, 483, 484, 485, 486, 487, 487, 488, 489, 490, 491, 492, 492, 493, 494, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 648, 649};
+        for (int el : legendaries) {
+            if (id == el) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public File determineMusic(Pokemon opponent) {
+        String name = opponent.getName();
+        int id = opponent.getId();
+        File toReturn = null;
+        switch (name.toLowerCase()) {
+            default:
+                if (isLegendary(id)) {
+                    if (id <= 151) {
+                        toReturn = new File(ROOT_PATH + "gen6-xy-kanto-legendary.mp3");
+                        break;
+                    } else if (id >= 494) {
+                        toReturn = new File(ROOT_PATH + "gen5-bw-legendary.mp3");
+                        break;
+                    } else {
+                        toReturn = new File(ROOT_PATH + "gen4-dppt-legendary.mp3");
+                        break;
+                    }
+                } else {
+                    File[] wildSongs = {new File(ROOT_PATH + "gen4-dppt-wild.mp3"), new File(ROOT_PATH + "gen4-hgss-wild-kanto.mp3"), new File(ROOT_PATH + "gen4-hgss-wild-johto.mp3"), new File(ROOT_PATH + "gen5-bw-wild.mp3"), new File(ROOT_PATH + "gen6-oras-wild.mp3"), new File(ROOT_PATH + "gen6-xy-wild.mp3")};
+                    toReturn = wildSongs[new SecureRandom().nextInt(wildSongs.length)];
+                }
+                break;
+            case "uxie":
+            case "azelf":
+            case "mespirit":
+                toReturn = new File(ROOT_PATH + "gen4-dppt-uxie-mespirit-azelf.mp3");
+                break;
+            case "arceus":
+                toReturn = new File(ROOT_PATH + "gen4-dppt-arceus.mp3");
+                break;
+            case "dialga":
+            case "palkia":
+                toReturn = new File(ROOT_PATH + "gen4-dppt-dialga-palkia.mp3");
+                break;
+            case "giratina":
+                toReturn = new File(ROOT_PATH + "gen4-dppt-giratina.mp3");
+            case "ho-oh":
+                toReturn = new File(ROOT_PATH + "gen4-hgss-hooh.mp3");
+                break;
+            case "lugia":
+                toReturn = new File(ROOT_PATH + "gen4-hgss-lugia.mp3");
+                break;
+            case "suicune":
+                toReturn = new File(ROOT_PATH + "gen4-hgss-suicune.mp3");
+                break;
+            case "entei":
+                toReturn = new File(ROOT_PATH + "gen4-hgss-entei.mp3");
+                break;
+            case "raikou":
+                toReturn = new File(ROOT_PATH + "gen4-hgss-raikou.mp3");
+                break;
+            case "kyruem":
+                toReturn = new File(ROOT_PATH + "gen5-bw-kyurem.mp3");
+                break;
+            case "zekrom":
+            case "reshiram":
+                toReturn = new File(ROOT_PATH + "gen5-bw-zekrom-reshiram.mp3");
+                break;
+            case "deoxys":
+                toReturn = new File(ROOT_PATH + "gen6-oras-deoxys.mp3");
+                break;
+            case "groudon":
+            case "kyogre":
+                toReturn = new File(ROOT_PATH + "gen6-oras-groudon-kyogre.mp3");
+                break;
+            case "rayquaza":
+                toReturn = new File(ROOT_PATH + "gen6-oras-rayquaza.mp3");
+                break;
+            case "regirock":
+            case "registeel":
+            case "regigigas":
+            case "regice":
+                toReturn = new File(ROOT_PATH + "gen6-oras-regi.mp3");
+                break;
+            case "xerneas":
+            case "yveltal":
+                toReturn = new File(ROOT_PATH + "gen6-xy-xerneas-yveltal.mp3");
+                break;
+        }
+        return toReturn;
+    }
+
+    public File determineMusic(String firstClass, String secondClass, String firstUsername, String secondUsername) {
+        File toReturn = null;
+        if (firstClass.equalsIgnoreCase("Champion") || secondClass.equalsIgnoreCase("Champion")) {
+            File[] list = {new File(ROOT_PATH + "gen4-dppt-champion.mp3"), new File(ROOT_PATH + "gen4-hgss-champion.mp3"), new File(ROOT_PATH + "gen5-bw-champion.mp3"), new File(ROOT_PATH + "gen6-oras-champion.mp3")};
+            toReturn = list[new SecureRandom().nextInt(list.length)];
+        } else if (firstClass.equalsIgnoreCase("Elite Four") || secondClass.equalsIgnoreCase("Elite Four")) {
+            File[] list = {new File(ROOT_PATH + "gen4-dppt-elitefour.mp3"), new File(ROOT_PATH + "gen4-hgss-gym-johto.mp3"), new File(ROOT_PATH + "gen5-bw-elitefour.mp3"), new File(ROOT_PATH + "gen6-xy-elitefour.mp3"), new File(ROOT_PATH + "gen6-oras-elitefour.mp3")};
+            toReturn = list[new SecureRandom().nextInt(list.length)];
+        } else if (firstClass.equalsIgnoreCase("Gym Leader") || secondClass.equalsIgnoreCase("Gym Leader")) {
+            File[] list = {new File(ROOT_PATH + "gen4-dppt-gym.mp3"), new File(ROOT_PATH + "gen4-hgss-gym-johto.mp3"), new File(ROOT_PATH + "gen4-hgss-gym-kanto.mp3"), new File(ROOT_PATH + "gen5-bw-gym.mp3"), new File(ROOT_PATH + "gen5-b2w2-gym.mp3"), new File(ROOT_PATH + "gen6-xy-gym.mp3"), new File(ROOT_PATH + "gen6-oras-gym.mp3")};
+            toReturn = list[new SecureRandom().nextInt(list.length)];
+        } else if (firstUsername.equalsIgnoreCase("Cynthia") || secondUsername.equalsIgnoreCase("Cynthia")) {
+            toReturn = new SecureRandom().nextBoolean() ? new File(ROOT_PATH + "gen4-dppt-champion.mp3") : new File(ROOT_PATH + "gen5-bw-cynthia.mp3");
+        } else if (firstClass.toLowerCase().contains("magma") || secondClass.toLowerCase().contains("magma") || firstClass.toLowerCase().contains("aqua") || secondClass.toLowerCase().contains("aqua")) {
+            if (firstClass.toLowerCase().contains("boss") || secondClass.toLowerCase().contains("boss")) {
+                toReturn = new File(ROOT_PATH + "gen6-oras-trainer-team-boss.mp3");
+            } else {
+                toReturn = new File(ROOT_PATH + "gen6-oras-trainer-team.mp3");
+            }
+        } else if (firstClass.toLowerCase().contains("plasma") || secondClass.toLowerCase().contains("plasma")) {
+            toReturn = new SecureRandom().nextBoolean() ? new File(ROOT_PATH + "gen5-bw-trainer-team.mp3") : new File(ROOT_PATH + "gen5-b2w2-trainer-team.mp3");
+        } else if (firstClass.toLowerCase().contains("rocket") || secondClass.toLowerCase().contains("rocket")) {
+            toReturn = new File(ROOT_PATH + "gen4-hgss-trainer-team.mp3");
+        } else if (firstClass.toLowerCase().contains("galactic") || secondClass.toLowerCase().contains("galactic")) {
+            if (firstClass.toLowerCase().contains("boss") || secondClass.toLowerCase().contains("boss")) {
+                toReturn = new File(ROOT_PATH + "gen4-dppt-trainer-team-boss.mp3");
+            } else if (firstClass.toLowerCase().contains("commander") || secondClass.toLowerCase().contains("commander")) {
+                toReturn = new File(ROOT_PATH + "gen4-dppt-trainer-team-boss-commander.mp3");
+            } else {
+                toReturn = new File(ROOT_PATH + "gen4-dppt-trainer-team.mp3");
+            }
+        } else if (firstClass.equalsIgnoreCase("World Champion") || secondClass.equalsIgnoreCase("World Champion")) {
+            toReturn = new SecureRandom().nextBoolean() ? new File(ROOT_PATH + "gen5-bw-worldchamp.mp3") : new File(ROOT_PATH + "gen6-xy-worldchamp.mp3");
+        } else {
+            File[] list = {new File(ROOT_PATH + "gen4-dppt-trainer.mp3"), new File(ROOT_PATH + "gen4-hgss-trainer-johto.mp3"), new File(ROOT_PATH + "gen4-hgss-trainer-kanto.mp3"), new File(ROOT_PATH + "gen5-bw-trainer.mp3"), new File(ROOT_PATH + "gen5-b2w2-trainer.mp3"), new File(ROOT_PATH + "gen5-b2w2-trainer-hoenn.mp3"), new File(ROOT_PATH + "gen5-bw-trainer-subway.mp3"), new File(ROOT_PATH + "gen6-oras-trainer.mp3")};
+            toReturn = list[new SecureRandom().nextInt(list.length)];
+        }
+        return toReturn;
+    }
 }
