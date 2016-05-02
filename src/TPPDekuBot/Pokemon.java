@@ -188,7 +188,7 @@ public class Pokemon implements Serializable {
 
     public boolean isFlinched() {
         if (this.isFainted()) {
-            return false;
+            this.flinched = false;
         }
         return this.flinched;
     }
@@ -404,12 +404,6 @@ public class Pokemon implements Serializable {
             toReturn += "\nCritical Hit!!";
         }
         rand = new SecureRandom();
-        if (move.getEffectChance() != -1 && move.getEffect() != null) {
-            int chance = rand.nextInt(100) + 1;
-            if (chance <= move.getEffectChance() || move.getEffectChance() == 100) {
-                move.getEffect().run(this, opponent);
-            }
-        }
         double randModifier = 0.85 + (1.0 - 0.85) * rand.nextDouble();
         double modifier = stab * effectiveness * critical * randModifier;
         double damageBuf = 0.0;
@@ -429,8 +423,20 @@ public class Pokemon implements Serializable {
         if (damageBuffer > opponent.getStat(Stats.HP)) {
             damageBuffer = opponent.getStat(Stats.HP);
         }
+
+        String effect = "";
+        if (move.getEffectChance() != -1 && move.getEffect() != null) {
+            int chance = rand.nextInt(100) + 1;
+            if (chance <= move.getEffectChance() || move.getEffectChance() == 100) {
+                effect = move.getEffect().run(this, opponent, damageBuffer, move);
+            }
+        }
+
         opponent.damage(damage);
         toReturn += "\n" + opponent.getName() + " lost " + damageBuffer + "hp! " + opponent.getName() + " has " + opponent.getStat(Stats.HP) + "hp left!";
+        if (effect != null && !effect.isEmpty()) {
+            toReturn += " "+effect;
+        }
         return toReturn;
     }
 

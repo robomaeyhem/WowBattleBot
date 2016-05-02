@@ -520,8 +520,8 @@ public class MultiplayerBattle {
                 //                            break singlebattle;
                 //                        }
                 //                    }
-                boolean braek = mainBattle(first, second, m1, m2, b, channel);
-                if (braek) {
+                boolean fainted = mainBattle(first, second, m1, m2, b, channel);
+                if (fainted) {
                     break singlebattle;
                 }
             }
@@ -594,19 +594,18 @@ public class MultiplayerBattle {
     }
 
     public boolean mainBattle(Pokemon p1, Pokemon p2, String move1, String move2, BattleBot b, String channel) {
-        boolean braek = false;
+        boolean fainted = false;
         doMove(b, channel, move1, p1, p2);
         if (p2.isFlinched()) {
-            b.sendMessage(channel, p2.getName() + " flinched!");
             p2.setFlinch(false);
-            return braek;
+            return false;
         }
         if (!p2.isFainted()) {
             doMove(b, channel, move2, p2, p1);
         } else {
-            braek = true;
+            fainted = true;
         }
-        return braek;
+        return fainted;
     }
 
     public boolean continueBattle() {
