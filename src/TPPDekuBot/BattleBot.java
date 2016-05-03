@@ -366,7 +366,7 @@ public class BattleBot extends PircBot {
             }
         }
         if (message.toLowerCase().startsWith("!help") && !inMultiBattle) {
-            this.sendMessage(channel.getChannelName(), "http://pastebin.com/raw/28UbkHBR");
+            this.sendMessage(channel.getChannelName(), "https://github.com/robomaeyhem/WowBattleBot (scroll down to see the Readme)");
         }
         if (message.toLowerCase().startsWith("!randbat @") || message.toLowerCase().startsWith("!randombattle @") && !inMultiBattle && !inPokemonBattle && !inSafariBattle && !waitingPlayer) {
             //if ((message.toLowerCase().startsWith("!challenge @") || message.toLowerCase().startsWith("!multibattle @")) && !inMultiBattle && !inPokemonBattle && !inSafariBattle) {
