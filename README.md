@@ -1,6 +1,9 @@
 # WowBattleBot
 An IRC Bot that can play Pokemon
 
+# Music
+To listen to the music feature, go here https://discord.gg/0uMaFWa51QM5My1E and join the Voice Channel.
+
 # Commands
 Command parameters with `<>` are required, parameters with `[]` are optional. Commands seperated by a `|` do the same thing.
 
