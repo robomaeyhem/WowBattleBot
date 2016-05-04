@@ -13,6 +13,7 @@ public class BattleBotMusic {
     private boolean isVoiceReady = false;
     private IVoiceChannel voice;
     private IChannel channel;
+    public IUser CHEF;
     private String nowPlaying = "";
 
     public BattleBotMusic(String email, String password) throws DiscordException {
@@ -20,7 +21,7 @@ public class BattleBotMusic {
         clientBuilder.withLogin(email, password);
         this.client = clientBuilder.login();
         EventDispatcher dispatcher = client.getDispatcher();
-        dispatcher.registerListener(this);
+        dispatcher.registerListener(this);        
     }
 
     @EventSubscriber
@@ -34,6 +35,7 @@ public class BattleBotMusic {
         } catch (Exception ex) {
         }
         isVoiceReady = true;
+        CHEF = client.getGuildByID("162752501131640832").getUserByID("94696943652966400");
     }
 
     public void play(File file) {
@@ -48,8 +50,8 @@ public class BattleBotMusic {
             } catch (Exception ex) {
 
             }
-        }else{
-            System.err.println("File not found: "+file.getAbsolutePath());
+        } else {
+            System.err.println("File not found: " + file.getAbsolutePath());
         }
     }
 
@@ -60,7 +62,8 @@ public class BattleBotMusic {
         } catch (Exception ex) {
         }
     }
-    public String getNowPlaying(){
+
+    public String getNowPlaying() {
         return nowPlaying;
     }
 
@@ -71,5 +74,9 @@ public class BattleBotMusic {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public IChannel getChannel() {
+        return channel;
     }
 }

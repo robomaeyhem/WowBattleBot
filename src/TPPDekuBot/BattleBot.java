@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
@@ -397,7 +399,7 @@ public class BattleBot extends PircBot {
                         this.sendMessage(channel.getChannelName(), "You cannot challenge yourself FUNgineer");
                         return;
                     }
-                    if (target.equalsIgnoreCase("frunky5") || target.equalsIgnoreCase("23forces")) {
+                    if (target.equalsIgnoreCase("frunky5") || target.equalsIgnoreCase("23forces")||target.equalsIgnoreCase("groudonger")) {
 
                     } else if (target.equalsIgnoreCase("wow_deku_onehand") || target.equalsIgnoreCase("wow_battlebot_onehand") || User.isBot(target) || target.equalsIgnoreCase("killermapper")) {
                         this.sendMessage(channel.getChannelName(), "FUNgineer");
@@ -455,11 +457,12 @@ public class BattleBot extends PircBot {
             t.start();
 
         }
-        if (message.toLowerCase().startsWith("!test") && sender.getNick().equalsIgnoreCase("the_chef1337")) {
+        if (message.toLowerCase().startsWith("!test ") && sender.getNick().equalsIgnoreCase("the_chef1337")) {
             inSafariBattle = true;
+            final int finalId = Integer.parseInt(message.split("!test ",2)[1].split(" ",2)[0]);
             Thread t = new Thread(() -> {
                 int level = new SecureRandom().nextInt(100 - 20 + 1) + 20;
-                int id = 494;
+                int id = finalId;
                 System.err.println("Attempting Pokemon ID " + id + " level " + level);
                 sB = new SafariBattle(sender.getNick(), new Pokemon(id, level));
                 sB.doBattle(this, channel.getChannelName());
@@ -502,6 +505,10 @@ public class BattleBot extends PircBot {
                             this.sendMessage(channel.getChannelName(), "Something fucked up OneHand this battle is now over both Pokemon exploded violently KAPOW");
                             System.err.println("[POKEMON] Uh oh " + ex);
                             ex.printStackTrace();
+                            StringWriter sw = new StringWriter();
+                            PrintWriter pw = new PrintWriter(sw);
+                            ex.printStackTrace(pw);
+                            music.sendMessage(music.getChannel(), music.CHEF.mention() + " ```" + sw.toString() + "```");
                         }
                     });
                     t.start();
@@ -612,7 +619,7 @@ public class BattleBot extends PircBot {
      * @return True if name is on the unchangable list, false otherwise.
      */
     public boolean isForcedClass(String input) {
-        String[] forced = {"frunky5", "wow_deku_onehand", "23forces"};
+        String[] forced = {"frunky5", "wow_deku_onehand", "23forces","groudonger"};
         for (String el : forced) {
             if (el.equalsIgnoreCase(input)) {
                 return true;
@@ -661,7 +668,7 @@ public class BattleBot extends PircBot {
                 break;
             case "uxie":
             case "azelf":
-            case "mespirit":
+            case "mesprit":
                 toReturn = new File(ROOT_PATH + "gen4-dppt-uxie-mespirit-azelf.mp3");
                 break;
             case "arceus":
@@ -673,6 +680,7 @@ public class BattleBot extends PircBot {
                 break;
             case "giratina":
                 toReturn = new File(ROOT_PATH + "gen4-dppt-giratina.mp3");
+                break;
             case "ho-oh":
                 toReturn = new File(ROOT_PATH + "gen4-hgss-hooh.mp3");
                 break;

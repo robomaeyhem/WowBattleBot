@@ -435,7 +435,7 @@ public class Pokemon implements Serializable {
         opponent.damage(damage);
         toReturn += "\n" + opponent.getName() + " lost " + damageBuffer + "hp! " + opponent.getName() + " has " + opponent.getStat(Stats.HP) + "hp left!";
         if (effect != null && !effect.isEmpty()) {
-            toReturn += " "+effect;
+            toReturn += " " + effect;
         }
         return toReturn;
     }
@@ -1279,7 +1279,7 @@ public class Pokemon implements Serializable {
     }
 
     public static final boolean isBannedPokemon(int poke) {
-        int[] banned = {0, 132, 202, 235, 292, 360, 665, 606};
+        int[] banned = {0, 132, 201, 202, 235, 292, 360, 665, 606};
         for (int el : banned) {
             if (poke == el) {
                 return true;

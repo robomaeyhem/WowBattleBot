@@ -1,6 +1,8 @@
 package TPPDekuBot;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.security.SecureRandom;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -188,6 +190,10 @@ public class MultiplayerBattle {
 
         } catch (Exception ex) {
             System.err.println("[WARNING] Failed to Switch pokemon! " + ex);
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            b.music.sendMessage(b.music.getChannel(), b.music.CHEF.mention() + " ```" + sw.toString() + "```");
             endBattle = true;
         }
     }
@@ -266,6 +272,10 @@ public class MultiplayerBattle {
         } catch (Exception ex) {
             System.err.println("[WARNING] Failed to Switch pokemon! " + ex);
             endBattle = true;
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            b.music.sendMessage(b.music.getChannel(), b.music.CHEF.mention() + " ```" + sw.toString() + "```");
         }
 
     }

@@ -1,5 +1,7 @@
 package TPPDekuBot;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -92,6 +94,10 @@ public class PokemonBattle {
             System.err.println("[POKEMON] Failed to generate moves! UserID: " + rand1 + ", ComputerID: " + rand2 + "\n[POKEMON] " + ex);
             b.sendMessage(channel, "Something fucked up OneHand give it another try");
             b.inPokemonBattle = false;
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            b.music.sendMessage(b.music.getChannel(), b.music.CHEF.mention() + " ```" + sw.toString() + "\nUser ID: " + rand1 + " Computer ID: " + rand2 + "```");
             return;
         }
         if (test) {
