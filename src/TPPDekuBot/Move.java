@@ -47,8 +47,8 @@ public /*abstract*/ class Move implements Serializable {
     }
 
     public String getName() {
-        if(name.equalsIgnoreCase("Hidden-Power")){
-            return name+" ("+type+")";
+        if (name.equalsIgnoreCase("Hidden-Power")) {
+            return name + " (" + type + ")";
         }
         return name;
     }
@@ -102,7 +102,6 @@ public /*abstract*/ class Move implements Serializable {
 //    abstract int preMove(Pokemon user, Pokemon opponent);
 //
 //    abstract String postMove(Pokemon user, Pokemon opponent);
-
     public static Move getMove(Pokemon pokemon, int id) {
         Move toReturn = null;
         switch (id) {
@@ -121,6 +120,10 @@ public /*abstract*/ class Move implements Serializable {
         }
         return toReturn;
 
+    }
+
+    public boolean hasMoveEffect() {
+        return effect != null;
     }
 
     public static Move selectBestMove(Pokemon user, Pokemon opponent) {
