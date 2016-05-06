@@ -78,40 +78,39 @@ public class MultiplayerBattle {
         return player2.getTrainerName();
     }
 
-    private void doPlayer1Move(BattleBot b, String channel, String p1move) {
-        switch (p1move) {
-            case "1":
-                b.sendMessage(channel, pokemon1.attack(pokemon2, pokemon1.getMove1()).replace("\n", " "));
-                break;
-            case "2":
-                b.sendMessage(channel, pokemon1.attack(pokemon2, pokemon1.getMove2()).replace("\n", " "));
-                break;
-            case "3":
-                b.sendMessage(channel, pokemon1.attack(pokemon2, pokemon1.getMove3()).replace("\n", " "));
-                break;
-            case "4":
-                b.sendMessage(channel, pokemon1.attack(pokemon2, pokemon1.getMove4()).replace("\n", " "));
-                break;
-        }
-    }
-
-    private void doPlayer2Move(BattleBot b, String channel, String p2move) {
-        switch (p2move) {
-            case "1":
-                b.sendMessage(channel, pokemon2.attack(pokemon1, pokemon2.getMove1()).replace("\n", " "));
-                break;
-            case "2":
-                b.sendMessage(channel, pokemon2.attack(pokemon1, pokemon2.getMove2()).replace("\n", " "));
-                break;
-            case "3":
-                b.sendMessage(channel, pokemon2.attack(pokemon1, pokemon2.getMove3()).replace("\n", " "));
-                break;
-            case "4":
-                b.sendMessage(channel, pokemon2.attack(pokemon1, pokemon2.getMove4()).replace("\n", " "));
-                break;
-        }
-    }
-
+//    private void doPlayer1Move(BattleBot b, String channel, String p1move) {
+//        switch (p1move) {
+//            case "1":
+//                b.sendMessage(channel, pokemon1.attack(pokemon2, pokemon1.getMove1()).replace("\n", " "));
+//                break;
+//            case "2":
+//                b.sendMessage(channel, pokemon1.attack(pokemon2, pokemon1.getMove2()).replace("\n", " "));
+//                break;
+//            case "3":
+//                b.sendMessage(channel, pokemon1.attack(pokemon2, pokemon1.getMove3()).replace("\n", " "));
+//                break;
+//            case "4":
+//                b.sendMessage(channel, pokemon1.attack(pokemon2, pokemon1.getMove4()).replace("\n", " "));
+//                break;
+//        }
+//    }
+//
+//    private void doPlayer2Move(BattleBot b, String channel, String p2move) {
+//        switch (p2move) {
+//            case "1":
+//                b.sendMessage(channel, pokemon2.attack(pokemon1, pokemon2.getMove1()).replace("\n", " "));
+//                break;
+//            case "2":
+//                b.sendMessage(channel, pokemon2.attack(pokemon1, pokemon2.getMove2()).replace("\n", " "));
+//                break;
+//            case "3":
+//                b.sendMessage(channel, pokemon2.attack(pokemon1, pokemon2.getMove3()).replace("\n", " "));
+//                break;
+//            case "4":
+//                b.sendMessage(channel, pokemon2.attack(pokemon1, pokemon2.getMove4()).replace("\n", " "));
+//                break;
+//        }
+//    }
     private void doMove(BattleBot b, String channel, String move, Pokemon user, Pokemon opponent) {
         int m = Integer.parseInt(move);
         b.sendMessage(channel, user.attack(opponent, user.getMoveByNumber(m)).replace("\n", " "));
@@ -316,6 +315,8 @@ public class MultiplayerBattle {
                 b.sendWhisper(player2.getTrainerName(), "What will " + pokemon2.getName() + " do? (!move1)" + pokemon2.getMove1().getName() + ", (!move2)" + pokemon2.getMove2().getName() + ", (!move3)" + pokemon2.getMove3().getName() + ", (!move4)" + pokemon2.getMove4().getName() + " (!help)Additional Commands (reply in Battle Dungeon)");
                 pokemon1.setFlinch(false);
                 pokemon2.setFlinch(false);
+                p1switch = false;
+                p2switch = false;
                 String p1move = "", p2move = "";
                 int p1switchto = -1;
                 int p2switchto = -1;
@@ -454,7 +455,11 @@ public class MultiplayerBattle {
                     player1.removePokemon(p1switchto);
                     newName = pokemon1.getName();
                     b.sendMessage(channel, player1.getTrainerName() + " calls back " + oldName + " and sent out " + newName + "!");
-                    doPlayer2Move(b, channel, p2move);
+                    //doPlayer2Move(b, channel, p2move);
+                    doMove(b, channel, p2move, pokemon2, pokemon1);
+                    if (pokemon1.isFainted()) {
+                        break singlebattle;
+                    }
                     continue;
                 }
                 if (p2switch && !p1switch) {
@@ -465,7 +470,11 @@ public class MultiplayerBattle {
                     player2.removePokemon(p2switchto);
                     newName = pokemon2.getName();
                     b.sendMessage(channel, player2.getTrainerName() + " calls back " + oldName + " and sent out " + newName + "!");
-                    doPlayer1Move(b, channel, p1move);
+                    //doPlayer1Move(b, channel, p1move);
+                    doMove(b, channel, p1move, pokemon1, pokemon2);
+                    if (pokemon2.isFainted()) {
+                        break singlebattle;
+                    }
                     continue;
                 }
                 if (p1switch && p2switch) {
