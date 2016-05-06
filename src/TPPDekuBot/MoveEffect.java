@@ -22,7 +22,7 @@ class MoveEffects {
         } else {
             user.setHP(user.getStat(Stats.HP) + amt);
         }
-        return (user.getName() + " gained " + amt + " HP!");
+        return amt == 0 ? user.getName() + "'s HP is already full!" : (user.getName() + " gained " + amt + " HP!");
     };
     public static MoveEffect EXPLOSION = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
         user.setHP(0);

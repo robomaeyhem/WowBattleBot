@@ -399,7 +399,7 @@ public class BattleBot extends PircBot {
                         this.sendMessage(channel.getChannelName(), "You cannot challenge yourself FUNgineer");
                         return;
                     }
-                    if (target.equalsIgnoreCase("frunky5") || target.equalsIgnoreCase("23forces")||target.equalsIgnoreCase("groudonger")) {
+                    if (target.equalsIgnoreCase("frunky5") || target.equalsIgnoreCase("23forces") || target.equalsIgnoreCase("groudonger")) {
 
                     } else if (target.equalsIgnoreCase("wow_deku_onehand") || target.equalsIgnoreCase("wow_battlebot_onehand") || User.isBot(target) || target.equalsIgnoreCase("killermapper")) {
                         this.sendMessage(channel.getChannelName(), "FUNgineer");
@@ -457,20 +457,46 @@ public class BattleBot extends PircBot {
             t.start();
 
         }
-        if (message.toLowerCase().startsWith("!test ") && sender.getNick().equalsIgnoreCase("the_chef1337")) {
-            inSafariBattle = true;
-            final int finalId = Integer.parseInt(message.split("!test ",2)[1].split(" ",2)[0]);
+        if (message.toLowerCase().startsWith("!test") && sender.getNick().equalsIgnoreCase("the_chef1337")) {
+            final String senderFinal = "the_chef1337";
             Thread t = new Thread(() -> {
-                int level = new SecureRandom().nextInt(100 - 20 + 1) + 20;
-                int id = finalId;
-                System.err.println("Attempting Pokemon ID " + id + " level " + level);
-                sB = new SafariBattle(sender.getNick(), new Pokemon(id, level));
-                sB.doBattle(this, channel.getChannelName());
-                System.err.println("Now out of Safari Battle");
-                sB = null;
-                inSafariBattle = false;
+                try {
+                    inPokemonBattle = true;
+                    pokemonMessages = new LinkedBlockingQueue<>();
+                    personInBattle = senderFinal;
+                    System.err.println("Going into Pokemon Battle");
+                    PokemonBattle a = new PokemonBattle(this, channel.getChannelName(), false, false, sender.getNick(), true);
+                    System.err.println("Now out of Pokemon Battle");
+                    inPokemonBattle = false;
+                    pokemonMessages = new LinkedBlockingQueue<>();
+                    personInBattle = "";
+                } catch (Exception ex) {
+                    inPokemonBattle = false;
+                    personInBattle = "";
+                    pokemonMessages = new LinkedBlockingQueue<>();
+                    this.sendMessage(channel.getChannelName(), "Something fucked up OneHand this battle is now over both Pokemon exploded violently KAPOW");
+                    System.err.println("[POKEMON] Uh oh " + ex);
+                    ex.printStackTrace();
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    ex.printStackTrace(pw);
+                    music.sendMessage(music.getChannel(), music.CHEF.mention() + " ```" + sw.toString() + "```");
+                }
             });
             t.start();
+//            inSafariBattle = true;
+//            final int finalId = Integer.parseInt(message.split("!test ", 2)[1].split(" ", 2)[0]);
+//            Thread t = new Thread(() -> {
+//                int level = new SecureRandom().nextInt(100 - 20 + 1) + 20;
+//                int id = finalId;
+//                System.err.println("Attempting Pokemon ID " + id + " level " + level);
+//                sB = new SafariBattle(sender.getNick(), new Pokemon(id, level));
+//                sB.doBattle(this, channel.getChannelName());
+//                System.err.println("Now out of Safari Battle");
+//                sB = null;
+//                inSafariBattle = false;
+//            });
+//            t.start();
         }
         if (message.toLowerCase().startsWith("!battle") && !inMultiBattle && !waitingPlayer && !inSafariBattle && !inPokemonBattle) {
             boolean bigbrother = false, fromChef = false;
@@ -619,7 +645,7 @@ public class BattleBot extends PircBot {
      * @return True if name is on the unchangable list, false otherwise.
      */
     public boolean isForcedClass(String input) {
-        String[] forced = {"frunky5", "wow_deku_onehand", "23forces","groudonger"};
+        String[] forced = {"frunky5", "wow_deku_onehand", "23forces", "groudonger"};
         for (String el : forced) {
             if (el.equalsIgnoreCase(input)) {
                 return true;
@@ -629,7 +655,7 @@ public class BattleBot extends PircBot {
     }
 
     public boolean isLegendary(int id) {
-        int[] legendaries = {144, 145, 146, 150, 151, 243, 244, 245, 249, 250, 251, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 386, 386, 386, 480, 481, 482, 483, 484, 485, 486, 487, 487, 488, 489, 490, 491, 492, 492, 493, 494, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 648, 649};
+        int[] legendaries = {144, 145, 146, 150, 151, 243, 244, 245, 249, 250, 251, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 480, 481, 482, 483, 484, 485, 486, 487, 487, 488, 489, 490, 491, 492, 492, 493, 494, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649};
         for (int el : legendaries) {
             if (id == el) {
                 return true;
