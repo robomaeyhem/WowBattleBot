@@ -721,6 +721,7 @@ public class BattleBot extends PircBot {
                 break;
             case "xerneas":
             case "yveltal":
+            case "zygarde":
                 toReturn = new File(ROOT_PATH + "gen6-xy-xerneas-yveltal.mp3");
                 break;
         }

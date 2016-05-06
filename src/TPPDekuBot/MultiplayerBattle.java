@@ -20,6 +20,7 @@ public class MultiplayerBattle {
     private boolean endBattle = false;
     private int numberOfMon = 1;
     private boolean randomBattle;
+    private boolean musicChanged = false;
 
     private MultiplayerBattle() {
     }
@@ -294,15 +295,19 @@ public class MultiplayerBattle {
                     b.sendMessage(channel, toSend);
                 }
                 if (numberOfMon > 1) {
-                    if ((player1.getTrnClass().equalsIgnoreCase("Gym Leader") && player1.getPokemon().isEmpty()) || (player2.getTrnClass().equalsIgnoreCase("Gym Leader") && player2.getPokemon().isEmpty())) {
-                        String nowPlaying = b.music.getNowPlaying();
-                        if (nowPlaying.contains("gen5-bw-gym")) {
-                            b.music.clear();
-                            b.music.play(new File(b.ROOT_PATH + "gen5-bw-gym-final.mp3"));
-                        }
-                        if (nowPlaying.contains("gen5-b2w2-gym")) {
-                            b.music.clear();
-                            b.music.play(new File(b.ROOT_PATH + "gen5-b2w2-gym-final.mp3"));
+                    if (!musicChanged) {
+                        if ((player1.getTrnClass().equalsIgnoreCase("Gym Leader") && player1.getPokemon().isEmpty()) || (player2.getTrnClass().equalsIgnoreCase("Gym Leader") && player2.getPokemon().isEmpty())) {
+                            String nowPlaying = b.music.getNowPlaying();
+                            if (nowPlaying.contains("gen5-bw-gym")) {
+                                b.music.clear();
+                                b.music.play(new File(b.ROOT_PATH + "gen5-bw-gym-final.mp3"));
+                                musicChanged = true;
+                            }
+                            if (nowPlaying.contains("gen5-b2w2-gym")) {
+                                b.music.clear();
+                                b.music.play(new File(b.ROOT_PATH + "gen5-b2w2-gym-final.mp3"));
+                                musicChanged = true;
+                            }
                         }
                     }
                 }

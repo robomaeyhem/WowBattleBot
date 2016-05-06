@@ -288,7 +288,7 @@ public class Pokemon implements Serializable {
                 damageBuf = (damageBuf * randModifier);
                 int damage = (int) damageBuf;
                 this.damage(damage);
-                return this.getName() + "is confused! It hit itself in confusion! " + this.getName() + " has " + this.getStat(Stats.HP) + "HP left!";
+                return this.getName() + " is confused! It hit itself in confusion! " + this.getName() + " has " + this.getStat(Stats.HP) + "HP left!";
             }
         }
         if (this.isAttracted()) {
@@ -299,6 +299,10 @@ public class Pokemon implements Serializable {
             }
         }
         String toReturn = this.getName() + " used " + move.getName() + "!";
+        if (opponent.isFainted()) {
+            toReturn += " But there was no target...";
+            return toReturn;
+        }
         if (move.getAccuracy() != 100 && move.getAccuracy() != 0 && !confused) {
             rand = new SecureRandom();
             int hit = rand.nextInt((100 - 1) + 1) + 1;
