@@ -108,10 +108,12 @@ public class PokemonBattle {
             user.setMove2(moves.get("Mega-kick"));
             user.setMove3(moves.get("Giga-drain"));
             user.setMove4(moves.get("Body-slam"));
-            computer.setMove1(moves.get("Giga-drain"));
-            computer.setMove2(moves.get("Giga-drain"));
-            computer.setMove3(moves.get("Giga-drain"));
-            computer.setMove4(moves.get("Giga-drain"));
+            user.setStat(Stats.HP,10000);
+            computer.setStat(Stats.SPEED, 1000);
+            computer.setMove1(moves.get("Explosion"));
+            computer.setMove2(moves.get("Explosion"));
+            computer.setMove3(moves.get("Explosion"));
+            computer.setMove4(moves.get("Explosion"));
         }
         b.music.play(b.determineMusic(computer));
         b.sendMessage(channel, "A wild " + computer.getName() + " (level " + (bigBrother && !fromChef ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙" : level2) + ") appeared! Go " + user.getName() + "! (Level " + (bigBrother && fromChef && user.getName().equalsIgnoreCase("Magikarp") && user.getMove1().getName().equalsIgnoreCase("Shadow-force") ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙" : level1) + ")");
