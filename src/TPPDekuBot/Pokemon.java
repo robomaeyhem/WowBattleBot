@@ -115,25 +115,6 @@ public class Pokemon implements Serializable {
         baseStat = toLoad;
     }
 
-//    public Pokemon(int id, String name, int hp, int attack, int defense, int spAttack, int spDefense, int speed, int exp, Type type1, Type type2) {
-//        this.id = id;
-//        this.name = name;
-//        this.hp = hp;
-//        this.attack = attack;
-//        this.defense = defense;
-//        this.spAttack = spAttack;
-//        this.spDefense = spDefense;
-//        this.speed = speed;
-//        this.type1 = type1;
-//        this.type2 = type2;
-//        this.level = 1;
-//        this.fainted = false;
-//        this.status = Status.NORMAL;
-//        this.experience = exp;
-//        sleepLeft = 0;
-//        this.maxHP = hp;
-//        baseStatPokemon = this;
-//    }
     public void goToSleep() {
         this.status = Status.SLEEP;
         SecureRandom r = new SecureRandom();
@@ -1251,7 +1232,7 @@ public class Pokemon implements Serializable {
                     size = 0;
                 }
                 Move move = getMove(compatableMoves.get(size));
-                while (move.getPower() == 0 || move.getAccuracy() == 0 || (move.getCategory() == MoveCategory.STATUS && !move.hasMoveEffect())) {
+                while ((move.getCategory() == MoveCategory.STATUS && move.hasMoveEffect()) || (move.getPower() == 0 || move.getAccuracy() == 0 || (move.getCategory() == MoveCategory.STATUS && !move.hasMoveEffect()))) {
                     size++;
                     if (size > compatableMoves.size()) {
                         size = 0;
@@ -1263,19 +1244,19 @@ public class Pokemon implements Serializable {
             return;
         }
         SecureRandom rand = new SecureRandom();
-        while (this.getMove1() == null || this.getMove1().getPower() == 0 || this.getMove1().getAccuracy() == 0 || (this.getMove1().getCategory() == MoveCategory.STATUS && !this.getMove1().hasMoveEffect())) {
+        while (this.getMove1() == null || this.getMove1().getCategory() == MoveCategory.STATUS && !this.getMove1().hasMoveEffect() || (this.getMove1().getPower() == 0 || this.getMove1().getAccuracy() == 0 || this.getMove1().getCategory() == MoveCategory.STATUS)) {
             int index = rand.nextInt(compatableMoves.size());
             this.setMove1(getMove(compatableMoves.get(index)));
         }
-        while (this.getMove2() == null || this.getMove2().getPower() == 0 || this.getMove2().getAccuracy() == 0 || (this.getMove2().getCategory() == MoveCategory.STATUS && !this.getMove2().hasMoveEffect()) || this.getMove2().equals(this.getMove1())) {
+        while (this.getMove2() == null || this.getMove2().getCategory() == MoveCategory.STATUS && !this.getMove2().hasMoveEffect() || (this.getMove2().getPower() == 0 || this.getMove2().getAccuracy() == 0 || this.getMove2().getCategory() == MoveCategory.STATUS || this.getMove2().equals(this.getMove1()))) {
             int index = rand.nextInt(compatableMoves.size());
             this.setMove2(getMove(compatableMoves.get(index)));
         }
-        while (this.getMove3() == null || this.getMove3().getPower() == 0 || this.getMove3().getAccuracy() == 0 || (this.getMove3().getCategory() == MoveCategory.STATUS && !this.getMove3().hasMoveEffect()) || this.getMove3().equals(this.getMove1()) || this.getMove3().equals(this.getMove2())) {
+        while (this.getMove3() == null || this.getMove3().getCategory() == MoveCategory.STATUS && !this.getMove3().hasMoveEffect() || (this.getMove3().getPower() == 0 || this.getMove3().getAccuracy() == 0 || this.getMove3().getCategory() == MoveCategory.STATUS || this.getMove3().equals(this.getMove1()) || this.getMove3().equals(this.getMove2()))) {
             int index = rand.nextInt(compatableMoves.size());
             this.setMove3(getMove(compatableMoves.get(index)));
         }
-        while (this.getMove4() == null || this.getMove4().getPower() == 0 || this.getMove4().getAccuracy() == 0 || (this.getMove4().getCategory() == MoveCategory.STATUS && !this.getMove4().hasMoveEffect()) || this.getMove4().equals(this.getMove1()) || this.getMove4().equals(this.getMove2()) || this.getMove4().equals(this.getMove3())) {
+        while (this.getMove4() == null || this.getMove4().getCategory() == MoveCategory.STATUS && !this.getMove4().hasMoveEffect() || (this.getMove4().getPower() == 0 || this.getMove4().getAccuracy() == 0 || this.getMove4().getCategory() == MoveCategory.STATUS || this.getMove4().equals(this.getMove1()) || this.getMove4().equals(this.getMove2()) || this.getMove4().equals(this.getMove3()))) {
             int index = rand.nextInt(compatableMoves.size());
             this.setMove4(getMove(compatableMoves.get(index)));
         }
