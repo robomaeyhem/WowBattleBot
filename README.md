@@ -1,6 +1,9 @@
 # WowBattleBot
 An IRC Bot that can play Pokemon
 
+# Why am I here?
+Welcome to Battle Dungeon! Chances are you were invited by an automated script ran by someone else. Me and my bot did not invite you (unless you were challenged to a Battle, then you were invited by the bot)
+
 # Music
 To listen to the music feature, go here https://discord.gg/0uMaFWa51QM5My1E and join the Voice Channel.
 
@@ -18,6 +21,10 @@ Command parameters with `<>` are required, parameters with `[]` are optional. Co
 | `!check<number>` | Checks the Pokemon `number` specified. `number` is gotten from the `!list` command. |
 | `!move<number>` | Uses the Move from your Pokemon against your opponent. |
 | `!run` | Forefeits the current battle. If in a Wild Pokemon battle, if the Wild Pokemon outspeeds your Pokemon, the Wild Pokemon will attack before you run.|
+# Capturing Pokemon
+
+As of right now, it's not possible to capture Pokemon during battle. In Safari battles, you can capture Pokemon, however, any Pokemon caught are not saved. This will change in the future.
+
 
 # Authors and Contributors
 
