@@ -65,7 +65,10 @@ class MoveEffects {
         return "";
     };
     public static MoveEffect SLEEP = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
-        opponent.goToSleep();
-        return opponent.getName() + " fell asleep!";
+        if (opponent.getStatus() != Status.SLEEP) {
+            opponent.goToSleep();
+            return opponent.getName() + " fell asleep!";
+        }
+        return opponent.getName() + " is already asleep!";
     };
 }

@@ -145,7 +145,6 @@ public class Pokemon implements Serializable {
             sleepLeft--;
             return true;
         } else {
-            this.status = Status.NORMAL;
             return false;
         }
     }
@@ -249,6 +248,7 @@ public class Pokemon implements Serializable {
         int spAttack = this.spAttack;
         int spDefense = opponent.getStat(Stats.SP_DEFENSE);
         SecureRandom rand = new SecureRandom();
+        String toReturn = "";
         switch (this.status) {
             default:
             case NORMAL:
@@ -271,8 +271,12 @@ public class Pokemon implements Serializable {
                 }
                 break;
             case SLEEP:
-                if (this.isStillSleeping()) {
+                boolean sleep = this.isStillSleeping();
+                if (sleep) {
                     return this.getName() + " is fast asleep!";
+                } else {
+                    toReturn += this.getName() + " woke up! ";
+                    this.setStatus(Status.NORMAL);
                 }
                 break;
         }
@@ -302,7 +306,7 @@ public class Pokemon implements Serializable {
             this.setStatus(null);
             return this.getName() + " must recharge!";
         }
-        String toReturn = this.getName() + " used " + move.getName() + "!";
+        toReturn += this.getName() + " used " + move.getName() + "!";
         if (opponent.isFainted()) {
             toReturn += " But there was no target...";
             return toReturn;
@@ -390,6 +394,21 @@ public class Pokemon implements Serializable {
                     }
                     break;
             }
+        }
+        if (move.getCategory() == MoveCategory.STATUS) {
+            if (effectiveness == 0) {
+                toReturn += "\nIt doesn't affect the opponent!";
+                return toReturn;
+            }
+            String effect = "";
+            if (move.getEffectChance() != -1 && move.getEffect() != null) {
+                int chance = rand.nextInt(100) + 1;
+                if (chance <= move.getEffectChance() || move.getEffectChance() == 100) {
+                    effect = move.getEffect().run(this, opponent, 0, move);
+                }
+            }
+            return toReturn += " " + effect;
+
         }
         if (effectiveness >= 2.0) {
             toReturn += "\nIt's Super Effective!";
