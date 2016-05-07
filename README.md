@@ -28,3 +28,13 @@ Feel free to add/modify/fix the code above.
 # Bots
 
 If you would like, you can code a bot that can respond to matches through the `!randbat` command. If you have a favorite language, even if it is not Java, go ahead and code a bot and get in contact with the_chef1337 on Twitch.
+
+
+These bots can be challenged with the `!randbat` command:
+
+
+| Bot Name | Trainer Class | Creator |
+| ------------- | ------------- | ------------- |
+| frunky5 | Gym Leader | walle303 |
+| 23forces | Elite Four | frumpy4 |
+| groudonger | Gym Leader | chfoo |
