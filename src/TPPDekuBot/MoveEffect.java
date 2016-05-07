@@ -31,7 +31,7 @@ class MoveEffects {
     public static MoveEffect RECOIL_25 = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
         int amt = damage / 4;
         if (amt > user.getStat(Stats.HP)) {
-            amt = user.getStat(Stats.HP);            
+            amt = user.getStat(Stats.HP);
         }
         user.damage(amt);
         return user.getName() + " lost " + amt + "hp due to Recoil!";
@@ -39,7 +39,7 @@ class MoveEffects {
     public static MoveEffect RECOIL_33 = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
         int amt = damage / 3;
         if (amt > user.getStat(Stats.HP)) {
-            amt = user.getStat(Stats.HP);            
+            amt = user.getStat(Stats.HP);
         }
         user.damage(amt);
         return user.getName() + " lost " + amt + "hp due to Recoil!";
@@ -47,7 +47,7 @@ class MoveEffects {
     public static MoveEffect RECOIL_50 = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
         int amt = damage / 2;
         if (amt > user.getStat(Stats.HP)) {
-            amt = user.getStat(Stats.HP);            
+            amt = user.getStat(Stats.HP);
         }
         user.damage(amt);
         return user.getName() + " lost " + amt + "hp due to Recoil!";
@@ -55,9 +55,13 @@ class MoveEffects {
     public static MoveEffect STRUGGLE = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
         int amt = user.getMaxHP() / 4;
         if (amt > user.getStat(Stats.HP)) {
-            amt = user.getStat(Stats.HP);            
+            amt = user.getStat(Stats.HP);
         }
         user.damage(amt);
         return user.getName() + " lost " + amt + "hp due to Recoil!";
+    };
+    public static MoveEffect RECHARGE = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+        user.setStatus(Status.NO_MOVE_THIS_TURN);
+        return "";
     };
 }

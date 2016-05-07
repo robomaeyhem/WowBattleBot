@@ -298,6 +298,10 @@ public class Pokemon implements Serializable {
                 return this.getName() + " is immobilized by it's attraction! MVGame";
             }
         }
+        if (this.getStatus() != null && this.getStatus() == Status.NO_MOVE_THIS_TURN) {
+            this.setStatus(null);
+            return this.getName() + " must recharge!";
+        }
         String toReturn = this.getName() + " used " + move.getName() + "!";
         if (opponent.isFainted()) {
             toReturn += " But there was no target...";

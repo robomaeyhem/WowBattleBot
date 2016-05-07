@@ -47,7 +47,7 @@ public class MoveImporter {
         moveList.put("Slam", new Move("Slam", Type.NORMAL, MoveCategory.PHYSICAL, 80, 75, 20, null, -1));
         moveList.put("Facade", new Move("Facade", Type.NORMAL, MoveCategory.PHYSICAL, 70, 100, 20, null, -1));
         moveList.put("Wrap", new Move("Wrap", Type.NORMAL, MoveCategory.PHYSICAL, 15, 90, 20, null, -1));
-        moveList.put("Rock-wrecker", new Move("Rock-wrecker", Type.ROCK, MoveCategory.PHYSICAL, 150, 90, 5, null, -1));
+        moveList.put("Rock-wrecker", new Move("Rock-wrecker", Type.ROCK, MoveCategory.PHYSICAL, 150, 90, 5, MoveEffects.RECHARGE, 100));
         moveList.put("Rock-tomb", new Move("Rock-tomb", Type.ROCK, MoveCategory.PHYSICAL, 60, 95, 15, null, -1));
         moveList.put("Swords-dance", new Move("Swords-dance", Type.NORMAL, MoveCategory.STATUS, 0, 0, 20, null, -1));
         moveList.put("Mirror-move", new Move("Mirror-move", Type.FLYING, MoveCategory.STATUS, 0, 0, 20, null, -1));
@@ -60,7 +60,7 @@ public class MoveImporter {
         moveList.put("Bonemerang", new Move("Bonemerang", Type.GROUND, MoveCategory.PHYSICAL, 50, 90, 10, null, -1));
         moveList.put("Silver-wind", new Move("Silver-wind", Type.BUG, MoveCategory.SPECIAL, 60, 100, 5, null, -1));
         moveList.put("Charm", new Move("Charm", Type.FAIRY, MoveCategory.STATUS, 0, 100, 20, null, -1));
-        moveList.put("Hydro-cannon", new Move("Hydro-cannon", Type.WATER, MoveCategory.SPECIAL, 150, 90, 5, null, -1));
+        moveList.put("Hydro-cannon", new Move("Hydro-cannon", Type.WATER, MoveCategory.SPECIAL, 150, 90, 5, MoveEffects.RECHARGE, 100));
         moveList.put("Iron-head", new Move("Iron-head", Type.STEEL, MoveCategory.PHYSICAL, 80, 100, 15, MoveEffects.FLINCH, 30));
         moveList.put("Sharpen", new Move("Sharpen", Type.NORMAL, MoveCategory.STATUS, 0, 0, 30, null, -1));
         moveList.put("Sandstorm", new Move("Sandstorm", Type.ROCK, MoveCategory.STATUS, 0, 0, 10, null, -1));
@@ -85,7 +85,7 @@ public class MoveImporter {
         moveList.put("Sand-attack", new Move("Sand-attack", Type.GROUND, MoveCategory.STATUS, 0, 100, 15, null, -1));
         moveList.put("Poison-fang", new Move("Poison-fang", Type.POISON, MoveCategory.PHYSICAL, 50, 100, 15, null, -1));
         moveList.put("Shadow-punch", new Move("Shadow-punch", Type.GHOST, MoveCategory.PHYSICAL, 60, 0, 20, null, -1));
-        moveList.put("Blast-burn", new Move("Blast-burn", Type.FIRE, MoveCategory.SPECIAL, 150, 90, 5, null, -1));
+        moveList.put("Blast-burn", new Move("Blast-burn", Type.FIRE, MoveCategory.SPECIAL, 150, 90, 5, MoveEffects.RECHARGE, 100));
         moveList.put("Bestow", new Move("Bestow", Type.NORMAL, MoveCategory.STATUS, 0, 0, 15, null, -1));
         moveList.put("Forests-curse", new Move("Forests-curse", Type.GRASS, MoveCategory.STATUS, 0, 100, 20, null, -1));
         moveList.put("Smokescreen", new Move("Smokescreen", Type.NORMAL, MoveCategory.STATUS, 0, 100, 20, null, -1));
@@ -170,7 +170,7 @@ public class MoveImporter {
         moveList.put("Incinerate", new Move("Incinerate", Type.FIRE, MoveCategory.SPECIAL, 60, 100, 15, null, -1));
         moveList.put("Peck", new Move("Peck", Type.FLYING, MoveCategory.PHYSICAL, 35, 100, 35, null, -1));
         moveList.put("Aromatherapy", new Move("Aromatherapy", Type.GRASS, MoveCategory.STATUS, 0, 0, 5, null, -1));
-        moveList.put("Hyper-beam", new Move("Hyper-beam", Type.NORMAL, MoveCategory.SPECIAL, 150, 90, 5, null, -1));
+        moveList.put("Hyper-beam", new Move("Hyper-beam", Type.NORMAL, MoveCategory.SPECIAL, 150, 90, 5, MoveEffects.RECHARGE, 100));
         moveList.put("Imprison", new Move("Imprison", Type.PSYCHIC, MoveCategory.STATUS, 0, 0, 10, null, -1));
         moveList.put("Night-slash", new Move("Night-slash", Type.DARK, MoveCategory.PHYSICAL, 70, 100, 15, null, -1));
         moveList.put("Sticky-web", new Move("Sticky-web", Type.BUG, MoveCategory.STATUS, 0, 0, 20, null, -1));
@@ -248,7 +248,7 @@ public class MoveImporter {
         moveList.put("Topsy-turvy", new Move("Topsy-turvy", Type.DARK, MoveCategory.STATUS, 0, 0, 20, null, -1));
         moveList.put("Counter", new Move("Counter", Type.FIGHTING, MoveCategory.PHYSICAL, 0, 100, 20, null, -1));
         moveList.put("Aqua-tail", new Move("Aqua-tail", Type.WATER, MoveCategory.PHYSICAL, 90, 90, 10, null, -1));
-        moveList.put("Giga-impact", new Move("Giga-impact", Type.NORMAL, MoveCategory.PHYSICAL, 150, 90, 5, null, -1));
+        moveList.put("Giga-impact", new Move("Giga-impact", Type.NORMAL, MoveCategory.PHYSICAL, 150, 90, 5, MoveEffects.RECHARGE, 100));
         moveList.put("Flash-cannon", new Move("Flash-cannon", Type.STEEL, MoveCategory.SPECIAL, 80, 100, 10, null, -1));
         moveList.put("Gear-grind", new Move("Gear-grind", Type.STEEL, MoveCategory.PHYSICAL, 50, 85, 15, null, -1));
         moveList.put("Slash", new Move("Slash", Type.NORMAL, MoveCategory.PHYSICAL, 70, 100, 20, null, -1));
@@ -308,7 +308,7 @@ public class MoveImporter {
         moveList.put("Power-whip", new Move("Power-whip", Type.GRASS, MoveCategory.PHYSICAL, 120, 85, 10, null, -1));
         moveList.put("Aromatic-mist", new Move("Aromatic-mist", Type.FAIRY, MoveCategory.STATUS, 0, 0, 20, null, -1));
         moveList.put("Dragon-rush", new Move("Dragon-rush", Type.DRAGON, MoveCategory.PHYSICAL, 100, 75, 10, MoveEffects.FLINCH, 20));
-        moveList.put("Roar-of-time", new Move("Roar-of-time", Type.DRAGON, MoveCategory.SPECIAL, 150, 90, 5, null, -1));
+        moveList.put("Roar-of-time", new Move("Roar-of-time", Type.DRAGON, MoveCategory.SPECIAL, 150, 90, 5, MoveEffects.RECHARGE, 100));
         moveList.put("Assurance", new Move("Assurance", Type.DARK, MoveCategory.PHYSICAL, 60, 100, 10, null, -1));
         moveList.put("Metronome", new Move("Metronome", Type.NORMAL, MoveCategory.STATUS, 0, 0, 10, null, -1));
         moveList.put("Acid-spray", new Move("Acid-spray", Type.POISON, MoveCategory.SPECIAL, 40, 100, 20, null, -1));
@@ -611,7 +611,7 @@ public class MoveImporter {
         moveList.put("Mega-kick", new Move("Mega-kick", Type.NORMAL, MoveCategory.PHYSICAL, 120, 75, 5, null, -1));
         moveList.put("Nature-power", new Move("Nature-power", Type.NORMAL, MoveCategory.STATUS, 0, 0, 20, null, -1));
         moveList.put("Trick", new Move("Trick", Type.PSYCHIC, MoveCategory.STATUS, 0, 100, 10, null, -1));
-        moveList.put("Frenzy-plant", new Move("Frenzy-plant", Type.GRASS, MoveCategory.SPECIAL, 150, 90, 5, null, -1));
+        moveList.put("Frenzy-plant", new Move("Frenzy-plant", Type.GRASS, MoveCategory.SPECIAL, 150, 90, 5, MoveEffects.RECHARGE, 100));
         moveList.put("Meteor-mash", new Move("Meteor-mash", Type.STEEL, MoveCategory.PHYSICAL, 90, 90, 10, null, -1));
         moveList.put("Grassy-terrain", new Move("Grassy-terrain", Type.GRASS, MoveCategory.STATUS, 0, 0, 10, null, -1));
         moveList.put("Draining-kiss", new Move("Draining-kiss", Type.FAIRY, MoveCategory.SPECIAL, 50, 100, 10, null, -1));
