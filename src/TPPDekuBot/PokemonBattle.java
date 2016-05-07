@@ -140,6 +140,7 @@ public class PokemonBattle {
                     doUsersMove(user, computer, move);
                     if (!computer.isFainted()) {
                         if (computer.isFlinched()) {
+                            b.sendMessage(channel, computer.getName()+" flinched!");
                             computer.setFlinch(false);
                         } else {
                             doComputerMove(user, computer);
@@ -155,6 +156,7 @@ public class PokemonBattle {
                     doComputerMove(user, computer);
                     if (!user.isFainted()) {
                         if (user.isFlinched()) {
+                            b.sendMessage(channel, user.getName()+" flinched!");
                             user.setFlinch(false);
                         } else {
                             if (move.equalsIgnoreCase("run")) {
@@ -183,6 +185,7 @@ public class PokemonBattle {
                         doUsersMove(user, computer, move);
                         if (!computer.isFainted()) {
                             if (computer.isFlinched()) {
+                                b.sendMessage(channel, computer.getName()+" flinched!");
                                 computer.setFlinch(false);
                             } else {
                                 doComputerMove(user, computer);
@@ -198,6 +201,7 @@ public class PokemonBattle {
                         doComputerMove(user, computer);
                         if (!user.isFainted()) {
                             if (user.isFlinched()) {
+                                b.sendMessage(channel, user.getName()+" flinched!");
                                 user.setFlinch(false);
                             } else {
                                 if (move.equalsIgnoreCase("run")) {

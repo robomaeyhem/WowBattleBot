@@ -11,7 +11,7 @@ class MoveEffects {
 
     public static MoveEffect FLINCH = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
         opponent.setFlinch(true);
-        return opponent.getName() + " flinched!";
+        return "";
     };
 
     public static MoveEffect HEAL_HALF = (Pokemon user, Pokemon opponent, int damage, Move move) -> {

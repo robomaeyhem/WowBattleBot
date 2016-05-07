@@ -618,18 +618,18 @@ public class MultiplayerBattle {
     }
 
     public boolean mainBattle(Pokemon p1, Pokemon p2, String move1, String move2, BattleBot b, String channel) {
-        boolean fainted = false;
         doMove(b, channel, move1, p1, p2);
-        if (p2.isFlinched()) {
-            p2.setFlinch(false);
-            return false;
-        }
         if (!p2.isFainted()) {
+            if (p2.isFlinched()) {
+                p2.setFlinch(false);
+                b.sendMessage(channel, p2.getName()+" flinched!");
+                return false;
+            }
             doMove(b, channel, move2, p2, p1);
+            return false;
         } else {
-            fainted = true;
+            return true;
         }
-        return fainted;
     }
 
     public boolean continueBattle() {
