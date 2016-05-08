@@ -1,5 +1,7 @@
 package TPPDekuBot;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.security.SecureRandom;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -103,6 +105,10 @@ public class SafariBattle {
                     return;
                 }
             } catch (Exception ex) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                ex.printStackTrace(pw);
+                b.music.sendMessage(b.music.getChannel(), b.music.CHEF.mention() + " ```" + sw.toString() + "Pokemon ID: " + this.wild.getId() + "```");
             } finally {
                 if (caught || lastTurn.equalsIgnoreCase("run") || end) {
                     return;

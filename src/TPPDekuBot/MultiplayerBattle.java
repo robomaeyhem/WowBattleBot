@@ -193,7 +193,7 @@ public class MultiplayerBattle {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             ex.printStackTrace(pw);
-            b.music.sendMessage(b.music.getChannel(), b.music.CHEF.mention() + " ```" + sw.toString() + "```");
+            b.music.sendMessage(b.music.getChannel(), b.music.CHEF.mention() + " ```" + sw.toString() + "\n```");
             endBattle = true;
         }
     }
@@ -425,6 +425,10 @@ public class MultiplayerBattle {
                     }
                     p2msg = new LinkedBlockingQueue<>();
                 } catch (Exception ex) {
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    ex.printStackTrace(pw);
+                    b.music.sendMessage(b.music.getChannel(), b.music.CHEF.mention() + " ```" + sw.toString() + "```");
                 }
                 if (p1move.startsWith("!run") && !p2move.startsWith("!run")) {
                     b.sendMessage(channel, player1.getTrainerName() + " forfeits! " + player2.getTrainerName() + " wins!");
@@ -622,7 +626,7 @@ public class MultiplayerBattle {
         if (!p2.isFainted()) {
             if (p2.isFlinched()) {
                 p2.setFlinch(false);
-                b.sendMessage(channel, p2.getName()+" flinched!");
+                b.sendMessage(channel, p2.getName() + " flinched!");
                 return false;
             }
             doMove(b, channel, move2, p2, p1);

@@ -284,7 +284,7 @@ public class Pokemon implements Serializable {
             }
         }
         if (this.getStatus() != null && this.getStatus() == Status.NO_MOVE_THIS_TURN) {
-            this.setStatus(null);
+            this.setStatus(Status.NORMAL);
             return this.getName() + " must recharge!";
         }
         toReturn += this.getName() + " used " + move.getName() + "!";
@@ -1232,7 +1232,7 @@ public class Pokemon implements Serializable {
                     size = 0;
                 }
                 Move move = getMove(compatableMoves.get(size));
-                while ((move.getCategory() == MoveCategory.STATUS && move.hasMoveEffect()) || (move.getPower() == 0 || move.getAccuracy() == 0 || (move.getCategory() == MoveCategory.STATUS && !move.hasMoveEffect()))) {
+                while ((move.getCategory() == MoveCategory.STATUS && !move.hasMoveEffect()) || (move.getPower() == 0 || move.getAccuracy() == 0 || (move.getCategory() == MoveCategory.STATUS && !move.hasMoveEffect()))) {
                     size++;
                     if (size > compatableMoves.size()) {
                         size = 0;

@@ -231,7 +231,10 @@ public class PokemonBattle {
                 }
             }
         } catch (Exception ex) {
-
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            b.music.sendMessage(b.music.getChannel(), b.music.CHEF.mention() + " ```" + sw.toString() + "\nUser ID: " + rand1 + " Computer ID: " + rand2 + "```");
         }
         b.inPokemonBattle = false;
         b.music.clear();
