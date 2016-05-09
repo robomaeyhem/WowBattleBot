@@ -8,7 +8,7 @@ Welcome to Battle Dungeon! Chances are you were invited by an automated script r
 To listen to the music feature, go here https://discord.gg/0uMaFWa51QM5My1E and join the Voice Channel.
 
 # Commands
-Command parameters with `<>` are required, parameters with `[]` are optional. Commands seperated by a `|` do the same thing.
+Command parameters with `<>` are required, parameters with `[]` are optional. Commands seperated by a `|` do the same thing. Only one battle can be going on at any given time.
 
 | Command  | Purpose |
 | ------------- | ------------- |
@@ -16,7 +16,7 @@ Command parameters with `<>` are required, parameters with `[]` are optional. Co
 | `!randbat <@username> [num]`  | Challenges `username` to a battle. Change `num` to a number between 1 and 6 for a Multi-Pokemon battle.  |
 | `!safari` | Puts you in a Safari battle with a Random pokemon. Gives you a rock, bait, and Pokeballs to catch the random Pokemon. |
 | `!changeclass <class> | !switchclass <class>`| Changes your Trainer Class. Cannot be "Gym Leader", "Champion", "Elite Four" or any other protected class.
-| `!list` | Gets a list of your current Pokemon in battles with more than 1 Pokemon per team. |
+| `!list` | Gets a list of your current Pokemon in battles with more than 1 Pokemon per team. Only works in Battle. |
 | `!switch<number>` | Switches your Pokemon to the `number` specified. `number` is gotten from the `!list` command. |
 | `!check<number>` | Checks the Pokemon `number` specified. `number` is gotten from the `!list` command. |
 | `!move<number>` | Uses the Move from your Pokemon against your opponent. |
@@ -46,4 +46,4 @@ These bots can be challenged with the `!randbat` command:
 | 23forces | Elite Four | frumpy4 |
 | groudonger | Gym Leader | chfoo |
 
-If you defeat any of these bots, in the future you will receive a Gym Badge. These are currently not implemented just yet, but will be in the future.
+If you defeat any of these bots with the Gym Leader trainer class, in the future you will receive a Gym Badge. These are currently not implemented just yet, but will be in the future.
