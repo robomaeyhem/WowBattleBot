@@ -108,7 +108,7 @@ public class Pokemon implements Serializable {
         this.type2 = type2;
         this.level = 1;
         this.fainted = false;
-        this.status = Status.NORMAL;        
+        this.status = Status.NORMAL;
         sleepLeft = 0;
         this.experience = 1;
         this.maxHP = hp;
@@ -487,13 +487,26 @@ public class Pokemon implements Serializable {
             }
             return toReturn;
         } finally {
-            if (this.getStatus() == Status.TOXIC) {
-                this.toxicCount++;
-                int dmg = (int) ((double) this.getMaxHP() / ((double) this.toxicCount / (double) 16));
-                toReturn += this.getName() + " lost " + dmg + "hp due to poison!";
-            } else if (this.getStatus() == Status.POISON) {
-                int dmg = (int) ((double) this.getMaxHP() / 8);
-                toReturn += this.getName() + " lost " + dmg + "hp due to poison!";
+            if (null != this.getStatus()) {
+                switch (this.getStatus()) {
+                    case TOXIC: {
+                        this.toxicCount++;
+                        int dmg = (int) ((double) this.getMaxHP() / ((double) this.toxicCount / (double) 16));
+                        toReturn += this.getName() + " lost " + dmg + "hp due to poison!";
+                        break;
+                    }
+                    case POISON: {
+                        int dmg = (int) ((double) this.getMaxHP() / (double) 8);
+                        toReturn += this.getName() + " lost " + dmg + "hp due to poison!";
+                        break;
+                    }
+                    case BURN:
+                        int dmg = (int) ((double) this.getStat(Stats.HP) / (double) 8);
+                        toReturn += this.getName() + " lost " + dmg + "hp due to it's burn!";
+                        break;
+                    default:
+                        break;
+                }
             }
             return toReturn;
         }
