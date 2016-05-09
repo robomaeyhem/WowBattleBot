@@ -110,9 +110,9 @@ public class Trainer {
         }
         ArrayList<Pokemon> toReturn = new ArrayList<>();
         for (int i = 0; i < amt; i++) {
-            int pokemon = new SecureRandom().nextInt(721);
+            int pokemon = new SecureRandom().nextInt(719);
             while (Pokemon.isBannedPokemon(pokemon)) {
-                pokemon = new SecureRandom().nextInt(721);
+                pokemon = new SecureRandom().nextInt(719);
             }
             Pokemon pkm = new Pokemon(pokemon, level);
             pkm.assignMoves();
