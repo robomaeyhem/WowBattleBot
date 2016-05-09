@@ -45,3 +45,5 @@ These bots can be challenged with the `!randbat` command:
 | frunky5 | Gym Leader | walle303 |
 | 23forces | Elite Four | frumpy4 |
 | groudonger | Gym Leader | chfoo |
+
+If you defeat any of these bots, in the future you will receive a Gym Badge. These are currently not implemented just yet, but will be in the future.
