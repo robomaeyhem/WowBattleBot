@@ -62,7 +62,7 @@ class MoveEffects {
         return user.getName() + " lost " + amt + "hp due to Recoil!";
     };
     public static MoveEffect RECHARGE = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
-        user.setStatus(Status.NO_MOVE_THIS_TURN);
+        user.setMoveStatus(Status.NO_MOVE_THIS_TURN);
         return "";
     };
     public static MoveEffect SLEEP = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
@@ -76,6 +76,9 @@ class MoveEffects {
         return "But it failed!";
     };
     public static MoveEffect TOXIC = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+        if (opponent.getType1() == Type.STEEL || opponent.getType2() == Type.STEEL || opponent.getType1() == Type.POISON || opponent.getType2() == Type.POISON) {
+            return "But it failed!";
+        }
         if (opponent.getStatus() == Status.NORMAL) {
             opponent.setStatus(Status.TOXIC);
             return opponent.getName() + " was badly poisioned!";
@@ -122,6 +125,13 @@ class MoveEffects {
         }
     };
     public static MoveEffect POISON = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+        if (opponent.getType1() == Type.STEEL || opponent.getType2() == Type.STEEL || opponent.getType1() == Type.POISON || opponent.getType2() == Type.POISON) {
+            if (move.getCategory() == MoveCategory.STATUS) {
+                return "But it failed!";
+            } else {
+                return "";
+            }
+        }
         if (opponent.getStatus() != Status.NORMAL) {
             opponent.setStatus(Status.POISON);
             return opponent.getName() + " was poisioned!";
@@ -148,6 +158,7 @@ class MoveEffects {
             }
             opponent.setStatus(status);
             String toReturn = "";
+            //fuck the null pointer warnings I have money
             switch (status) {
                 case BURN:
                     toReturn = " was burned!";

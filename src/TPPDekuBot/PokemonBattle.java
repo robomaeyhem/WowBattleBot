@@ -101,19 +101,19 @@ public class PokemonBattle {
             return;
         }
         if (test) {
-            user = new Pokemon(63, 67);
-            computer = new Pokemon(3, 73);
+            user = new Pokemon(363, 80);
+            computer = new Pokemon(170, 73);
             HashMap<String, Move> moves = Pokemon.reloadMoves();
-            user.setMove1(moves.get("Fake-out"));
-            user.setMove2(moves.get("Mega-kick"));
-            user.setMove3(moves.get("Giga-drain"));
-            user.setMove4(moves.get("Sing"));
+            user.setMove1(moves.get("Double-edge"));
+            user.setMove2(moves.get("Icy-wind"));
+            user.setMove3(moves.get("Double-edge"));
+            user.setMove4(moves.get("Ice-beam"));
             user.setStat(Stats.HP,10000);
             computer.setStat(Stats.SPEED, 1000);
-            computer.setMove1(moves.get("Sing"));
-            computer.setMove2(moves.get("Sing"));
-            computer.setMove3(moves.get("Sing"));
-            computer.setMove4(moves.get("Sing"));
+            computer.setMove1(moves.get("Take-down"));
+            computer.setMove2(moves.get("Thunderbolt"));
+            computer.setMove3(moves.get("Round"));
+            computer.setMove4(moves.get("Blizzard"));
         }
         b.music.play(b.determineMusic(computer));
         b.sendMessage(channel, "A wild " + computer.getName() + " (level " + (bigBrother && !fromChef ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙" : level2) + ") appeared! Go " + user.getName() + "! (Level " + (bigBrother && fromChef && user.getName().equalsIgnoreCase("Magikarp") && user.getMove1().getName().equalsIgnoreCase("Shadow-force") ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙" : level1) + ")");

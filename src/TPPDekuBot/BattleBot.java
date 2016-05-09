@@ -270,6 +270,10 @@ public class BattleBot extends PircBot {
                 newClass = newClass.replace("  ", " ");
                 newClass = newClass.trim();
             }
+            if (!isPureAscii(newClass)) {
+                this.sendMessage(channel.getChannelName(), "@" + sender.getNick() + " Invalid Trainer Class FUNgineer");
+                return;
+            }
             if (newClass.toLowerCase().contains("gym leader") || newClass.toLowerCase().contains("leader") || newClass.toLowerCase().contains("champion") || newClass.toLowerCase().contains("elite four") || (newClass.toLowerCase().charAt(0) == '/' || newClass.toLowerCase().charAt(0) == '.' || !Character.isLetter(newClass.toLowerCase().charAt(0))) || containsBannedChar(newClass)) {
                 this.sendMessage(channel.getChannelName(), "@" + sender.getNick() + " Invalid Trainer Class FUNgineer");
                 return;
@@ -458,46 +462,46 @@ public class BattleBot extends PircBot {
 
         }
         if (message.toLowerCase().startsWith("!test ") && sender.getNick().equalsIgnoreCase("the_chef1337")) {
-//            final String senderFinal = "the_chef1337";
-//            Thread t = new Thread(() -> {
-//                try {
-//                    inPokemonBattle = true;
-//                    pokemonMessages = new LinkedBlockingQueue<>();
-//                    personInBattle = senderFinal;
-//                    System.err.println("Going into Pokemon Battle");
-//                    PokemonBattle a = new PokemonBattle(this, channel.getChannelName(), false, false, sender.getNick(), true);
-//                    System.err.println("Now out of Pokemon Battle");
-//                    inPokemonBattle = false;
-//                    pokemonMessages = new LinkedBlockingQueue<>();
-//                    personInBattle = "";
-//                } catch (Exception ex) {
-//                    inPokemonBattle = false;
-//                    personInBattle = "";
-//                    pokemonMessages = new LinkedBlockingQueue<>();
-//                    this.sendMessage(channel.getChannelName(), "Something fucked up OneHand this battle is now over both Pokemon exploded violently KAPOW");
-//                    System.err.println("[POKEMON] Uh oh " + ex);
-//                    ex.printStackTrace();
-//                    StringWriter sw = new StringWriter();
-//                    PrintWriter pw = new PrintWriter(sw);
-//                    ex.printStackTrace(pw);
-//                    music.sendMessage(music.getChannel(), music.CHEF.mention() + " ```" + sw.toString() + "```");
-//                }
-//            });
-//            t.start();
-//--
-            inSafariBattle = true;
-            final int finalId = Integer.parseInt(message.split("!test ", 2)[1].split(" ", 2)[0]);
+            final String senderFinal = "the_chef1337";
             Thread t = new Thread(() -> {
-                int level = new SecureRandom().nextInt(100 - 20 + 1) + 20;
-                int id = finalId;
-                System.err.println("Attempting Pokemon ID " + id + " level " + level);
-                sB = new SafariBattle(sender.getNick(), new Pokemon(id, level));
-                sB.doBattle(this, channel.getChannelName());
-                System.err.println("Now out of Safari Battle");
-                sB = null;
-                inSafariBattle = false;
+                try {
+                    inPokemonBattle = true;
+                    pokemonMessages = new LinkedBlockingQueue<>();
+                    personInBattle = senderFinal;
+                    System.err.println("Going into Pokemon Battle");
+                    PokemonBattle a = new PokemonBattle(this, channel.getChannelName(), false, false, sender.getNick(), true);
+                    System.err.println("Now out of Pokemon Battle");
+                    inPokemonBattle = false;
+                    pokemonMessages = new LinkedBlockingQueue<>();
+                    personInBattle = "";
+                } catch (Exception ex) {
+                    inPokemonBattle = false;
+                    personInBattle = "";
+                    pokemonMessages = new LinkedBlockingQueue<>();
+                    this.sendMessage(channel.getChannelName(), "Something fucked up OneHand this battle is now over both Pokemon exploded violently KAPOW");
+                    System.err.println("[POKEMON] Uh oh " + ex);
+                    ex.printStackTrace();
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    ex.printStackTrace(pw);
+                    music.sendMessage(music.getChannel(), music.CHEF.mention() + " ```" + sw.toString() + "```");
+                }
             });
             t.start();
+//--
+//            inSafariBattle = true;
+//            final int finalId = Integer.parseInt(message.split("!test ", 2)[1].split(" ", 2)[0]);
+//            Thread t = new Thread(() -> {
+//                int level = new SecureRandom().nextInt(100 - 20 + 1) + 20;
+//                int id = finalId;
+//                System.err.println("Attempting Pokemon ID " + id + " level " + level);
+//                sB = new SafariBattle(sender.getNick(), new Pokemon(id, level));
+//                sB.doBattle(this, channel.getChannelName());
+//                System.err.println("Now out of Safari Battle");
+//                sB = null;
+//                inSafariBattle = false;
+//            });
+//            t.start();
         }
         if (message.toLowerCase().startsWith("!battle") && !inMultiBattle && !waitingPlayer && !inSafariBattle && !inPokemonBattle) {
             boolean bigbrother = false, fromChef = false;

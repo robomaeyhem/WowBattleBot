@@ -31,6 +31,9 @@ public class Pokemon implements Serializable {
     private boolean fainted, confused, attracted;
     private boolean flinched;
     private Status status;
+    private Status moveStatus;
+    private Move moveBuffer;
+    private int toxicCount;
     private static final long serialVersionUID = -8670060699743627504L;
     private final Pokemon baseStatPokemon;
     private final ArrayList<PokemonBaseStat> baseStat;
@@ -62,6 +65,9 @@ public class Pokemon implements Serializable {
         this.status = Status.NORMAL;
         sleepLeft = 0;
         this.experience = 1;
+        this.moveBuffer = null;
+        this.toxicCount = 0;
+        this.moveStatus = Status.NORMAL;
         ArrayList<PokemonBaseStat> toLoad = null;
         while (toLoad == null) {
             try (FileInputStream f = new FileInputStream(BattleBot.BASE_PATH + "pokemonBaseStats.dat"); ObjectInputStream o = new ObjectInputStream(f)) {
@@ -84,6 +90,9 @@ public class Pokemon implements Serializable {
         this.hp = calculateStats(level, Stats.HP);
         this.experience = ExpLevel.getExp(level);
         this.maxHP = this.hp;
+        this.moveBuffer = null;
+        this.toxicCount = 0;
+        this.moveStatus = Status.NORMAL;
     }
 
     public Pokemon(int id, String name, int hp, int attack, int defense, int spAttack, int spDefense, int speed, Type type1, Type type2) {
@@ -99,10 +108,13 @@ public class Pokemon implements Serializable {
         this.type2 = type2;
         this.level = 1;
         this.fainted = false;
-        this.status = Status.NORMAL;
+        this.status = Status.NORMAL;        
         sleepLeft = 0;
         this.experience = 1;
         this.maxHP = hp;
+        this.moveBuffer = null;
+        this.toxicCount = 0;
+        this.moveStatus = Status.NORMAL;
         baseStatPokemon = this;
         ArrayList<PokemonBaseStat> toLoad = null;
         while (toLoad == null) {
@@ -136,6 +148,14 @@ public class Pokemon implements Serializable {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Status getMoveStatus() {
+        return this.moveStatus;
+    }
+
+    public void setMoveStatus(Status status) {
+        this.moveStatus = status;
     }
 
     public void setConfused(boolean confused) {
@@ -224,228 +244,259 @@ public class Pokemon implements Serializable {
     }
 
     public String attack(Pokemon opponent, Move move, boolean confused) {
+
         int attack = this.attack;
         int defense = opponent.getStat(Stats.DEFENSE);
         int spAttack = this.spAttack;
         int spDefense = opponent.getStat(Stats.SP_DEFENSE);
         SecureRandom rand = new SecureRandom();
         String toReturn = "";
-        switch (this.status) {
-            default:
-            case NORMAL:
-                break;
-            case BURN:
-                attack = attack / 2;
-                break;
-            case FREEZE:
-                int cure = rand.nextInt((100 - 1) + 1) + 1;
-                if (cure <= 20) {
-                    this.status = Status.NORMAL;
+        try {
+            switch (this.moveStatus) {
+                default:
+                case NORMAL:
                     break;
-                } else {
-                    return this.getName() + " is frozen solid!";
-                }
-            case PARALYSIS:
-                int hit = rand.nextInt((100 - 1) + 1) + 1;
-                if (hit <= 25) {
-                    return this.getName() + " is fully paralyzed!";
-                }
-                break;
-            case SLEEP:
-                boolean sleep = this.isStillSleeping();
-                if (sleep) {
-                    return this.getName() + " is fast asleep!";
-                } else {
-                    toReturn += this.getName() + " woke up! ";
+                case ATTACK_NEXT_TURN:
+                    if (moveBuffer == null) {
+                        moveBuffer = move;
+                        switch (move.getName()) {//todo
+                            case "Fly":
+                                break;
+                            case "Bounce":
+                                break;
+                        }
+                    } else {
+                        moveBuffer = null;
+                        this.moveStatus = Status.NORMAL;
+                    }
+                    break;
+                case NO_MOVE_THIS_TURN:
                     this.setStatus(Status.NORMAL);
+                    return this.getName() + " must recharge!";
+            }
+            switch (this.status) {
+                default:
+                case NORMAL:
+                    break;
+                case BURN:
+                    attack = attack / 2;
+                    break;
+                case FREEZE:
+                    int cure = rand.nextInt((100 - 1) + 1) + 1;
+                    if (cure <= 20) {
+                        this.status = Status.NORMAL;
+                        break;
+                    } else {
+                        return this.getName() + " is frozen solid!";
+                    }
+                case PARALYSIS:
+                    int hit = rand.nextInt((100 - 1) + 1) + 1;
+                    if (hit <= 25) {
+                        return this.getName() + " is fully paralyzed!";
+                    }
+                    break;
+                case SLEEP:
+                    boolean sleep = this.isStillSleeping();
+                    if (sleep) {
+                        return this.getName() + " is fast asleep!";
+                    } else {
+                        toReturn += this.getName() + " woke up! ";
+                        this.setStatus(Status.NORMAL);
+                    }
+                    break;
+            }
+            if (this.isConfused() && !confused) {
+                rand = new SecureRandom();
+                int hit = rand.nextInt((100 - 1) + 1) + 1;
+                if (hit > 50) {
+                    double randModifier = 0.85 + (1.0 - 0.85) * rand.nextDouble();
+                    double damageBuf = 0;
+                    damageBuf = (2.0 * (double) this.level + 10.0) / 250.0;
+                    damageBuf = damageBuf * ((double) attack / (double) defense);
+                    damageBuf = damageBuf * (double) 40 + 2.0;
+                    damageBuf = (damageBuf * randModifier);
+                    int damage = (int) damageBuf;
+                    this.damage(damage);
+                    return this.getName() + " is confused! It hit itself in confusion! " + this.getName() + " has " + this.getStat(Stats.HP) + "HP left!";
                 }
-                break;
-        }
-        if (this.isConfused() && !confused) {
-            rand = new SecureRandom();
-            int hit = rand.nextInt((100 - 1) + 1) + 1;
-            if (hit > 50) {
-                double randModifier = 0.85 + (1.0 - 0.85) * rand.nextDouble();
-                double damageBuf = 0;
-                damageBuf = (2.0 * (double) this.level + 10.0) / 250.0;
-                damageBuf = damageBuf * ((double) attack / (double) defense);
-                damageBuf = damageBuf * (double) 40 + 2.0;
-                damageBuf = (damageBuf * randModifier);
-                int damage = (int) damageBuf;
-                this.damage(damage);
-                return this.getName() + " is confused! It hit itself in confusion! " + this.getName() + " has " + this.getStat(Stats.HP) + "HP left!";
             }
-        }
-        if (this.isAttracted()) {
-            rand = new SecureRandom();
-            int hit = rand.nextInt((100 - 1) + 1) + 1;
-            if (hit > 50) {
-                return this.getName() + " is immobilized by it's attraction! MVGame";
+            if (this.isAttracted()) {
+                rand = new SecureRandom();
+                int hit = rand.nextInt((100 - 1) + 1) + 1;
+                if (hit > 50) {
+                    return this.getName() + " is immobilized by it's attraction! MVGame";
+                }
             }
-        }
-        if (this.getStatus() != null && this.getStatus() == Status.NO_MOVE_THIS_TURN) {
-            this.setStatus(Status.NORMAL);
-            return this.getName() + " must recharge!";
-        }
-        toReturn += this.getName() + " used " + move.getName() + "!";
-        if (opponent.isFainted()) {
-            toReturn += " But there was no target...";
-            return toReturn;
-        }
-        if (move.getAccuracy() != 100 && move.getAccuracy() != 0 && !confused) {
-            rand = new SecureRandom();
-            int hit = rand.nextInt((100 - 1) + 1) + 1;
-            if (hit > move.getAccuracy()) {
-                toReturn += "\nThe attack missed!";
+            toReturn += this.getName() + " used " + move.getName() + "!";
+            if (opponent.isFainted()) {
+                toReturn += " But there was no target...";
                 return toReturn;
             }
-        }
-        int effective1 = Pokemon.effectiveness(move.getType(), opponent.getType1());
-        int effective2 = Pokemon.effectiveness(move.getType(), opponent.getType2());
-        double effectiveness = 1.0;
-        if (effective2 == -5) {
-            switch (effective1) {
-                case 0:
-                    effectiveness = 0.0;
-                    break;
-                case -1:
-                    effectiveness = 0.5;
-                    break;
-                case 1:
-                    effectiveness = 1.0;
-                    break;
-                case 2:
-                    effectiveness = 2.0;
-                    break;
-                default:
-                    effectiveness = 1.0;
-                    break;
+            if (move.getAccuracy() != 100 && move.getAccuracy() != 0 && !confused) {
+                rand = new SecureRandom();
+                int hit = rand.nextInt((100 - 1) + 1) + 1;
+                if (hit > move.getAccuracy()) {
+                    toReturn += "\nThe attack missed!";
+                    return toReturn;
+                }
             }
-        } else {
-            switch (effective1) {
-                case 0:
-                    effectiveness = 0.0;
-                    break;
-                case -1:
-                    switch (effective2) {
-                        case 0:
-                            effectiveness = 0.0;
-                            break;
-                        case -1:
-                            effectiveness = 0.25;
-                            break;
-                        case 1:
-                            effectiveness = 0.5;
-                            break;
-                        case 2:
-                            effectiveness = 1.0;
-                            break;
-                    }
-                    break;
-                case 1:
-                    switch (effective2) {
-                        case 0:
-                            effectiveness = 0.0;
-                            break;
-                        case -1:
-                            effectiveness = 0.5;
-                            break;
-                        case 1:
-                            effectiveness = 1.0;
-                            break;
-                        case 2:
-                            effectiveness = 2.0;
-                            break;
-                    }
-                    break;
-                case 2:
-                    switch (effective2) {
-                        case 0:
-                            effectiveness = 0.0;
-                            break;
-                        case -1:
-                            effectiveness = 1.0;
-                            break;
-                        case 1:
-                            effectiveness = 2.0;
-                            break;
-                        case 2:
-                            effectiveness = 4.0;
-                            break;
-                    }
-                    break;
+            int effective1 = Pokemon.effectiveness(move.getType(), opponent.getType1());
+            int effective2 = Pokemon.effectiveness(move.getType(), opponent.getType2());
+            double effectiveness = 1.0;
+            if (effective2 == -5) {
+                switch (effective1) {
+                    case 0:
+                        effectiveness = 0.0;
+                        break;
+                    case -1:
+                        effectiveness = 0.5;
+                        break;
+                    case 1:
+                        effectiveness = 1.0;
+                        break;
+                    case 2:
+                        effectiveness = 2.0;
+                        break;
+                    default:
+                        effectiveness = 1.0;
+                        break;
+                }
+            } else {
+                switch (effective1) {
+                    case 0:
+                        effectiveness = 0.0;
+                        break;
+                    case -1:
+                        switch (effective2) {
+                            case 0:
+                                effectiveness = 0.0;
+                                break;
+                            case -1:
+                                effectiveness = 0.25;
+                                break;
+                            case 1:
+                                effectiveness = 0.5;
+                                break;
+                            case 2:
+                                effectiveness = 1.0;
+                                break;
+                        }
+                        break;
+                    case 1:
+                        switch (effective2) {
+                            case 0:
+                                effectiveness = 0.0;
+                                break;
+                            case -1:
+                                effectiveness = 0.5;
+                                break;
+                            case 1:
+                                effectiveness = 1.0;
+                                break;
+                            case 2:
+                                effectiveness = 2.0;
+                                break;
+                        }
+                        break;
+                    case 2:
+                        switch (effective2) {
+                            case 0:
+                                effectiveness = 0.0;
+                                break;
+                            case -1:
+                                effectiveness = 1.0;
+                                break;
+                            case 1:
+                                effectiveness = 2.0;
+                                break;
+                            case 2:
+                                effectiveness = 4.0;
+                                break;
+                        }
+                        break;
+                }
             }
-        }
-        if (move.getCategory() == MoveCategory.STATUS) {
+            if (move.getCategory() == MoveCategory.STATUS) {
+                if (effectiveness == 0) {
+                    toReturn += "\nIt doesn't affect the opponent!";
+                    return toReturn;
+                }
+                String effect = "";
+                if (move.getEffectChance() != -1 && move.getEffect() != null) {
+                    int chance = rand.nextInt(100) + 1;
+                    if (chance <= move.getEffectChance() || move.getEffectChance() == 100) {
+                        effect = move.getEffect().run(this, opponent, 0, move);
+                    }
+                }
+                return toReturn += " " + effect;
+
+            }
+            if (effectiveness >= 2.0) {
+                toReturn += "\nIt's Super Effective!";
+            }
+            if (effectiveness > 0 && effectiveness < 1) {
+                toReturn += "\nIt's not very effective...";
+            }
             if (effectiveness == 0) {
                 toReturn += "\nIt doesn't affect the opponent!";
                 return toReturn;
             }
+            double stab = 1.0;
+            if (this.type1 == move.getType() || this.type2 == move.getType()) {
+                stab = 1.5;
+            }
+            double critical = 1.0;
+            int randomNum = rand.nextInt((16 - 1) + 1) + 1;
+            if (randomNum == 1) {
+                critical = 1.5;
+                toReturn += "\nCritical Hit!!";
+            }
+            rand = new SecureRandom();
+            double randModifier = 0.85 + (1.0 - 0.85) * rand.nextDouble();
+            double modifier = stab * effectiveness * critical * randModifier;
+            double damageBuf = 0.0;
+            if (move.getCategory() == MoveCategory.PHYSICAL) {
+                damageBuf = (2.0 * (double) this.level + 10.0) / 250.0;
+                damageBuf = damageBuf * ((double) attack / (double) defense);
+                damageBuf = damageBuf * (double) move.getPower() + 2.0;
+                damageBuf = (damageBuf * modifier);
+            } else if (move.getCategory() == MoveCategory.SPECIAL) {
+                damageBuf = (2.0 * (double) level + 10.0) / 250.0;
+                damageBuf = damageBuf * ((double) spAttack / (double) spDefense);
+                damageBuf = damageBuf * (double) move.getPower() + 2.0;
+                damageBuf = (damageBuf * modifier);
+            }
+            int damage = (int) damageBuf;
+            int damageBuffer = damage;
+            if (damageBuffer > opponent.getStat(Stats.HP)) {
+                damageBuffer = opponent.getStat(Stats.HP);
+            }
+
             String effect = "";
             if (move.getEffectChance() != -1 && move.getEffect() != null) {
                 int chance = rand.nextInt(100) + 1;
                 if (chance <= move.getEffectChance() || move.getEffectChance() == 100) {
-                    effect = move.getEffect().run(this, opponent, 0, move);
+                    effect = move.getEffect().run(this, opponent, damageBuffer, move);
                 }
             }
-            return toReturn += " " + effect;
 
-        }
-        if (effectiveness >= 2.0) {
-            toReturn += "\nIt's Super Effective!";
-        }
-        if (effectiveness > 0 && effectiveness < 1) {
-            toReturn += "\nIt's not very effective...";
-        }
-        if (effectiveness == 0) {
-            toReturn += "\nIt doesn't affect the opponent!";
+            opponent.damage(damage);
+            toReturn += "\n" + opponent.getName() + " lost " + damageBuffer + "hp! " + opponent.getName() + " has " + opponent.getStat(Stats.HP) + "hp left!";
+            if (effect != null && !effect.isEmpty()) {
+                toReturn += " " + effect;
+            }
+            return toReturn;
+        } finally {
+            if (this.getStatus() == Status.TOXIC) {
+                this.toxicCount++;
+                int dmg = (int) ((double) this.getMaxHP() / ((double) this.toxicCount / (double) 16));
+                toReturn += this.getName() + " lost " + dmg + "hp due to poison!";
+            } else if (this.getStatus() == Status.POISON) {
+                int dmg = (int) ((double) this.getMaxHP() / 8);
+                toReturn += this.getName() + " lost " + dmg + "hp due to poison!";
+            }
             return toReturn;
         }
-        double stab = 1.0;
-        if (this.type1 == move.getType() || this.type2 == move.getType()) {
-            stab = 1.5;
-        }
-        double critical = 1.0;
-        int randomNum = rand.nextInt((16 - 1) + 1) + 1;
-        if (randomNum == 1) {
-            critical = 1.5;
-            toReturn += "\nCritical Hit!!";
-        }
-        rand = new SecureRandom();
-        double randModifier = 0.85 + (1.0 - 0.85) * rand.nextDouble();
-        double modifier = stab * effectiveness * critical * randModifier;
-        double damageBuf = 0.0;
-        if (move.getCategory() == MoveCategory.PHYSICAL) {
-            damageBuf = (2.0 * (double) this.level + 10.0) / 250.0;
-            damageBuf = damageBuf * ((double) attack / (double) defense);
-            damageBuf = damageBuf * (double) move.getPower() + 2.0;
-            damageBuf = (damageBuf * modifier);
-        } else if (move.getCategory() == MoveCategory.SPECIAL) {
-            damageBuf = (2.0 * (double) level + 10.0) / 250.0;
-            damageBuf = damageBuf * ((double) spAttack / (double) spDefense);
-            damageBuf = damageBuf * (double) move.getPower() + 2.0;
-            damageBuf = (damageBuf * modifier);
-        }
-        int damage = (int) damageBuf;
-        int damageBuffer = damage;
-        if (damageBuffer > opponent.getStat(Stats.HP)) {
-            damageBuffer = opponent.getStat(Stats.HP);
-        }
-
-        String effect = "";
-        if (move.getEffectChance() != -1 && move.getEffect() != null) {
-            int chance = rand.nextInt(100) + 1;
-            if (chance <= move.getEffectChance() || move.getEffectChance() == 100) {
-                effect = move.getEffect().run(this, opponent, damageBuffer, move);
-            }
-        }
-
-        opponent.damage(damage);
-        toReturn += "\n" + opponent.getName() + " lost " + damageBuffer + "hp! " + opponent.getName() + " has " + opponent.getStat(Stats.HP) + "hp left!";
-        if (effect != null && !effect.isEmpty()) {
-            toReturn += " " + effect;
-        }
-        return toReturn;
     }
 
     //-1 = 1/2 dmg, 0 = no effect, 1 = normal, 2 = super effective
@@ -1244,19 +1295,19 @@ public class Pokemon implements Serializable {
             return;
         }
         SecureRandom rand = new SecureRandom();
-        while (this.getMove1() == null || this.getMove1().getCategory() == MoveCategory.STATUS && !this.getMove1().hasMoveEffect() || (this.getMove1().getPower() == 0 || this.getMove1().getAccuracy() == 0 || this.getMove1().getCategory() == MoveCategory.STATUS)) {
+        while (this.getMove1() == null || (this.getMove1().getCategory() == MoveCategory.STATUS && !this.getMove1().hasMoveEffect()) || (this.getMove1().getPower() == 0 || this.getMove1().getAccuracy() == 0 || this.getMove1().getCategory() == MoveCategory.STATUS)) {
             int index = rand.nextInt(compatableMoves.size());
             this.setMove1(getMove(compatableMoves.get(index)));
         }
-        while (this.getMove2() == null || this.getMove2().getCategory() == MoveCategory.STATUS && !this.getMove2().hasMoveEffect() || (this.getMove2().getPower() == 0 || this.getMove2().getAccuracy() == 0 || this.getMove2().getCategory() == MoveCategory.STATUS || this.getMove2().equals(this.getMove1()))) {
+        while (this.getMove2() == null || (this.getMove2().getCategory() == MoveCategory.STATUS && !this.getMove2().hasMoveEffect()) || (this.getMove2().getPower() == 0 || this.getMove2().getAccuracy() == 0 || this.getMove2().getCategory() == MoveCategory.STATUS || this.getMove2().equals(this.getMove1()))) {
             int index = rand.nextInt(compatableMoves.size());
             this.setMove2(getMove(compatableMoves.get(index)));
         }
-        while (this.getMove3() == null || this.getMove3().getCategory() == MoveCategory.STATUS && !this.getMove3().hasMoveEffect() || (this.getMove3().getPower() == 0 || this.getMove3().getAccuracy() == 0 || this.getMove3().getCategory() == MoveCategory.STATUS || this.getMove3().equals(this.getMove1()) || this.getMove3().equals(this.getMove2()))) {
+        while (this.getMove3() == null || (this.getMove3().getCategory() == MoveCategory.STATUS && !this.getMove3().hasMoveEffect()) || (this.getMove3().getPower() == 0 || this.getMove3().getAccuracy() == 0 || this.getMove3().getCategory() == MoveCategory.STATUS || this.getMove3().equals(this.getMove1()) || this.getMove3().equals(this.getMove2()))) {
             int index = rand.nextInt(compatableMoves.size());
             this.setMove3(getMove(compatableMoves.get(index)));
         }
-        while (this.getMove4() == null || this.getMove4().getCategory() == MoveCategory.STATUS && !this.getMove4().hasMoveEffect() || (this.getMove4().getPower() == 0 || this.getMove4().getAccuracy() == 0 || this.getMove4().getCategory() == MoveCategory.STATUS || this.getMove4().equals(this.getMove1()) || this.getMove4().equals(this.getMove2()) || this.getMove4().equals(this.getMove3()))) {
+        while (this.getMove4() == null || (this.getMove4().getCategory() == MoveCategory.STATUS && !this.getMove4().hasMoveEffect()) || (this.getMove4().getPower() == 0 || this.getMove4().getAccuracy() == 0 || this.getMove4().getCategory() == MoveCategory.STATUS || this.getMove4().equals(this.getMove1()) || this.getMove4().equals(this.getMove2()) || this.getMove4().equals(this.getMove3()))) {
             int index = rand.nextInt(compatableMoves.size());
             this.setMove4(getMove(compatableMoves.get(index)));
         }
