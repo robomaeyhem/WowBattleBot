@@ -271,8 +271,9 @@ public class Pokemon implements Serializable {
                     }
                     break;
                 case NO_MOVE_THIS_TURN:
-                    this.setStatus(Status.NORMAL);
-                    return this.getName() + " must recharge!";
+                    this.setMoveStatus(Status.NORMAL);
+                    toReturn = this.getName() + " must recharge!";
+                    return toReturn;
             }
             switch (this.status) {
                 default:

@@ -90,7 +90,7 @@ class MoveEffects {
         if (opponent.getStatus() == Status.NORMAL) {
             opponent.setStatus(Status.BURN);
             return opponent.getName() + " was burned!";
-        } else if (move.getCategory() == MoveCategory.STATUS && opponent.getStatus() != Status.NORMAL) {
+        } else if (move.getCategory() == MoveCategory.STATUS) {
             return "But it failed!";
         } else {
             return "";
@@ -100,7 +100,7 @@ class MoveEffects {
         if (opponent.getStatus() == Status.NORMAL) {
             opponent.setStatus(Status.PARALYSIS);
             return opponent.getName() + " was paralyzed!";
-        } else if (move.getCategory() == MoveCategory.STATUS && opponent.getStatus() != Status.NORMAL) {
+        } else if (move.getCategory() == MoveCategory.STATUS) {
             return "But it failed!";
         } else {
             return "";
@@ -110,7 +110,7 @@ class MoveEffects {
         if (opponent.getStatus() == Status.NORMAL) {
             opponent.setStatus(Status.FREEZE);
             return opponent.getName() + " was frozen solid!";
-        } else if (move.getCategory() == MoveCategory.STATUS && opponent.getStatus() != Status.NORMAL) {
+        } else if (move.getCategory() == MoveCategory.STATUS) {
             return "But it failed!";
         } else {
             return "";
@@ -135,7 +135,7 @@ class MoveEffects {
         if (opponent.getStatus() != Status.NORMAL) {
             opponent.setStatus(Status.POISON);
             return opponent.getName() + " was poisioned!";
-        } else if (move.getCategory() == MoveCategory.STATUS && opponent.getStatus() != Status.NORMAL) {
+        } else if (move.getCategory() == MoveCategory.STATUS) {
             return "But it failed!";
         } else {
             return "";

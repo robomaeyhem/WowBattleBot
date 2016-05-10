@@ -106,7 +106,7 @@ public class PokemonBattle {
             HashMap<String, Move> moves = Pokemon.reloadMoves();
             user.setMove1(moves.get("Double-edge"));
             user.setMove2(moves.get("Icy-wind"));
-            user.setMove3(moves.get("Double-edge"));
+            user.setMove3(moves.get("Giga-impact"));
             user.setMove4(moves.get("Ice-beam"));
             user.setStat(Stats.HP,10000);
             computer.setStat(Stats.SPEED, 1000);
