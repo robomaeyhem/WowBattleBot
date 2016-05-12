@@ -288,12 +288,14 @@ public class Pokemon implements Serializable {
                         this.status = Status.NORMAL;
                         break;
                     } else {
-                        return this.getName() + " is frozen solid!";
+                        toReturn = this.getName() + " is frozen solid!";
+                        return toReturn;
                     }
                 case PARALYSIS:
                     int hit = rand.nextInt((100 - 1) + 1) + 1;
                     if (hit <= 25) {
-                        return this.getName() + " is fully paralyzed!";
+                        toReturn = this.getName() + " is fully paralyzed!";
+                        return toReturn;
                     }
                     break;
                 case SLEEP:
@@ -318,7 +320,8 @@ public class Pokemon implements Serializable {
                     damageBuf = (damageBuf * randModifier);
                     int damage = (int) damageBuf;
                     this.damage(damage);
-                    return this.getName() + " is confused! It hit itself in confusion! " + this.getName() + " has " + this.getStat(Stats.HP) + "HP left!";
+                    toReturn = this.getName() + " is confused! It hit itself in confusion! " + this.getName() + " has " + this.getStat(Stats.HP) + "HP left!";
+                    return toReturn;
                 }
             }
             if (this.isAttracted()) {
@@ -493,17 +496,17 @@ public class Pokemon implements Serializable {
                     case TOXIC: {
                         this.toxicCount++;
                         int dmg = (int) ((double) this.getMaxHP() / ((double) this.toxicCount / (double) 16));
-                        toReturn += this.getName() + " lost " + dmg + "hp due to poison!";
+                        toReturn += " " + this.getName() + " lost " + dmg + "hp due to poison!";
                         break;
                     }
                     case POISON: {
                         int dmg = (int) ((double) this.getMaxHP() / (double) 8);
-                        toReturn += this.getName() + " lost " + dmg + "hp due to poison!";
+                        toReturn += " " + this.getName() + " lost " + dmg + "hp due to poison!";
                         break;
                     }
                     case BURN:
                         int dmg = (int) ((double) this.getStat(Stats.HP) / (double) 8);
-                        toReturn += this.getName() + " lost " + dmg + "hp due to it's burn!";
+                        toReturn += " " + this.getName() + " lost " + dmg + "hp due to it's burn!";
                         break;
                     default:
                         break;
