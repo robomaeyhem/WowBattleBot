@@ -41,7 +41,7 @@ public class SafariBattle {
 
     public void doBattle(BattleBot b, String channel) {
         b.music.play(b.determineMusic(wild));
-        b.sendMessage(channel, "A Wild " + wild.getName() + " (Level " + wild.getLevel() + ") Appeared!");
+        b.sendMessage(channel, (BattleBot.isLegendary(wild.getId()) ? "Woah! " : "") + "A Wild " + wild.getName() + " (Level " + wild.getLevel() + ") Appeared!");
         recalcCatch();
         boolean caught = false;
         boolean end = false;

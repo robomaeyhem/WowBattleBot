@@ -108,7 +108,7 @@ public class PokemonBattle {
             user.setMove2(moves.get("Icy-wind"));
             user.setMove3(moves.get("Giga-impact"));
             user.setMove4(moves.get("Ice-beam"));
-            user.setStat(Stats.HP,10000);
+            user.setStat(Stats.HP, 10000);
             computer.setStat(Stats.SPEED, 1000);
             computer.setMove1(moves.get("Take-down"));
             computer.setMove2(moves.get("Thunderbolt"));
@@ -116,7 +116,7 @@ public class PokemonBattle {
             computer.setMove4(moves.get("Blizzard"));
         }
         b.music.play(b.determineMusic(computer));
-        b.sendMessage(channel, "A wild " + computer.getName() + " (level " + (bigBrother && !fromChef ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙" : level2) + ") appeared! Go " + user.getName() + "! (Level " + (bigBrother && fromChef && user.getName().equalsIgnoreCase("Magikarp") && user.getMove1().getName().equalsIgnoreCase("Shadow-force") ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙" : level1) + ")");
+        b.sendMessage(channel, (BattleBot.isLegendary(computer.getId()) ? "Woah! " : "") + "A wild " + computer.getName() + " (level " + (bigBrother && !fromChef ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙" : level2) + ") appeared! Go " + user.getName() + "! (Level " + (bigBrother && fromChef && user.getName().equalsIgnoreCase("Magikarp") && user.getMove1().getName().equalsIgnoreCase("Shadow-force") ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙" : level1) + ")");
         System.err.println("User moves = " + user.getMove1().getName() + ", " + user.getMove2().getName() + ", " + user.getMove3().getName() + ", " + user.getMove4().getName() + ", ");
         System.err.println("Computer moves = " + computer.getMove1().getName() + ", " + computer.getMove2().getName() + ", " + computer.getMove3().getName() + ", " + computer.getMove4().getName() + ", ");
         try {
@@ -140,7 +140,7 @@ public class PokemonBattle {
                     doUsersMove(user, computer, move);
                     if (!computer.isFainted()) {
                         if (computer.isFlinched()) {
-                            b.sendMessage(channel, computer.getName()+" flinched!");
+                            b.sendMessage(channel, computer.getName() + " flinched!");
                             computer.setFlinch(false);
                         } else {
                             doComputerMove(user, computer);
@@ -156,7 +156,7 @@ public class PokemonBattle {
                     doComputerMove(user, computer);
                     if (!user.isFainted()) {
                         if (user.isFlinched()) {
-                            b.sendMessage(channel, user.getName()+" flinched!");
+                            b.sendMessage(channel, user.getName() + " flinched!");
                             user.setFlinch(false);
                         } else {
                             if (move.equalsIgnoreCase("run")) {
@@ -185,7 +185,7 @@ public class PokemonBattle {
                         doUsersMove(user, computer, move);
                         if (!computer.isFainted()) {
                             if (computer.isFlinched()) {
-                                b.sendMessage(channel, computer.getName()+" flinched!");
+                                b.sendMessage(channel, computer.getName() + " flinched!");
                                 computer.setFlinch(false);
                             } else {
                                 doComputerMove(user, computer);
@@ -201,7 +201,7 @@ public class PokemonBattle {
                         doComputerMove(user, computer);
                         if (!user.isFainted()) {
                             if (user.isFlinched()) {
-                                b.sendMessage(channel, user.getName()+" flinched!");
+                                b.sendMessage(channel, user.getName() + " flinched!");
                                 user.setFlinch(false);
                             } else {
                                 if (move.equalsIgnoreCase("run")) {
