@@ -87,7 +87,7 @@ class MoveEffects {
         }
     };
     public static MoveEffect BURN = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
-        if (opponent.getStatus() == Status.NORMAL) {
+        if (opponent.getStatus() == Status.NORMAL && (opponent.getType1() != Type.FIRE || opponent.getType2() != Type.FIRE)) {
             opponent.setStatus(Status.BURN);
             return opponent.getName() + " was burned!";
         } else if (move.getCategory() == MoveCategory.STATUS) {
@@ -145,16 +145,28 @@ class MoveEffects {
         if (opponent.getStatus() != Status.NORMAL) {
             int rand = new SecureRandom().nextInt(2);
             Status status = null;
-            switch (rand) {
-                case 0:
-                    status = Status.BURN;
-                    break;
-                case 1:
-                    status = Status.FREEZE;
-                    break;
-                case 2:
-                    status = Status.PARALYSIS;
-                    break;
+            if (opponent.getType1() == Type.FIRE || opponent.getType2() == Type.FIRE) {
+                rand = new SecureRandom().nextInt(1);
+                switch (rand) {
+                    case 0:
+                        status = Status.FREEZE;
+                        break;
+                    case 1:
+                        status = Status.PARALYSIS;
+                        break;
+                }
+            } else {
+                switch (rand) {
+                    case 0:
+                        status = Status.BURN;
+                        break;
+                    case 1:
+                        status = Status.FREEZE;
+                        break;
+                    case 2:
+                        status = Status.PARALYSIS;
+                        break;
+                }
             }
             opponent.setStatus(status);
             String toReturn = "";

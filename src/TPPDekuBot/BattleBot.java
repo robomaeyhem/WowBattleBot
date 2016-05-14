@@ -383,7 +383,7 @@ public class BattleBot extends PircBot {
             Thread t = new Thread(() -> {
                 try {
                     String target = messageFinal.split("@", 2)[1].split(" ", 2)[0];
-                    if (target.isEmpty()) {
+                    if (target.isEmpty() || target.contains("/") || target.contains(".")) {
                         this.sendMessage(channel, "FUNgineer");
                         return;
                     }

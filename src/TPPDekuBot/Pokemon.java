@@ -286,6 +286,7 @@ public class Pokemon implements Serializable {
                     int cure = rand.nextInt((100 - 1) + 1) + 1;
                     if (cure <= 20) {
                         this.status = Status.NORMAL;
+                        toReturn = this.getName() + " thawed out! ";
                         break;
                     } else {
                         toReturn = this.getName() + " is frozen solid!";
