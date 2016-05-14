@@ -97,7 +97,7 @@ class MoveEffects {
         }
     };
     public static MoveEffect PARALYZE = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
-        if (opponent.getStatus() == Status.NORMAL) {
+        if (opponent.getStatus() == Status.NORMAL && (opponent.getType1() != Type.ELECTRIC || opponent.getType2() != Type.ELECTRIC)) {
             opponent.setStatus(Status.PARALYSIS);
             return opponent.getName() + " was paralyzed!";
         } else if (move.getCategory() == MoveCategory.STATUS) {
@@ -107,7 +107,7 @@ class MoveEffects {
         }
     };
     public static MoveEffect FREEZE = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
-        if (opponent.getStatus() == Status.NORMAL) {
+        if (opponent.getStatus() == Status.NORMAL && (opponent.getType1() != Type.ICE || opponent.getType2() != Type.ICE)) {
             opponent.setStatus(Status.FREEZE);
             return opponent.getName() + " was frozen solid!";
         } else if (move.getCategory() == MoveCategory.STATUS) {
@@ -145,28 +145,83 @@ class MoveEffects {
         if (opponent.getStatus() != Status.NORMAL) {
             int rand = new SecureRandom().nextInt(2);
             Status status = null;
-            if (opponent.getType1() == Type.FIRE || opponent.getType2() == Type.FIRE) {
-                rand = new SecureRandom().nextInt(1);
-                switch (rand) {
-                    case 0:
-                        status = Status.FREEZE;
-                        break;
-                    case 1:
-                        status = Status.PARALYSIS;
-                        break;
-                }
-            } else {
-                switch (rand) {
-                    case 0:
-                        status = Status.BURN;
-                        break;
-                    case 1:
-                        status = Status.FREEZE;
-                        break;
-                    case 2:
-                        status = Status.PARALYSIS;
-                        break;
-                }
+            switch (opponent.getType1()) {
+                case FIRE:
+                    switch (opponent.getType2()) {
+                        case ICE: //interesting combo, regardless:
+                            status = Status.PARALYSIS;
+                            break;
+                        case ELECTRIC:
+                            status = Status.FREEZE;
+                            break;
+                        default:
+                            rand = new SecureRandom().nextInt(1);
+                            switch (rand) {
+                                case 0:
+                                    status = Status.PARALYSIS;
+                                    break;
+                                case 1:
+                                    status = Status.FREEZE;
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                case ICE:
+                    switch (opponent.getType2()) {
+                        case FIRE: //interesting combo, regardless:
+                            status = Status.PARALYSIS;
+                            break;
+                        case ELECTRIC:
+                            status = Status.BURN;
+                            break;
+                        default:
+                            rand = new SecureRandom().nextInt(1);
+                            switch (rand) {
+                                case 0:
+                                    status = Status.PARALYSIS;
+                                    break;
+                                case 1:
+                                    status = Status.BURN;
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                case ELECTRIC:
+                    switch (opponent.getType2()) {
+                        case FIRE:
+                            status = Status.FREEZE;
+                            break;
+                        case ICE:
+                            status = Status.BURN;
+                            break;
+                        default:
+                            rand = new SecureRandom().nextInt(1);
+                            switch (rand) {
+                                case 0:
+                                    status = Status.BURN;
+                                    break;
+                                case 1:
+                                    status = Status.FREEZE;
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                default:
+                    switch (rand) {
+                        case 0:
+                            status = Status.BURN;
+                            break;
+                        case 1:
+                            status = Status.FREEZE;
+                            break;
+                        case 2:
+                            status = Status.PARALYSIS;
+                            break;
+                    }
+                    break;
             }
             opponent.setStatus(status);
             String toReturn = "";
