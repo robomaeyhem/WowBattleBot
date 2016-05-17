@@ -506,7 +506,7 @@ public class Pokemon implements Serializable {
                         break;
                     }
                     case BURN:
-                        int dmg = (int) ((double) this.getStat(Stats.HP) / (double) 8);
+                        int dmg = (int) ((double) this.getMaxHP() / (double) 8);
                         toReturn += " " + this.getName() + " lost " + dmg + "hp due to it's burn!";
                         break;
                     default:
