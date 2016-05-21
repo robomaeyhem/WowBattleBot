@@ -497,16 +497,28 @@ public class Pokemon implements Serializable {
                     case TOXIC: {
                         this.toxicCount++;
                         int dmg = (int) ((double) this.getMaxHP() * ((double) this.toxicCount / (double) 16));
+                        if (dmg > this.getStat(Stats.HP)) {
+                            dmg = this.getStat(Stats.HP);
+                        }
+                        this.damage(dmg);
                         toReturn += " " + this.getName() + " lost " + dmg + "hp due to poison!";
                         break;
                     }
                     case POISON: {
                         int dmg = (int) ((double) this.getMaxHP() / (double) 8);
+                        if (dmg > this.getStat(Stats.HP)) {
+                            dmg = this.getStat(Stats.HP);
+                        }
+                        this.damage(dmg);
                         toReturn += " " + this.getName() + " lost " + dmg + "hp due to poison!";
                         break;
                     }
                     case BURN:
                         int dmg = (int) ((double) this.getMaxHP() / (double) 8);
+                        if (dmg > this.getStat(Stats.HP)) {
+                            dmg = this.getStat(Stats.HP);
+                        }
+                        this.damage(dmg);
                         toReturn += " " + this.getName() + " lost " + dmg + "hp due to it's burn!";
                         break;
                     default:
