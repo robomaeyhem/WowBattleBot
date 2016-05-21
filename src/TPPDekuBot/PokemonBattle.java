@@ -104,12 +104,12 @@ public class PokemonBattle {
             user = new Pokemon(363, 80);
             computer = new Pokemon(170, 73);
             HashMap<String, Move> moves = Pokemon.reloadMoves();
-            user.setMove1(moves.get("Double-edge"));
+            user.setMove1(moves.get("Toxic"));
             user.setMove2(moves.get("Icy-wind"));
             user.setMove3(moves.get("Giga-impact"));
             user.setMove4(moves.get("Ice-beam"));
+            user.setStat(Stats.SPEED, 1000);
             user.setStat(Stats.HP, 10000);
-            computer.setStat(Stats.SPEED, 1000);
             computer.setMove1(moves.get("Take-down"));
             computer.setMove2(moves.get("Thunderbolt"));
             computer.setMove3(moves.get("Round"));
