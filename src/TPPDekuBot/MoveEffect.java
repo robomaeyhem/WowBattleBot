@@ -87,7 +87,7 @@ class MoveEffects {
         }
     };
     public static MoveEffect BURN = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
-        if (opponent.getStatus() == Status.NORMAL && (opponent.getType1() != Type.FIRE || opponent.getType2() != Type.FIRE)) {
+        if (opponent.getStatus() == Status.NORMAL && (opponent.getType1() != Type.FIRE || opponent.getType2() != Type.FIRE) && !opponent.isFainted()) {
             opponent.setStatus(Status.BURN);
             return opponent.getName() + " was burned!";
         } else if (move.getCategory() == MoveCategory.STATUS) {
@@ -97,7 +97,7 @@ class MoveEffects {
         }
     };
     public static MoveEffect PARALYZE = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
-        if (opponent.getStatus() == Status.NORMAL && (opponent.getType1() != Type.ELECTRIC || opponent.getType2() != Type.ELECTRIC)) {
+        if (opponent.getStatus() == Status.NORMAL && (opponent.getType1() != Type.ELECTRIC || opponent.getType2() != Type.ELECTRIC) && !opponent.isFainted()) {
             opponent.setStatus(Status.PARALYSIS);
             return opponent.getName() + " was paralyzed!";
         } else if (move.getCategory() == MoveCategory.STATUS) {
@@ -107,7 +107,7 @@ class MoveEffects {
         }
     };
     public static MoveEffect FREEZE = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
-        if (opponent.getStatus() == Status.NORMAL && (opponent.getType1() != Type.ICE || opponent.getType2() != Type.ICE)) {
+        if (opponent.getStatus() == Status.NORMAL && (opponent.getType1() != Type.ICE || opponent.getType2() != Type.ICE) && !opponent.isFainted()) {
             opponent.setStatus(Status.FREEZE);
             return opponent.getName() + " was frozen solid!";
         } else if (move.getCategory() == MoveCategory.STATUS) {
@@ -132,7 +132,7 @@ class MoveEffects {
                 return "";
             }
         }
-        if (opponent.getStatus() != Status.NORMAL) {
+        if (opponent.getStatus() != Status.NORMAL && !opponent.isFainted()) {
             opponent.setStatus(Status.POISON);
             return opponent.getName() + " was poisioned!";
         } else if (move.getCategory() == MoveCategory.STATUS) {
