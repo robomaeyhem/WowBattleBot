@@ -7,7 +7,7 @@ import java.security.SecureRandom;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class MultiplayerBattle {
+public class MultiplayerBattle extends Battle {
 
     public Trainer player1;
     public Trainer player2;
@@ -77,40 +77,7 @@ public class MultiplayerBattle {
     public String getPlayer2() {
         return player2.getTrainerName();
     }
-
-//    private void doPlayer1Move(BattleBot b, String channel, String p1move) {
-//        switch (p1move) {
-//            case "1":
-//                b.sendMessage(channel, pokemon1.attack(pokemon2, pokemon1.getMove1()).replace("\n", " "));
-//                break;
-//            case "2":
-//                b.sendMessage(channel, pokemon1.attack(pokemon2, pokemon1.getMove2()).replace("\n", " "));
-//                break;
-//            case "3":
-//                b.sendMessage(channel, pokemon1.attack(pokemon2, pokemon1.getMove3()).replace("\n", " "));
-//                break;
-//            case "4":
-//                b.sendMessage(channel, pokemon1.attack(pokemon2, pokemon1.getMove4()).replace("\n", " "));
-//                break;
-//        }
-//    }
-//
-//    private void doPlayer2Move(BattleBot b, String channel, String p2move) {
-//        switch (p2move) {
-//            case "1":
-//                b.sendMessage(channel, pokemon2.attack(pokemon1, pokemon2.getMove1()).replace("\n", " "));
-//                break;
-//            case "2":
-//                b.sendMessage(channel, pokemon2.attack(pokemon1, pokemon2.getMove2()).replace("\n", " "));
-//                break;
-//            case "3":
-//                b.sendMessage(channel, pokemon2.attack(pokemon1, pokemon2.getMove3()).replace("\n", " "));
-//                break;
-//            case "4":
-//                b.sendMessage(channel, pokemon2.attack(pokemon1, pokemon2.getMove4()).replace("\n", " "));
-//                break;
-//        }
-//    }
+    
     private void doMove(BattleBot b, String channel, String move, Pokemon user, Pokemon opponent) {
         int m = Integer.parseInt(move);
         b.sendMessage(channel, user.attack(opponent, user.getMoveByNumber(m)).replace("\n", " "));

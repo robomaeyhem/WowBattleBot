@@ -17,6 +17,7 @@ public class Trainer {
     private ArrayList<Item> badges;
     private boolean defeatedChampion = false;
     private int eliteFour;
+    private boolean ai;
 
     public Trainer(String name, ArrayList<Pokemon> pokemon, ArrayList<Item> items) {
         this.pokemon = pokemon;

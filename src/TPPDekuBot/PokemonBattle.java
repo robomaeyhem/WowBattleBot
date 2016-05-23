@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class PokemonBattle {
+public class PokemonBattle extends Battle{
 
     private BattleBot b;
     private String channel;

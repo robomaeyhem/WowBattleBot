@@ -6,7 +6,7 @@ import java.security.SecureRandom;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class SafariBattle {
+public class SafariBattle extends Battle {
 
     public Trainer user;
     private Pokemon wild;
