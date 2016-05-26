@@ -584,6 +584,22 @@ public class BattleBot extends PircBot {
     }
 
     @Override
+    public void onSentMessage(String channel, String message) {
+        //multiplayer
+        if (message.contains("did not select a move in time.") || (message.contains(" forfeits! ") && (message.contains(" wins!") || message.contains("forfeits as well! The result of the Battle is a Draw! PipeHype"))) || message.contains("Something went wrong this battle is now over all the Pokemon got stolen by Team Rocket RuleFive") || message.contains("is out of usable Pokemon!") || message.contains("fainted too! The Battle ends in a Draw! NotLikeThis")) {
+            this.music.clear();
+        }
+        //singleplayer battle
+        if (message.contains(" did not select a move in time and got their Pokemon stolen by Team Rocket! RuleFive") || message.contains("You got away safely!") || message.contains(" fainted! You lose! BibleThump") || message.contains(" fainted! You Win! PogChamp")) {
+            this.music.clear();
+        }
+        //singleplayer safari
+        if (message.contains("did not select an action in time, the Pokemon was stolen by Team Flare WutFace") || message.contains(" was caught! Kreygasm") || message.contains("You got away safely!") || (message.contains("The wild") && message.contains("ran away!"))) {
+            this.music.clear();
+        }
+    }
+
+    @Override
     public void onJoin(Channel channel, User sender) {
         append(sender.getNick() + " JOIN " + channel.getChannelName());
     }

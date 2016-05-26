@@ -291,7 +291,6 @@ public class MultiplayerBattle extends Battle {
                     p1move = p1msg.poll(60, TimeUnit.SECONDS);
                     if (p1move == null) {
                         b.sendMessage(channel, player1.getTrainerName() + " did not select a move in time. " + player2.getTrainerName() + " wins!");
-                        b.music.clear();
                         return;
                     }
                     if (p1move.startsWith("!switch") && p1move.length() >= 8) {
@@ -342,7 +341,6 @@ public class MultiplayerBattle extends Battle {
                     p2move = p2msg.poll(60, TimeUnit.SECONDS);
                     if (p2move == null) {
                         b.sendMessage(channel, player2.getTrainerName() + " did not select a move in time. " + player1.getTrainerName() + " wins!");
-                        b.music.clear();
                         return;
                     }
                     if (p2move.startsWith("!switch") && p2move.length() >= 8) {
@@ -399,17 +397,14 @@ public class MultiplayerBattle extends Battle {
                 }
                 if (p1move.startsWith("!run") && !p2move.startsWith("!run")) {
                     b.sendMessage(channel, player1.getTrainerName() + " forfeits! " + player2.getTrainerName() + " wins!");
-                    b.music.clear();
                     return;
                 }
                 if (p2move.startsWith("!run") && !p1move.startsWith("!run")) {
                     b.sendMessage(channel, player2.getTrainerName() + " forfeits! " + player1.getTrainerName() + " wins!");
-                    b.music.clear();
                     return;
                 }
                 if (p1move.startsWith("!run") && p2move.startsWith("!run")) {
                     b.sendMessage(channel, player1.getTrainerName() + " forfeits! " + player2.getTrainerName() + " forfeits as well! The result of the Battle is a Draw! PipeHype");
-                    b.music.clear();
                     return;
                 }
                 if (Character.isDigit(p1move.charAt(5))) {
@@ -469,23 +464,11 @@ public class MultiplayerBattle extends Battle {
                 Pokemon first, second;
                 String m1, m2;
                 if (pokemon1.getStat(Stats.SPEED) > pokemon2.getStat(Stats.SPEED)) {
-//                    doPlayer1Move(b, channel, p1move);
-//                    if (!pokemon2.isFainted()) {
-//                        doPlayer2Move(b, channel, p2move);
-//                    } else {
-//                        break singlebattle;
-//                    }
                     first = pokemon1;
                     m1 = p1move;
                     second = pokemon2;
                     m2 = p2move;
                 } else if (pokemon1.getStat(Stats.SPEED) < pokemon2.getStat(Stats.SPEED)) {
-//                    doPlayer2Move(b, channel, p2move);
-//                    if (!pokemon1.isFainted()) {
-//                        doPlayer1Move(b, channel, p1move);
-//                    } else {
-//                        break singlebattle;
-//                    }
                     first = pokemon2;
                     m1 = p2move;
                     second = pokemon1;
@@ -500,21 +483,7 @@ public class MultiplayerBattle extends Battle {
                     m1 = p2move;
                     second = pokemon1;
                     m2 = p1move;
-                } //                    if (p1First) {
-                //                        doPlayer1Move(b, channel, p1move);
-                //                        if (!pokemon2.isFainted()) {
-                //                            doPlayer2Move(b, channel, p2move);
-                //                        } else {
-                //                            break singlebattle;
-                //                        }
-                //                    } else {
-                //                        doPlayer2Move(b, channel, p2move);
-                //                        if (!pokemon1.isFainted()) {
-                //                            doPlayer1Move(b, channel, p1move);
-                //                        } else {
-                //                            break singlebattle;
-                //                        }
-                //                    }
+                } 
                 boolean fainted = mainBattle(first, second, m1, m2, b, channel);
                 if (fainted) {
                     break singlebattle;
@@ -527,7 +496,6 @@ public class MultiplayerBattle extends Battle {
                     switchPlayer1(b, channel);
                     if (endBattle) {
                         b.sendMessage(channel, "Something went wrong this battle is now over all the Pokemon got stolen by Team Rocket RuleFive");
-                        b.music.clear();
                         return;
                     }
                     continue;
@@ -539,7 +507,6 @@ public class MultiplayerBattle extends Battle {
                     switchPlayer2(b, channel);
                     if (endBattle) {
                         b.sendMessage(channel, "Something went wrong this battle is now over all the Pokemon got stolen by Team Rocket RuleFive");
-                        b.music.clear();
                         return;
                     }
                     continue;
@@ -547,7 +514,6 @@ public class MultiplayerBattle extends Battle {
             }
             if (endBattle) {
                 b.sendMessage(channel, "Something went wrong this battle is now over all the Pokemon got stolen by Team Rocket RuleFive");
-                b.music.clear();
                 return;
             }
             //} while ((!player1.getPokemon().isEmpty() && !player2.getPokemon().isEmpty()) && (!pokemon1.isFainted() && !pokemon2.isFainted()));
@@ -585,7 +551,6 @@ public class MultiplayerBattle extends Battle {
         } else {
             System.err.println("Loop dun fucked up.");
         }
-        b.music.clear();
     }
 
     public boolean mainBattle(Pokemon p1, Pokemon p2, String move1, String move2, BattleBot b, String channel) {

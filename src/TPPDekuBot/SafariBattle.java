@@ -53,7 +53,6 @@ public class SafariBattle extends Battle {
                 String move = msg.poll(60, TimeUnit.SECONDS);
                 if (move == null) {
                     b.sendMessage(channel, user.getTrainerName() + " did not select an action in time, the Pokemon was stolen by Team Flare WutFace");
-                    b.music.clear();
                     end = true;
                     return;
                 }
@@ -94,13 +93,11 @@ public class SafariBattle extends Battle {
                         continue;
                     }
                     b.sendMessage(channel, "Awright! " + wild.getName() + " was caught! Kreygasm");
-                    b.music.clear();
                     caught = true;
                     return;
 
                 } else if (move.startsWith("!run")) {
                     b.sendMessage(channel, "You got away safely!");
-                    b.music.clear();
                     lastTurn = "run";
                     return;
                 }
@@ -118,7 +115,6 @@ public class SafariBattle extends Battle {
                     int random = new SecureRandom().nextInt(256);
                     if (random < (wild.getStat(Stats.SPEED) / 2)) {
                         b.sendMessage(channel, "The wild " + wild.getName() + " ran away!");
-                        b.music.clear();
                         return;
                     }
                 } else if (angry > eat) {
@@ -126,7 +122,6 @@ public class SafariBattle extends Battle {
                     int random = new SecureRandom().nextInt(256);
                     if (random < (wild.getStat(Stats.SPEED) * 4)) {
                         b.sendMessage(channel, "The wild " + wild.getName() + " ran away!");
-                        b.music.clear();
                         return;
                     }
                 } else {
@@ -134,7 +129,6 @@ public class SafariBattle extends Battle {
                     int random = new SecureRandom().nextInt(256);
                     if (random < (wild.getStat(Stats.SPEED) * 2)) {
                         b.sendMessage(channel, "The wild " + wild.getName() + " ran away!");
-                        b.music.clear();
                         return;
                     }
                 }
