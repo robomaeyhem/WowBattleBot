@@ -6,6 +6,11 @@ public abstract class Battle {
     private Move lastMoveTeam2;
     private Move delayedMove;
     private Weather weather = Weather.NORMAL;
+    public BattleBot b;
+
+    Battle(BattleBot b) {
+        this.b = b;
+    }
 
     public Move getLastMoveTeam1() {
         return lastMoveTeam1;

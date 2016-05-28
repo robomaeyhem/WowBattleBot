@@ -17,13 +17,18 @@ public class SafariBattle extends Battle {
     private double rate;
     private double catchChance;
     private double shakeProbability;
+    private BattleBot b;
 
-    public SafariBattle(String user, Pokemon wild) {
+    public SafariBattle(BattleBot b, String user, Pokemon wild) {
+        super(b);
+        this.b = b;
         this.user = new Trainer(user);
         this.wild = wild;
     }
 
-    public SafariBattle(Trainer user, Pokemon wild) {
+    public SafariBattle(BattleBot b, Trainer user, Pokemon wild) {
+        super(b);
+        this.b = b;
         this.user = user;
         this.wild = wild;
     }

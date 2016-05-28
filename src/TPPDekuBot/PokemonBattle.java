@@ -14,6 +14,7 @@ public class PokemonBattle extends Battle{
     private String player;
 
     public PokemonBattle(BattleBot b, String channel, boolean bigBrother, boolean fromChef, String player, boolean test) {
+        super(b);
         this.b = b;
         this.channel = channel;
         this.player = player;

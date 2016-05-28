@@ -21,9 +21,7 @@ public class MultiplayerBattle extends Battle {
     private int numberOfMon = 1;
     private boolean randomBattle;
     private boolean musicChanged = false;
-
-    private MultiplayerBattle() {
-    }
+    private BattleBot b;
 
     public final boolean isBannedPokemon(int poke) {
         int[] banned = {0, 132, 202, 235, 292, 360, 665};
@@ -38,7 +36,9 @@ public class MultiplayerBattle extends Battle {
         return false;
     }
 
-    public MultiplayerBattle(String player1, String player2, int level, int pokemonNumber) {
+    public MultiplayerBattle(BattleBot b, String player1, String player2, int level, int pokemonNumber) {
+        super(b);
+        this.b = b;
         this.player1 = new Trainer(player1, pokemonNumber, level);
         this.player2 = new Trainer(player2, pokemonNumber, level);
         this.pokemon1 = this.player1.getPokemon(0);
@@ -49,7 +49,9 @@ public class MultiplayerBattle extends Battle {
         randomBattle = true;
     }
 
-    public MultiplayerBattle(String player1, String player2, int level) {
+    public MultiplayerBattle(BattleBot b, String player1, String player2, int level) {
+        super(b);
+        this.b = b;
         this.player1 = new Trainer(player1, 1, level);
         this.player2 = new Trainer(player2, 1, level);
         this.pokemon1 = this.player1.getPokemon(0);
@@ -59,7 +61,9 @@ public class MultiplayerBattle extends Battle {
         randomBattle = true;
     }
 
-    public MultiplayerBattle(Trainer player1, Trainer player2) {
+    public MultiplayerBattle(BattleBot b, Trainer player1, Trainer player2) {
+        super(b);
+        this.b = b;
         randomBattle = false;
         this.player1 = player1;
         this.player2 = player2;
@@ -77,13 +81,13 @@ public class MultiplayerBattle extends Battle {
     public String getPlayer2() {
         return player2.getTrainerName();
     }
-    
-    private void doMove(BattleBot b, String channel, String move, Pokemon user, Pokemon opponent) {
+
+    private void doMove(String channel, String move, Pokemon user, Pokemon opponent) {
         int m = Integer.parseInt(move);
         b.sendMessage(channel, user.attack(opponent, user.getMoveByNumber(m)).replace("\n", " "));
     }
 
-    private void switchPlayer1(BattleBot b, String channel) {
+    private void switchPlayer1(String channel) {
         if (pokemon2.getLevel() == 100) {
             b.sendMessage(channel, pokemon1.getName() + " fainted! What Pokemon will " + player1.getTrainerName() + " switch to?");
         } else {
@@ -165,7 +169,7 @@ public class MultiplayerBattle extends Battle {
         }
     }
 
-    private void switchPlayer2(BattleBot b, String channel) {
+    private void switchPlayer2(String channel) {
         if (pokemon1.getLevel() == 100) {
             b.sendMessage(channel, pokemon2.getName() + " fainted! What Pokemon will " + player2.getTrainerName() + " switch to?");
         } else {
@@ -247,7 +251,7 @@ public class MultiplayerBattle extends Battle {
 
     }
 
-    public void doBattle(BattleBot b, String channel) {
+    public void doBattle(String channel) {
         boolean hasSent = false;
         b.music.play(b.determineMusic(player1.getTrnClass(), player2.getTrnClass(), player1.getTrainerName(), player2.getTrainerName()));
         b.sendMessage(channel, player1 + " is issuing a challenge against " + player2 + "!");
@@ -422,7 +426,7 @@ public class MultiplayerBattle extends Battle {
                     newName = pokemon1.getName();
                     b.sendMessage(channel, player1.getTrainerName() + " calls back " + oldName + " and sent out " + newName + "!");
                     //doPlayer2Move(b, channel, p2move);
-                    doMove(b, channel, p2move, pokemon2, pokemon1);
+                    doMove(channel, p2move, pokemon2, pokemon1);
                     if (pokemon1.isFainted()) {
                         break singlebattle;
                     }
@@ -436,8 +440,7 @@ public class MultiplayerBattle extends Battle {
                     player2.removePokemon(p2switchto);
                     newName = pokemon2.getName();
                     b.sendMessage(channel, player2.getTrainerName() + " calls back " + oldName + " and sent out " + newName + "!");
-                    //doPlayer1Move(b, channel, p1move);
-                    doMove(b, channel, p1move, pokemon1, pokemon2);
+                    doMove(channel, p1move, pokemon1, pokemon2);
                     if (pokemon2.isFainted()) {
                         break singlebattle;
                     }
@@ -483,8 +486,8 @@ public class MultiplayerBattle extends Battle {
                     m1 = p2move;
                     second = pokemon1;
                     m2 = p1move;
-                } 
-                boolean fainted = mainBattle(first, second, m1, m2, b, channel);
+                }
+                boolean fainted = mainBattle(first, second, m1, m2, channel);
                 if (fainted) {
                     break singlebattle;
                 }
@@ -493,7 +496,7 @@ public class MultiplayerBattle extends Battle {
                 if (player1.getPokemon().isEmpty()) {
                     break;
                 } else {
-                    switchPlayer1(b, channel);
+                    switchPlayer1(channel);
                     if (endBattle) {
                         b.sendMessage(channel, "Something went wrong this battle is now over all the Pokemon got stolen by Team Rocket RuleFive");
                         return;
@@ -504,7 +507,7 @@ public class MultiplayerBattle extends Battle {
                 if (player2.getPokemon().isEmpty()) {
                     break;
                 } else {
-                    switchPlayer2(b, channel);
+                    switchPlayer2(channel);
                     if (endBattle) {
                         b.sendMessage(channel, "Something went wrong this battle is now over all the Pokemon got stolen by Team Rocket RuleFive");
                         return;
@@ -553,15 +556,15 @@ public class MultiplayerBattle extends Battle {
         }
     }
 
-    public boolean mainBattle(Pokemon p1, Pokemon p2, String move1, String move2, BattleBot b, String channel) {
-        doMove(b, channel, move1, p1, p2);
+    public boolean mainBattle(Pokemon p1, Pokemon p2, String move1, String move2, String channel) {
+        doMove(channel, move1, p1, p2);
         if (!p2.isFainted()) {
             if (p2.isFlinched()) {
                 p2.setFlinch(false);
                 b.sendMessage(channel, p2.getName() + " flinched!");
                 return false;
             }
-            doMove(b, channel, move2, p2, p1);
+            doMove(channel, move2, p2, p1);
             return false;
         } else {
             return true;

@@ -362,7 +362,7 @@ public class BattleBot extends PircBot {
                     int level = new SecureRandom().nextInt(100 - 20 + 1) + 20;
                     int id = new SecureRandom().nextInt(718 - 1 + 1) + 1;
                     System.err.println("Attempting Pokemon ID " + id + " level " + level);
-                    sB = new SafariBattle(sender.getNick(), new Pokemon(id, level));
+                    sB = new SafariBattle(this, sender.getNick(), new Pokemon(id, level));
                     sB.doBattle(this, channel.getChannelName());
                     System.err.println("Now out of Safari Battle");
                     sB = null;
@@ -447,8 +447,8 @@ public class BattleBot extends PircBot {
                         waitingOn = "";
                         this.sendMessage(channel.getChannelName(), "Generating Pokemon, give me a minute...");
                         System.err.println("Going into Multiplayer Battle");
-                        mpB = new MultiplayerBattle(sender.getNick(), target, level, pkmAmt);
-                        mpB.doBattle(this, channel.getChannelName());
+                        mpB = new MultiplayerBattle(this, sender.getNick(), target, level, pkmAmt);
+                        mpB.doBattle(channel.getChannelName());
                         inMultiBattle = false;
                         inPokemonBattle = false;
                         mpB = null;
@@ -499,7 +499,7 @@ public class BattleBot extends PircBot {
                     int level = new SecureRandom().nextInt(100 - 20 + 1) + 20;
                     int id = finalId;
                     System.err.println("Attempting Pokemon ID " + id + " level " + level);
-                    sB = new SafariBattle(sender.getNick(), new Pokemon(id, level));
+                    sB = new SafariBattle(this, sender.getNick(), new Pokemon(id, level));
                     sB.doBattle(this, channel.getChannelName());
                     System.err.println("Now out of Safari Battle");
                     sB = null;

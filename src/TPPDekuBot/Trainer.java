@@ -17,6 +17,7 @@ public class Trainer {
     private ArrayList<Item> badges;
     private boolean defeatedChampion = false;
     private int eliteFour;
+    private Region homeRegion;
     private boolean ai;
 
     public Trainer(String name, ArrayList<Pokemon> pokemon, ArrayList<Item> items) {
@@ -200,6 +201,18 @@ public class Trainer {
 
     public String getTrnClass() {
         return this.trnClass;
+    }
+
+    public boolean isAI() {
+        return ai;
+    }
+
+    public Region getRegion() {
+        return homeRegion;
+    }
+
+    public void setRegion(Region region) {
+        this.homeRegion = region;
     }
 
     @Override
