@@ -18,6 +18,7 @@ public class PokemonBattle extends Battle{
         this.b = b;
         this.channel = channel;
         this.player = player;
+        b.battle = this;
         SecureRandom rand = new SecureRandom();
         int rand1 = rand.nextInt(718);
         int rand2 = rand1;
@@ -93,12 +94,12 @@ public class PokemonBattle extends Battle{
             }
         } catch (Exception ex) {
             System.err.println("[POKEMON] Failed to generate moves! UserID: " + rand1 + ", ComputerID: " + rand2 + "\n[POKEMON] " + ex);
-            b.sendMessage(channel, "Something fucked up OneHand give it another try");
-            b.inPokemonBattle = false;
+            b.sendMessage(channel, "Something fucked up OneHand give it another try");            
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             ex.printStackTrace(pw);
             b.music.sendMessage(b.music.getChannel(), b.music.CHEF.mention() + " ```" + sw.toString() + "\nUser ID: " + rand1 + " Computer ID: " + rand2 + "```");
+            b.battle = null;
             return;
         }
         if (test) {
@@ -229,7 +230,6 @@ public class PokemonBattle extends Battle{
             ex.printStackTrace(pw);
             b.music.sendMessage(b.music.getChannel(), b.music.CHEF.mention() + " ```" + sw.toString() + "\nUser ID: " + rand1 + " Computer ID: " + rand2 + "```");
         }
-        b.inPokemonBattle = false;
     }
 
     private void doComputerMove(Pokemon user, Pokemon computer) {

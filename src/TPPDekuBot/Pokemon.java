@@ -1313,7 +1313,7 @@ public class Pokemon implements Serializable {
                     size = 0;
                 }
                 Move move = getMove(compatableMoves.get(size));
-                while ((move.getPower() == 0 || move.getAccuracy() == 0) && !move.hasMoveEffect()) {
+                while (move.getName().equalsIgnoreCase("Fling") || (move.getPower() == 0 || move.getAccuracy() == 0) && !move.hasMoveEffect()) {
                     size++;
                     if (size > compatableMoves.size()) {
                         size = 0;
@@ -1325,19 +1325,19 @@ public class Pokemon implements Serializable {
             return;
         }
         SecureRandom rand = new SecureRandom();
-        while (this.getMove1() == null || ((this.getMove1().getPower() == 0 || this.getMove1().getAccuracy() == 0) && !this.getMove1().hasMoveEffect())) {
+        while (this.getMove1() == null || this.getMove1().getName().equalsIgnoreCase("Fling") || ((this.getMove1().getPower() == 0 || this.getMove1().getAccuracy() == 0) && !this.getMove1().hasMoveEffect())) {
             int index = rand.nextInt(compatableMoves.size());
             this.setMove1(getMove(compatableMoves.get(index)));
         }
-        while (this.getMove2() == null || ((this.getMove2().getPower() == 0 || this.getMove2().getAccuracy() == 0) && !this.getMove2().hasMoveEffect()) || (this.getMove2().equals(this.getMove1()))) {
+        while (this.getMove2() == null || this.getMove2().getName().equalsIgnoreCase("Fling") || ((this.getMove2().getPower() == 0 || this.getMove2().getAccuracy() == 0) && !this.getMove2().hasMoveEffect()) || (this.getMove2().equals(this.getMove1()))) {
             int index = rand.nextInt(compatableMoves.size());
             this.setMove2(getMove(compatableMoves.get(index)));
         }
-        while (this.getMove3() == null || ((this.getMove3().getPower() == 0 || this.getMove3().getAccuracy() == 0) && !this.getMove3().hasMoveEffect()) || (this.getMove3().equals(this.getMove1()) || this.getMove3().equals(this.getMove2()))) {
+        while (this.getMove3() == null || this.getMove3().getName().equalsIgnoreCase("Fling") || ((this.getMove3().getPower() == 0 || this.getMove3().getAccuracy() == 0) && !this.getMove3().hasMoveEffect()) || (this.getMove3().equals(this.getMove1()) || this.getMove3().equals(this.getMove2()))) {
             int index = rand.nextInt(compatableMoves.size());
             this.setMove3(getMove(compatableMoves.get(index)));
         }
-        while (this.getMove4() == null || ((this.getMove4().getPower() == 0 || this.getMove4().getAccuracy() == 0) && !this.getMove4().hasMoveEffect()) || (this.getMove4().equals(this.getMove1()) || this.getMove4().equals(this.getMove2()) || this.getMove4().equals(this.getMove3()))) {
+        while (this.getMove4() == null || this.getMove4().getName().equalsIgnoreCase("Fling") || ((this.getMove4().getPower() == 0 || this.getMove4().getAccuracy() == 0) && !this.getMove4().hasMoveEffect()) || (this.getMove4().equals(this.getMove1()) || this.getMove4().equals(this.getMove2()) || this.getMove4().equals(this.getMove3()))) {
             int index = rand.nextInt(compatableMoves.size());
             this.setMove4(getMove(compatableMoves.get(index)));
         }
