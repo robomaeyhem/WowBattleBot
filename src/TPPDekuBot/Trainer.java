@@ -81,10 +81,11 @@ public class Trainer {
         getTrainerClass();
     }
 
-    public Trainer(String name, String trnClass, ArrayList<Pokemon> pokemon, boolean ai) {
+    public Trainer(String name, String trnClass, Region region, ArrayList<Pokemon> pokemon, boolean ai) {
         this.name = name;
         this.pokemon = pokemon;
         this.pokemonLeft = pokemon.size();
+        this.homeRegion = region;
         money = 0;
         this.trnClass = trnClass;
         this.ai = ai;

@@ -74,14 +74,24 @@ public class PWTournament {
         participants = newBracket;
     }
 
-    public void doTourney(BattleBot b) {
+    public void doTourney(BattleBot b) {        
         b.sendMessage("#_keredau_1413645868201", "The " + type + " tournament is starting!");
-        int round = 1;
+        PWTRound pwtround = PWTRound.FIRST_ROUND;
+        int origPart = partNum;
         while (partNum >= 2) {
+            if (partNum != origPart && pwtround == PWTRound.FIRST_ROUND) {
+                pwtround = PWTRound.SEMIFINALS;
+            } else if (partNum == 2) {
+                pwtround = PWTRound.FINALS;
+            }
             for (int i = 0; i < participants.size(); i += 2) {
                 Trainer p1 = participants.get(i);
                 Trainer p2 = participants.get(i + 1);
-
+                b.sendMessage("#_keredau_1413645868201", "This " + pwtround + " match in the " + type + " tournament is " + p1.getTrainerName() + " vs " + p2.getTrainerName() + "!");
+                PWTBattle battle = new PWTBattle(b, p1, p2, type, pwtclass, pwtround);
+                b.music.play(PWTBattle.determineMusic(battle));
+                b.battle = battle;
+                partNum--;
             }
         }
     }
@@ -187,7 +197,7 @@ public class PWTournament {
                 break;
         }
         ArrayList<Pokemon> pokemon = Trainer.generatePokemon(3, 50);
-        Trainer t = new Trainer(name, trnClass, pokemon, true);
+        Trainer t = new Trainer(name, trnClass, region, pokemon, true);
         return t;
     }
 }

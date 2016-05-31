@@ -2,6 +2,7 @@ package TPPDekuBot;
 
 import java.io.File;
 import java.security.SecureRandom;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class PWTBattle extends Battle {
 
@@ -10,6 +11,8 @@ public class PWTBattle extends Battle {
     private Trainer player1;
     private Trainer player2;
     private PWTRound round;
+    public LinkedBlockingQueue<String> p1msg;
+    public LinkedBlockingQueue<String> p2msg;
 
     public PWTBattle(BattleBot b, Trainer player1, Trainer player2, PWTType type, PWTClass pwtclass, PWTRound round) {
         super(b);
@@ -18,6 +21,8 @@ public class PWTBattle extends Battle {
         this.player1 = player1;
         this.player2 = player2;
         this.round = round;
+        p1msg = new LinkedBlockingQueue<>();
+        p2msg = new LinkedBlockingQueue<>();
     }
 
     public PWTType getType() {
@@ -38,6 +43,15 @@ public class PWTBattle extends Battle {
 
     public PWTRound getRound() {
         return round;
+    }
+
+    /**
+     * Does the PWT Battle.
+     *
+     * @return Trainer that was victorious
+     */
+    public Trainer doBattle() {
+        //todo
     }
 
     public static File determineMusic(PWTBattle battle) {
