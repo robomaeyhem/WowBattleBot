@@ -81,6 +81,15 @@ public class Trainer {
         getTrainerClass();
     }
 
+    public Trainer(String name, String trnClass, ArrayList<Pokemon> pokemon, boolean ai) {
+        this.name = name;
+        this.pokemon = pokemon;
+        this.pokemonLeft = pokemon.size();
+        money = 0;
+        this.trnClass = trnClass;
+        this.ai = ai;
+    }
+
     public boolean hasDefeatedChampion() {
         return defeatedChampion;
     }
@@ -103,7 +112,7 @@ public class Trainer {
         return generatePokemon(amt, level);
     }
 
-    private ArrayList<Pokemon> generatePokemon(int amt, int level) {
+    public static ArrayList<Pokemon> generatePokemon(int amt, int level) {
         if (amt > 6) {
             amt = 6;
         }
