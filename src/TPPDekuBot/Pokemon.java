@@ -1386,4 +1386,9 @@ public class Pokemon implements Serializable {
         }
         return toReturn;
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
 }

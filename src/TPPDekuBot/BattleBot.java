@@ -21,6 +21,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +51,7 @@ public class BattleBot extends PircBot {
     public String personInBattle = "";
     public String lastMessage = "";
     public boolean waitingPlayer = false;
+    public boolean waitingPWT = false;
     public String waitingOn = "";
     public static LinkedBlockingQueue<String> pokemonMessages = new LinkedBlockingQueue<>();
     public final LinkedBlockingQueue<String> player = new LinkedBlockingQueue<>();
@@ -61,6 +63,7 @@ public class BattleBot extends PircBot {
     private static DateFormat ISO_8601_DATE_TIME = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ");
     public BattleBotMusic music;
     public static String ROOT_PATH = "";
+    private ArrayList<String> pwtQueue = new ArrayList<>();
 
     static {
         ISO_8601_DATE_TIME.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -150,7 +153,7 @@ public class BattleBot extends PircBot {
             this.sendRawLine(line);
             return;
         }
-        if ((message.toLowerCase().startsWith("!accept")) && waitingPlayer && sender.getNick().equalsIgnoreCase(waitingOn)) {
+        if ((message.toLowerCase().startsWith("!accept")) && waitingPlayer && waitingPWT && sender.getNick().equalsIgnoreCase(waitingOn)) {
             try {
                 player.put(sender.getNick());
             } catch (Exception ex) {
@@ -240,7 +243,7 @@ public class BattleBot extends PircBot {
             this.sendMessage(channel.getChannelName(), longMessage("FUNgineer"));
             return;
         }
-        if ((message.toLowerCase().startsWith("!accept")) && waitingPlayer && sender.getNick().equalsIgnoreCase(waitingOn)) {
+        if ((message.toLowerCase().startsWith("!accept")) && waitingPlayer && waitingPWT && sender.getNick().equalsIgnoreCase(waitingOn)) {
             try {
                 player.put(sender.getNick());
             } catch (Exception ex) {
@@ -401,7 +404,7 @@ public class BattleBot extends PircBot {
                 }
             }
         }
-        if (!isInBattle() && !waitingPlayer) {
+        if (!isInBattle() && !waitingPlayer && !waitingPWT) {
             if (message.startsWith("!safari")) {
                 Thread t = new Thread(() -> {
                     int level = new SecureRandom().nextInt(100 - 20 + 1) + 20;
@@ -416,11 +419,51 @@ public class BattleBot extends PircBot {
                 t.start();
             }
         }
+        if (!isInBattle() && !waitingPlayer && !waitingPWT) {
+            if (message.startsWith("!pwt")) {
+                this.sendMessage(channel, sender.getNick() + " has started a new Random Pokemon World Tournament! Type !join to join. The PWT will start in 60 seconds.");
+                pwtQueue.add(sender.getNick().toLowerCase());
+                waitingPWT = true;
+                Thread t = new Thread(() -> {
+                    try {
+                        Thread.sleep(60000);
+                        waitingPWT = false;
+                        this.sendMessage(channel, "The " + PWTType.RANDOM + " Pokemon World Tournament is starting! Stand by while I generate Pokemon... the first match will begin soon!");
+                        ArrayList<Trainer> pwtList = new ArrayList<>();
+                        for (String el : pwtQueue) {
+                            ArrayList<Pokemon> p = Trainer.generatePokemon(3, 50);
+                            Trainer te = new Trainer(el, Trainer.getTrainerClass(el), Region.getRandomRegion(), p, false);
+                            pwtList.add(te);
+                        }
+                        Collections.shuffle(pwtList);
+                        PWTournament pwt = new PWTournament(PWTType.RANDOM, PWTClass.NORMAL, pwtList);
+                        pwt.arrangeBracket();
+                        pwt.doTourney(this, channel.getChannelName());
+                    } catch (Exception ex) {
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        ex.printStackTrace(pw);
+                        music.sendMessage(music.getChannel(), music.CHEF.mention() + " ```An error occurred in the PWT!!\n" + sw.toString() + "```");
+
+                    }
+                });
+                t.start();
+            }
+        }
+        if (!isInBattle() && waitingPWT) {
+            if (message.toLowerCase().startsWith("!join") && pwtQueue.size() < 4) {
+                if (!pwtQueue.contains(sender.getNick().toLowerCase())) {
+                    pwtQueue.add(sender.getNick().toLowerCase());
+                    this.sendMessage(channel, sender.getNick() + " has been added to the PWT! Type !join to join.");
+                    return;
+                }
+            }
+        }
         if (message.toLowerCase().startsWith("!help") && !isInBattle()) {
             this.sendMessage(channel.getChannelName(), "https://github.com/robomaeyhem/WowBattleBot (scroll down to see the Readme)");
         }
         if (message.toLowerCase().startsWith("!randbat @") || message.toLowerCase().startsWith("!randombattle @")) {
-            if (isInBattle() || waitingPlayer) {
+            if (isInBattle() || waitingPlayer || waitingPWT) {
                 return;
             }
             //if ((message.toLowerCase().startsWith("!challenge @") || message.toLowerCase().startsWith("!multibattle @")) && !inMultiBattle && !inPokemonBattle && !inSafariBattle) {
@@ -532,16 +575,15 @@ public class BattleBot extends PircBot {
                 });
                 t.start();
             } else if (message.toLowerCase().split("!test ", 2)[1].split(" ", 2)[0].equalsIgnoreCase("pwt")) {
-                ArrayList<Pokemon> pokemont = Trainer.generatePokemon(3, 50);
-                Trainer t = new Trainer("Clair", "Gym Leader", Region.JOHTO, pokemont, true);
-                ArrayList<Pokemon> pokemon = Trainer.generatePokemon(3, 50);
-                Trainer m = new Trainer(sender.getNick(), "Magma Admin", Region.JOHTO, pokemon, false);
+                Trainer t = PWTournament.generateTrainer(PWTType.RANDOM, PWTClass.NORMAL);
+                Trainer m = PWTournament.generateTrainer(PWTType.RANDOM, PWTClass.NORMAL);
                 PWTBattle b = new PWTBattle(this, m, t, PWTType.RANDOM, PWTClass.NORMAL, PWTRound.FIRST_ROUND);
                 battle = b;
                 Thread th = new Thread(() -> {
                     try {
                         this.music.play(PWTBattle.determineMusic(b));
                         b.doBattle(channel.getChannelName());
+                        battle = null;
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -562,7 +604,7 @@ public class BattleBot extends PircBot {
                 t.start();
             }
         }
-        if (message.toLowerCase().startsWith("!battle") && !waitingPlayer && !isInBattle()) {
+        if (message.toLowerCase().startsWith("!battle") && !waitingPlayer && !waitingPWT && !isInBattle()) {
             boolean bigbrother = false, fromChef = false;
             if (message.contains("BigBrother") || sender.getNick().equalsIgnoreCase("dewgong98") || sender.getNick().equalsIgnoreCase("mad_king98") || sender.getNick().equalsIgnoreCase("Starmiewaifu")) {
                 bigbrother = true;
@@ -576,7 +618,7 @@ public class BattleBot extends PircBot {
                 return;
             } else {
                 final String senderFinal = sender.getNick();
-                if (!isInBattle() && !waitingPlayer) {
+                if (!isInBattle() && !waitingPlayer && !waitingPWT) {
                     Thread t = new Thread(() -> {
                         try {
                             pokemonMessages = new LinkedBlockingQueue<>();
@@ -639,7 +681,11 @@ public class BattleBot extends PircBot {
     public void onSentMessage(String channel, String message) {
         //multiplayer
         if (message.contains("did not select a move in time.") || (message.contains(" forfeits! ") && (message.contains(" wins!") || message.contains("forfeits as well! The result of the Battle is a Draw! PipeHype"))) || message.contains("Something went wrong this battle is now over all the Pokemon got stolen by Team Rocket RuleFive") || message.contains("is out of usable Pokemon!") || message.contains("fainted too! The Battle ends in a Draw! NotLikeThis")) {
-            this.music.clear();
+            if (battle instanceof PWTBattle) {
+                this.music.skip();
+            } else {
+                this.music.clear();
+            }
         }
         //singleplayer battle
         if (message.contains(" did not select a move in time and got their Pokemon stolen by Team Rocket! RuleFive") || message.contains("You got away safely!") || message.contains(" fainted! You lose! BibleThump") || message.contains(" fainted! You Win! PogChamp")) {

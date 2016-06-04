@@ -1,5 +1,7 @@
 package TPPDekuBot;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.security.SecureRandom;
 import java.util.*;
 
@@ -14,13 +16,15 @@ public class PWTournament {
         this.type = type;
         this.pwtclass = pwtclass;
         this.participants = participants;
-        int humanPartSize = participants.size();
-        if (humanPartSize == 2) {
-            partNum = 4;
-        } else if (humanPartSize > 2 && humanPartSize <= 4) {
-            partNum = 8;
-        } else if (humanPartSize > 4 && humanPartSize <= 8) {
-            partNum = 16;
+        partNum = 8;
+        if (participants.size() < 4) {
+            for (int i = 0; i < 4; i++) {
+                try {
+                    participants.get(i);
+                } catch (IndexOutOfBoundsException ex) {
+                    participants.add(PWTournament.generateTrainer(type, pwtclass));
+                }
+            }
         }
     }
 
@@ -64,36 +68,90 @@ public class PWTournament {
     public void arrangeBracket() {
         ArrayList<Trainer> old = (ArrayList<Trainer>) participants.clone();
         ArrayList<Trainer> newBracket = new ArrayList<>();
-        for (int i = 0, j = 1; i < old.size() * 2; i++, j++) {
+        for (int i = 0; i < old.size(); i++) {
             Trainer el = old.get(i);
-            if (!el.isAI()) {
+            if (!el.isAI() || Trainer.isUserBot(el.getTrainerName())) {
                 newBracket.add(el);
                 newBracket.add(PWTournament.generateTrainer(type, pwtclass));
+            }
+        }
+        for (int i = 0; i < newBracket.size(); i++) {
+            if (!newBracket.get(i).isAI()) {
+                continue;
+            }
+            for (int j = 0; j < newBracket.size(); j++) {
+                if (newBracket.get(i).equals(newBracket.get(j)) && i != j) {
+                    newBracket.set(j, PWTournament.generateTrainer(type, pwtclass));
+                }
             }
         }
         participants = newBracket;
     }
 
-    public void doTourney(BattleBot b) {
-        b.sendMessage("#_keredau_1413645868201", "The " + type + " tournament is starting!");
+    public void doTourney(BattleBot b, String channel) throws Exception {
         PWTRound pwtround = PWTRound.FIRST_ROUND;
-        int origPart = partNum;
-        while (partNum >= 2) {
-            if (partNum != origPart && pwtround == PWTRound.FIRST_ROUND) {
+        int loop = 0;
+        while (partNum > 1) {
+            if (loop == 1) {
                 pwtround = PWTRound.SEMIFINALS;
-            } else if (partNum == 2) {
+            }
+            if (loop == 2) {
                 pwtround = PWTRound.FINALS;
             }
+            ArrayList<PWTBattle> battles = new ArrayList<>();
             for (int i = 0; i < participants.size(); i += 2) {
                 Trainer p1 = participants.get(i);
+                ArrayList<Pokemon> p1p = (ArrayList<Pokemon>) p1.getPokemon().clone();
+                Trainer p1copy = new Trainer(p1.getTrainerName(), p1.getTrnClass(), p1.getRegion(), p1p, p1.isAI());
                 Trainer p2 = participants.get(i + 1);
-                b.sendMessage("#_keredau_1413645868201", "This " + pwtround + " match in the " + type + " tournament is " + p1.getTrainerName() + " vs " + p2.getTrainerName() + "!");
-                PWTBattle battle = new PWTBattle(b, p1, p2, type, pwtclass, pwtround);
-                b.music.play(PWTBattle.determineMusic(battle));
-                b.battle = battle;
-                partNum--;
+                ArrayList<Pokemon> p2p = (ArrayList<Pokemon>) p2.getPokemon().clone();
+                Trainer p2copy = new Trainer(p2.getTrainerName(), p2.getTrnClass(), p2.getRegion(), p2p, p2.isAI());                
+                battles.add(new PWTBattle(b, p1copy, p2copy, type, pwtclass, pwtround));
             }
+            ArrayList<Trainer> oldList = (ArrayList<Trainer>) participants.clone();
+            participants = new ArrayList<>();
+            for (PWTBattle el : battles) {
+                b.sendMessage(channel, pwtround.getText() + " match of the " + type + " tournament! This match is between " + el.player1 + " and " + el.player2 + "!");
+                if ((el.player1.isAI() && !Trainer.isUserBot(el.player1.getTrainerName())) && (el.player2.isAI() && !Trainer.isUserBot(el.player2.getTrainerName()))) {
+                    Trainer winner = new SecureRandom().nextBoolean() ? el.player1 : el.player2;
+                    b.sendMessage(channel, "After a hard fought battle, " + el.player1 + " was victorious over " + el.player2 + "! PogChamp");
+                    partNum--;
+                    for (int i = 0; i < oldList.size(); i++) {
+                        if (oldList.get(i).getTrainerName().equalsIgnoreCase(winner.getTrainerName())) {
+                            participants.add(oldList.get(i));
+                            break;
+                        }
+                    }
+                } else {
+                    try {
+                        b.music.play(PWTBattle.determineMusic(el));
+                        b.battle = el;
+                        Trainer winner = el.doBattle(channel);
+                        b.battle = null;
+                        if (winner == null) {
+                            throw new Exception("No winner in last match, aborting PWT"); //¯\_(ツ)_/¯ for now
+                        } else {
+                            partNum--;
+                            for (int i = 0; i < oldList.size(); i++) {
+                                if (oldList.get(i).getTrainerName().equalsIgnoreCase(winner.getTrainerName())) {
+                                    participants.add(oldList.get(i));
+                                    break;
+                                }
+                            }
+                        }
+                    } catch (Exception ex) {
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        ex.printStackTrace(pw);
+                        b.music.sendMessage(b.music.getChannel(), b.music.CHEF.mention() + " ```An error occurred in the PWT!!\n" + sw.toString() + "```");
+                    }
+                }
+            }
+            loop++;
+            b.music.clear();
         }
+        Trainer grandWinner = participants.get(0);
+        b.sendMessage(channel, grandWinner + " has won the " + type + " Pokemon World Tournament! PagChomp");
     }
 
     public static Trainer generateTrainer(PWTType type, PWTClass pwtclass) {

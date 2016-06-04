@@ -107,6 +107,14 @@ public class Trainer {
             trnClass = "Pokemon Trainer";
         }
     }
+    public static String getTrainerClass(String input){
+        try (FileInputStream f = new FileInputStream(BattleBot.BASE_PATH + "/trainerclasses.wdu"); ObjectInputStream o = new ObjectInputStream(f)) {
+            HashMap<String, String> classes = (HashMap<String, String>) o.readObject();
+            return (classes.containsKey(input.toLowerCase())) ? classes.get(input.toLowerCase()) : "Pokemon Trainer";
+        } catch (Exception ex) {
+            return "Pokemon Trainer";
+        }
+    }
 
     private ArrayList<Pokemon> generatePokemon(int amt) {
         int level = new SecureRandom().nextInt((100 - 20) + 1) + 20;
@@ -236,6 +244,9 @@ public class Trainer {
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
         if (obj == null) {
             return false;
         }
@@ -243,11 +254,34 @@ public class Trainer {
             return false;
         }
         final Trainer other = (Trainer) obj;
-        if (!Objects.equals(this.pokemon, other.pokemon)) {
+        if (this.money != other.money) {
             return false;
         }
-        return Objects.equals(this.name, other.name);
+        if (this.defeatedChampion != other.defeatedChampion) {
+            return false;
+        }
+        if (this.eliteFour != other.eliteFour) {
+            return false;
+        }
+        if (this.ai != other.ai) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.trnClass, other.trnClass)) {
+            return false;
+        }
+        if (!Objects.equals(this.items, other.items)) {
+            return false;
+        }
+        if (!Objects.equals(this.badges, other.badges)) {
+            return false;
+        }
+        return this.homeRegion == other.homeRegion;
     }
+
+
 
     @Override
     public String toString() {
@@ -273,5 +307,6 @@ public class Trainer {
         }
         return false;
     }
+    
 
 }

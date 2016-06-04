@@ -54,6 +54,13 @@ public class BattleBotMusic {
             System.err.println("File not found: " + file.getAbsolutePath());
         }
     }
+    public void skip(){
+        try{
+            voice.getAudioChannel().skip();
+        }catch(Exception ex){
+            
+        }
+    }
 
     public void clear() {
         try {

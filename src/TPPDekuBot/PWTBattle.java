@@ -64,7 +64,6 @@ public class PWTBattle extends Battle {
         pokemon2 = player2.getPokemon(0);
         player1.removePokemon(0);
         player2.removePokemon(0);
-        b.sendMessage(channel, round.getText() + " " + type + " tournament! This match is between " + player1 + " and " + player2 + "!");
         b.sendMessage(channel, player1.getTrainerName() + " sends out " + pokemon1.getName() + " (Level " + pokemon1.getLevel() + ")! " + player2.getTrainerName() + " sends out " + pokemon2.getName() + " (Level " + pokemon2.getLevel() + ")!");
         do {
             singlebattle:
@@ -122,7 +121,7 @@ public class PWTBattle extends Battle {
                             }
                         } else if (p1move.startsWith("!move")) {
                             if (p1move.length() >= 5 && Character.isDigit(p1move.charAt(5))) {
-                                p1move = p1move.charAt(5)+"";
+                                p1move = p1move.charAt(5) + "";
                                 break;
                             } else {
                                 p2move = "";
@@ -174,7 +173,7 @@ public class PWTBattle extends Battle {
                             }
                         } else if (p2move.startsWith("!move")) {
                             if (p2move.length() >= 5 && Character.isDigit(p2move.charAt(5))) {
-                                p2move = p2move.charAt(5)+"";
+                                p2move = p2move.charAt(5) + "";
                                 break;
                             } else {
                                 p2move = "";
@@ -319,6 +318,23 @@ public class PWTBattle extends Battle {
                 return null;
             }
         } while (continueBattle());
+        if (pokemon1.isFainted()) {
+            if (pokemon2.isFainted()) {
+                b.sendMessage(channel, player1.getTrainerName() + " is out of usable Pokemon! " + player2 + " is out of usable Pokemon as well! The result is a draw! RuleFive");
+                return null;
+            }
+            b.sendMessage(channel, player1.getTrainerName() + " is out of usable Pokemon! " + player2 + " wins! PogChamp");
+            return player2;
+        }
+        if (pokemon2.isFainted()) {
+            if (pokemon1.isFainted()) {
+                b.sendMessage(channel, player2.getTrainerName() + " is out of usable Pokemon! " + player1 + " is out of usable Pokemon as well! The result is a draw! RuleFive");
+                return null;
+            }
+            b.sendMessage(channel, player2.getTrainerName() + " is out of usable Pokemon! " + player1 + " wins! PogChamp");
+            return player1;
+        }
+        System.err.println("nulled");
         return winner;
     }
 
@@ -364,12 +380,14 @@ public class PWTBattle extends Battle {
                         }
                         if (player.getTrainerName().equalsIgnoreCase(player1.getTrainerName())) {
                             p1msg = new LinkedBlockingQueue<>();
+                            player1.getPokemon().add(this.pokemon1);
                             this.pokemon1 = player1.getPokemon(switchTo);
                             player1.removePokemon(switchTo);
                             b.sendMessage(channel, player + " sends out " + this.pokemon1 + " (Level " + this.pokemon1.getLevel() + ")!");
                             break;
                         } else {
                             p2msg = new LinkedBlockingQueue<>();
+                            player2.getPokemon().add(this.pokemon2);
                             this.pokemon2 = player2.getPokemon(switchTo);
                             player2.removePokemon(switchTo);
                             b.sendMessage(channel, player + " sends out " + this.pokemon2 + " (Level " + this.pokemon2.getLevel() + ")!");
@@ -383,8 +401,18 @@ public class PWTBattle extends Battle {
                 ex.printStackTrace(pw);
                 b.music.sendMessage(b.music.getChannel(), b.music.CHEF.mention() + " ```An error occurred while attempting to switch Pokemon\n" + sw.toString() + "\nPlayer=" + player.getTrainerName() + ",Pokemon=" + playerPokemon.getName() + "```");
             }
+        } else if (player.getTrainerName().equalsIgnoreCase(player1.getTrainerName())) {
+            p1msg = new LinkedBlockingQueue<>();
+            player1.getPokemon().add(this.pokemon1);
+            this.pokemon1 = player1.getPokemon(0);
+            player1.removePokemon(0);
+            b.sendMessage(channel, player + " sends out " + this.pokemon1 + " (Level " + this.pokemon1.getLevel() + ")!");
         } else {
-            feed.add("!switch0"); //top level AI
+            p2msg = new LinkedBlockingQueue<>();
+            player2.getPokemon().add(this.pokemon2);
+            this.pokemon2 = player2.getPokemon(0);
+            player2.removePokemon(0);
+            b.sendMessage(channel, player + " sends out " + this.pokemon2 + " (Level " + this.pokemon2.getLevel() + ")!");
         }
     }
 
@@ -432,6 +460,14 @@ public class PWTBattle extends Battle {
             ai = battle.player1;
         } else if (battle.player2.isAI()) {
             ai = battle.player2;
+        } else if (battle.player1.isAI() && battle.player2.isAI()) {
+            if (battle.player2.getTrnClass().contains("Champion") || battle.player2.getTrnClass().contains("Gym Leader")) {
+                ai = battle.player2;
+            } else if (battle.player1.getTrnClass().contains("Champion") || battle.player1.getTrnClass().contains("Gym Leader")) {
+                ai = battle.player1;
+            } else {
+                ai = new SecureRandom().nextBoolean() ? battle.player1 : battle.player2;
+            }
         }
         if (ai == null) {
             if (battle.player2.getTrnClass().contains("Champion") || battle.player2.getTrnClass().contains("Gym Leader")) {
@@ -498,6 +534,10 @@ public class PWTBattle extends Battle {
      */
     public static String PWTAIMove(Pokemon user, Pokemon opponent) {
         Move mostPowerful = Move.selectBestMove(user, opponent);
+        if (mostPowerful == null) {
+            System.err.println("Move is null!!");
+            return "!move" + new SecureRandom().nextInt(4) + 1;
+        }
         if (mostPowerful.equals(user.getMove1())) {
             return "!move1";
         } else if (mostPowerful.equals(user.getMove2())) {

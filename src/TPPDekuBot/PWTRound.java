@@ -14,7 +14,7 @@ public enum PWTRound {
             case SEMIFINALS:
                 return "This is a Semifinal ";
             case FINALS:
-                return "PagChomp This is the FINAL MATCH in the ";
+                return "PagChomp This is the FINAL ";
             default:
                 return "";
         }
