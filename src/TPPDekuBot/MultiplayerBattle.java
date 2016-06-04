@@ -425,7 +425,6 @@ public class MultiplayerBattle extends Battle {
                     player1.removePokemon(p1switchto);
                     newName = pokemon1.getName();
                     b.sendMessage(channel, player1.getTrainerName() + " calls back " + oldName + " and sent out " + newName + "!");
-                    //doPlayer2Move(b, channel, p2move);
                     doMove(channel, p2move, pokemon2, pokemon1);
                     if (pokemon1.isFainted()) {
                         break singlebattle;

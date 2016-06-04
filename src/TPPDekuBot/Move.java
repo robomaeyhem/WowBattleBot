@@ -7,6 +7,7 @@ package TPPDekuBot;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  *
@@ -174,4 +175,55 @@ public /*abstract*/ class Move implements Serializable {
         }
         return Move.getMove(user, mostPowerful);
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 71 * hash + Objects.hashCode(this.name);
+        hash = 71 * hash + Objects.hashCode(this.category);
+        hash = 71 * hash + Objects.hashCode(this.type);
+        hash = 71 * hash + Objects.hashCode(this.effect);
+        hash = 71 * hash + this.power;
+        hash = 71 * hash + this.accuracy;
+        hash = 71 * hash + this.pp;
+        hash = 71 * hash + this.effectChance;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Move other = (Move) obj;
+        if (this.power != other.power) {
+            return false;
+        }
+        if (this.accuracy != other.accuracy) {
+            return false;
+        }
+        if (this.pp != other.pp) {
+            return false;
+        }
+        if (this.effectChance != other.effectChance) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (this.category != other.category) {
+            return false;
+        }
+        if (this.type != other.type) {
+            return false;
+        }
+        return Objects.equals(this.effect, other.effect);
+    }
+
 }

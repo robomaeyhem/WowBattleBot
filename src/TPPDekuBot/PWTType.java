@@ -30,7 +30,7 @@ public enum PWTType {
             case RANDOM:
             case CHAMPIONS:
             case SPECIAL:
-                toReturn = toReturn.charAt(0) + toReturn.substring(1).toLowerCase();
+                toReturn = this.name().charAt(0) + this.name().substring(1).toLowerCase();
                 break;
             case TYPE_NORMAL:
             case TYPE_FIRE:

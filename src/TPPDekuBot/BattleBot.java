@@ -343,6 +343,54 @@ public class BattleBot extends PircBot {
                 this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " Type !list to see a list of your Pokemon. Type !checkx where x is the number of the Pokemon from !list to see it's moves. Type !switchx where x is number of the Pokemon from !list to switch to a Pokemon.");
             }
         }
+        if (isInBattle() && battle instanceof PWTBattle) {
+            PWTBattle mpB = (PWTBattle) battle;
+            if (message.toLowerCase().startsWith("!run") || (message.toLowerCase().startsWith("!switch") && message.length() >= 8 && Character.isDigit(message.charAt(7))) || Move.isValidMove(message)) {
+                if (sender.getNick().equalsIgnoreCase(mpB.player1.getTrainerName())) {
+                    try {
+                        mpB.p1msg.put(message);
+                    } catch (Exception ex) {
+                    }
+                }
+                if (sender.getNick().equalsIgnoreCase(mpB.player2.getTrainerName())) {
+                    try {
+                        mpB.p2msg.put(message);
+                    } catch (Exception ex) {
+                    }
+                }
+            }
+            if (message.toLowerCase().startsWith("!list")) {
+                if (sender.getNick().equalsIgnoreCase(mpB.player1.getTrainerName())) {
+                    try {
+                        String pokemon = mpB.player1.getPokemonList();
+                        this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " Your pokemon are: " + pokemon);
+                    } catch (Exception ex) {
+                        this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " You have no other Pokemon in your party!");
+                    }
+                } else if (sender.getNick().equalsIgnoreCase(mpB.player2.getTrainerName())) {
+                    try {
+                        String pokemon = mpB.player2.getPokemonList();
+                        this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " Your pokemon are: " + pokemon);
+                    } catch (Exception ex) {
+                        this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " You have no other Pokemon in your party!");
+                    }
+                }
+                return;
+            }
+            if (message.toLowerCase().startsWith("!check") && message.length() >= 7 && Character.isDigit(message.charAt(6))) {
+                int check = Integer.parseInt(message.charAt(6) + "");
+                if (sender.getNick().equalsIgnoreCase(mpB.player1.getTrainerName())) {
+                    Pokemon p = mpB.player1.getPokemon(check);
+                    this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
+                } else if (sender.getNick().equalsIgnoreCase(mpB.player2.getTrainerName())) {
+                    Pokemon p = mpB.player2.getPokemon(check);
+                    this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
+                }
+            }
+            if (message.toLowerCase().startsWith("!help") && (isInBattle() && battle instanceof PWTBattle) && (sender.getNick().equalsIgnoreCase(mpB.player1.getTrainerName())) || sender.getNick().equalsIgnoreCase(mpB.player2.getTrainerName())) {
+                this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " Type !list to see a list of your Pokemon. Type !checkx where x is the number of the Pokemon from !list to see it's moves. Type !switchx where x is number of the Pokemon from !list to switch to a Pokemon.");
+            }
+        }
         if (isInBattle() && battle instanceof SafariBattle) {
             SafariBattle sB = (SafariBattle) battle;
             if (sender.getNick().equalsIgnoreCase(sB.user.getTrainerName())) {
@@ -456,7 +504,8 @@ public class BattleBot extends PircBot {
 
         }
         if (message.toLowerCase().startsWith("!test ") && sender.getNick().equalsIgnoreCase("the_chef1337")) {
-            if (!Character.isDigit(message.charAt(6))) {
+            String test = message.toLowerCase().split("!test ", 2)[1].split(" ", 2)[0];
+            if (!test.equalsIgnoreCase("pwt") && !Character.isDigit(message.charAt(6))) {
                 final String senderFinal = "the_chef1337";
                 Thread t = new Thread(() -> {
                     try {
@@ -482,6 +531,22 @@ public class BattleBot extends PircBot {
                     }
                 });
                 t.start();
+            } else if (message.toLowerCase().split("!test ", 2)[1].split(" ", 2)[0].equalsIgnoreCase("pwt")) {
+                ArrayList<Pokemon> pokemont = Trainer.generatePokemon(3, 50);
+                Trainer t = new Trainer("Clair", "Gym Leader", Region.JOHTO, pokemont, true);
+                ArrayList<Pokemon> pokemon = Trainer.generatePokemon(3, 50);
+                Trainer m = new Trainer(sender.getNick(), "Magma Admin", Region.JOHTO, pokemon, false);
+                PWTBattle b = new PWTBattle(this, m, t, PWTType.RANDOM, PWTClass.NORMAL, PWTRound.FIRST_ROUND);
+                battle = b;
+                Thread th = new Thread(() -> {
+                    try {
+                        this.music.play(PWTBattle.determineMusic(b));
+                        b.doBattle(channel.getChannelName());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                th.start();
             } else {
                 final int finalId = Integer.parseInt(message.split("!test ", 2)[1].split(" ", 2)[0]);
                 Thread t = new Thread(() -> {
@@ -517,8 +582,8 @@ public class BattleBot extends PircBot {
                             pokemonMessages = new LinkedBlockingQueue<>();
                             personInBattle = senderFinal;
                             System.err.println("Going into Pokemon Battle");
-                            PokemonBattle a = new PokemonBattle(this, channel.getChannelName(), bbrother, fChef, sender.getNick(), false);                            
-                            System.err.println("Now out of Pokemon Battle");                            
+                            PokemonBattle a = new PokemonBattle(this, channel.getChannelName(), bbrother, fChef, sender.getNick(), false);
+                            System.err.println("Now out of Pokemon Battle");
                             pokemonMessages = new LinkedBlockingQueue<>();
                             personInBattle = "";
                             battle = null;

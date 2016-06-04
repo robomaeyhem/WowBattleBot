@@ -264,4 +264,14 @@ public class Trainer {
         return false;
     }
 
+    public static boolean isUserBot(String input) {
+        String[] userBots = {"frunky5", "23forces", "groudonger"};
+        for (String el : userBots) {
+            if (el.equalsIgnoreCase(input)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
