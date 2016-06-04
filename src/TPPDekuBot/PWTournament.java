@@ -99,7 +99,7 @@ public class PWTournament {
                 pwtround = PWTRound.FINALS;
             }
             ArrayList<PWTBattle> battles = new ArrayList<>();
-            for (int i = 0; i < participants.size(); i += 2) {
+            for (int i = 0; i < participants.size()-2; i += 2) {
                 Trainer p1 = participants.get(i);
                 ArrayList<Pokemon> p1p = (ArrayList<Pokemon>) p1.getPokemon().clone();
                 Trainer p1copy = new Trainer(p1.getTrainerName(), p1.getTrnClass(), p1.getRegion(), p1p, p1.isAI());
@@ -119,6 +119,7 @@ public class PWTournament {
                     for (int i = 0; i < oldList.size(); i++) {
                         if (oldList.get(i).getTrainerName().equalsIgnoreCase(winner.getTrainerName())) {
                             participants.add(oldList.get(i));
+                            System.err.println("added "+oldList.get(i).getTrainerName()+" to the list");
                             break;
                         }
                     }
@@ -135,6 +136,7 @@ public class PWTournament {
                             for (int i = 0; i < oldList.size(); i++) {
                                 if (oldList.get(i).getTrainerName().equalsIgnoreCase(winner.getTrainerName())) {
                                     participants.add(oldList.get(i));
+                                    System.err.println("added "+oldList.get(i).getTrainerName()+" to the list");
                                     break;
                                 }
                             }
