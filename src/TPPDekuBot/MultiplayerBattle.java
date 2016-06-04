@@ -465,12 +465,20 @@ public class MultiplayerBattle extends Battle {
                 //main battle
                 Pokemon first, second;
                 String m1, m2;
-                if (pokemon1.getStat(Stats.SPEED) > pokemon2.getStat(Stats.SPEED)) {
+                int p1speed = pokemon1.getStat(Stats.SPEED);
+                int p2speed = pokemon2.getStat(Stats.SPEED);
+                if (pokemon1.getStatus() == Status.PARALYSIS) {
+                    p1speed = p1speed / 2;
+                }
+                if (pokemon2.getStatus() == Status.PARALYSIS) {
+                    p2speed = p2speed / 2;
+                }
+                if (p1speed > p2speed) {
                     first = pokemon1;
                     m1 = p1move;
                     second = pokemon2;
                     m2 = p2move;
-                } else if (pokemon1.getStat(Stats.SPEED) < pokemon2.getStat(Stats.SPEED)) {
+                } else if (p1speed < p2speed) {
                     first = pokemon2;
                     m1 = p2move;
                     second = pokemon1;

@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class PokemonBattle extends Battle{
+public class PokemonBattle extends Battle {
 
     private BattleBot b;
     private String channel;
@@ -94,7 +94,7 @@ public class PokemonBattle extends Battle{
             }
         } catch (Exception ex) {
             System.err.println("[POKEMON] Failed to generate moves! UserID: " + rand1 + ", ComputerID: " + rand2 + "\n[POKEMON] " + ex);
-            b.sendMessage(channel, "Something fucked up OneHand give it another try");            
+            b.sendMessage(channel, "Something fucked up OneHand give it another try");
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             ex.printStackTrace(pw);
@@ -127,7 +127,15 @@ public class PokemonBattle extends Battle{
                 b.sendMessage(channel, "What will " + user.getName() + " do? (!move1)" + user.getMove1().getName() + ", (!move2)" + user.getMove2().getName() + ", (!move3)" + user.getMove3().getName() + ", (!move4)" + user.getMove4().getName());
                 user.setFlinch(false);
                 computer.setFlinch(false);
-                if (user.getStat(Stats.SPEED) > computer.getStat(Stats.SPEED)) {
+                int userSpeed = user.getStat(Stats.SPEED);
+                int compSpeed = computer.getStat(Stats.SPEED);
+                if (user.getStatus() == Status.PARALYSIS) {
+                    userSpeed = userSpeed / 2;
+                }
+                if (computer.getStatus() == Status.PARALYSIS) {
+                    compSpeed = compSpeed / 2;
+                }
+                if (userSpeed > compSpeed) {
                     String move = BattleBot.pokemonMessages.poll(60, TimeUnit.SECONDS);
                     if (move == null) {
                         b.sendMessage(channel, player + " did not select a move in time and got their Pokemon stolen by Team Rocket! RuleFive");
@@ -146,7 +154,7 @@ public class PokemonBattle extends Battle{
                             doComputerMove(user, computer);
                         }
                     }
-                } else if (user.getStat(Stats.SPEED) < computer.getStat(Stats.SPEED)) {
+                } else if (userSpeed < compSpeed) {
                     String move = BattleBot.pokemonMessages.poll(60, TimeUnit.SECONDS);
                     if (move == null) {
                         b.sendMessage(channel, player + " did not select a move in time and got their Pokemon stolen by Team Rocket! RuleFive");

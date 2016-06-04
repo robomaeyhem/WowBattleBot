@@ -18,7 +18,7 @@ public class PWTournament {
         this.participants = participants;
         partNum = 8;
         if (participants.size() < 4) {
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 3; i++) {
                 try {
                     participants.get(i);
                 } catch (IndexOutOfBoundsException ex) {
@@ -75,6 +75,9 @@ public class PWTournament {
                 newBracket.add(PWTournament.generateTrainer(type, pwtclass));
             }
         }
+        while (newBracket.size() < 8) {
+            newBracket.add(PWTournament.generateTrainer(type, pwtclass));
+        }
         for (int i = 0; i < newBracket.size(); i++) {
             if (!newBracket.get(i).isAI()) {
                 continue;
@@ -99,27 +102,30 @@ public class PWTournament {
                 pwtround = PWTRound.FINALS;
             }
             ArrayList<PWTBattle> battles = new ArrayList<>();
-            for (int i = 0; i < participants.size()-2; i += 2) {
-                Trainer p1 = participants.get(i);
-                ArrayList<Pokemon> p1p = (ArrayList<Pokemon>) p1.getPokemon().clone();
-                Trainer p1copy = new Trainer(p1.getTrainerName(), p1.getTrnClass(), p1.getRegion(), p1p, p1.isAI());
-                Trainer p2 = participants.get(i + 1);
-                ArrayList<Pokemon> p2p = (ArrayList<Pokemon>) p2.getPokemon().clone();
-                Trainer p2copy = new Trainer(p2.getTrainerName(), p2.getTrnClass(), p2.getRegion(), p2p, p2.isAI());                
-                battles.add(new PWTBattle(b, p1copy, p2copy, type, pwtclass, pwtround));
+            for (int i = 0, j = i + 1; j < participants.size(); i++, j++) {
+                participants.get(i).heal();
+                participants.get(j).heal();
+                Trainer p1 = (Trainer) participants.get(i).clone();
+                Trainer p2 = (Trainer) participants.get(j).clone();
+                i = j;
+                j++;
+                battles.add(new PWTBattle(b, p1, p2, type, pwtclass, pwtround));
+                if ((battles.size() == 4 && pwtround == PWTRound.FIRST_ROUND) || (battles.size() == 2 && pwtround == PWTRound.SEMIFINALS) || (battles.size() == 1 && pwtround == PWTRound.FINALS)) {
+                    break;
+                }
             }
             ArrayList<Trainer> oldList = (ArrayList<Trainer>) participants.clone();
             participants = new ArrayList<>();
             for (PWTBattle el : battles) {
                 b.sendMessage(channel, pwtround.getText() + "match of the " + type + " tournament! This match is between " + el.player1 + " and " + el.player2 + "!");
-                if ((el.player1.isAI() && !Trainer.isUserBot(el.player1.getTrainerName())) && (el.player2.isAI() && !Trainer.isUserBot(el.player2.getTrainerName()))) {
+                if (pwtround != PWTRound.FINALS && (el.player1.isAI() && !Trainer.isUserBot(el.player1.getTrainerName())) && (el.player2.isAI() && !Trainer.isUserBot(el.player2.getTrainerName()))) {
                     Trainer winner = new SecureRandom().nextBoolean() ? el.player1 : el.player2;
-                    b.sendMessage(channel, "After a hard fought battle, " + el.player1 + " was victorious over " + el.player2 + "! PogChamp");
+                    Trainer loser = (winner.getTrainerName().equalsIgnoreCase(el.player1.getTrainerName()) ? el.player2 : el.player1);
+                    b.sendMessage(channel, "After a hard fought battle, " + winner + " was victorious over " + loser + "! PogChamp");
                     partNum--;
                     for (int i = 0; i < oldList.size(); i++) {
                         if (oldList.get(i).getTrainerName().equalsIgnoreCase(winner.getTrainerName())) {
                             participants.add(oldList.get(i));
-                            System.err.println("added "+oldList.get(i).getTrainerName()+" to the list");
                             break;
                         }
                     }
@@ -136,7 +142,6 @@ public class PWTournament {
                             for (int i = 0; i < oldList.size(); i++) {
                                 if (oldList.get(i).getTrainerName().equalsIgnoreCase(winner.getTrainerName())) {
                                     participants.add(oldList.get(i));
-                                    System.err.println("added "+oldList.get(i).getTrainerName()+" to the list");
                                     break;
                                 }
                             }
@@ -146,11 +151,21 @@ public class PWTournament {
                         PrintWriter pw = new PrintWriter(sw);
                         ex.printStackTrace(pw);
                         b.music.sendMessage(b.music.getChannel(), b.music.CHEF.mention() + " ```An error occurred in the PWT!!\n" + sw.toString() + "```");
+                        return;
                     }
+                }
+                if (pwtround != PWTRound.FINALS) {
+                    b.sendMessage(channel, "Next match starting in less than 10 seconds. Get ready!");
+                    try {
+                        Thread.sleep(17000);
+                    } catch (Exception ex) {
+
+                    }
+                } else {
+                    break;
                 }
             }
             loop++;
-            b.music.clear();
         }
         Trainer grandWinner = participants.get(0);
         b.sendMessage(channel, grandWinner + " has won the " + type + " Pokemon World Tournament! PagChomp");
@@ -158,7 +173,7 @@ public class PWTournament {
     }
 
     public static Trainer generateTrainer(PWTType type, PWTClass pwtclass) {
-        String[] classes = {"Ace Trainer", "Beauty", "Biker", "Bird Keeper", "Blackbelt", "Bug Catcher", "Burglar", "Channeler", "Cue Ball", "Engineer", "Fisherman", "Gambler", "Gentleman", "Hiker", "Jr. Trainer", "Juggler", "Lass", "Leader", "PokeManiac", "Pokemon Trainer", "Psychic", "Rocker", "Sailor", "Scientist", "Super Nerd", "Swimmer", "Tamer", "Youngster", "Boarder", "Camper", "Firebreather", "Guitarist", "Kimono Girl", "Medium", "Officer", "Picnicker", "Pokefan", "Sage", "Schoolboy", "Skier", "Swimmer", "Teacher"};
+        String[] classes = {"Ace Trainer", "Beauty", "Biker", "Bird Keeper", "Blackbelt", "Bug Catcher", "Burglar", "Channeler", "Cue Ball", "Engineer", "Fisherman", "Gambler", "Gentleman", "Hiker", "Jr. Trainer", "Juggler", "Lass", "PokeManiac", "Pokemon Trainer", "Psychic", "Rocker", "Sailor", "Scientist", "Super Nerd", "Swimmer", "Tamer", "Youngster", "Boarder", "Camper", "Firebreather", "Guitarist", "Kimono Girl", "Medium", "Officer", "Picnicker", "Pokefan", "Sage", "Schoolboy", "Skier", "Swimmer", "Teacher"};
         String[] names = {"Samantha", "Robby", "Ray", "Carter", "Ellen", "Dawn", "Kirk", "Terrell", "Toby", "Simon", "Charlie", "Michael", "Phillip", "Bryan", "Russ", "Noland", "Margret", "Parker", "Daniel", "Dave", "Chase", "Ruth", "Brian", "Kevin", "Wayne", "Mike", "Bill", "Alfred", "Braxton", "Miki", "Trevor", "Seth", "Brenda", "Fidel", "Abe", "Stanly", "Al", "Fritz", "Paul", "Nicole", "Heidi", "Doug", "Horton", "Neal", "Ben", "Harris", "Paula", "Tully", "Red", "Gaven", "Izzy", "Ronald", "Jenn", "Tim", "Jerome", "Todd", "Emma", "Pat", "Rex", "Cameron", "Miguel", "Brad", "Lisa", "Samuel", "Kenneth", "Perry", "Owen", "Jody", "Eddie", "Jason", "Ernest", "Shawn", "Brooks", "Denise", "Rodney", "Yoshi", "Johnny", "Benny", "Benjamin", "Dean", "Sid", "Helenna", "Brooke", "Teru", "Keith", "Hank", "Darin", "Miller", "Oak", "Ed", "Tucker", "Wade", "Gregory", "Edward", "Jake", "Larry", "Jaclyn", "Rick", "Rich", "Cindy", "Riley", "Henry", "Diana", "Brett", "Kaylee", "Kent", "Kuni", "Brandon", "Joel", "Mitch", "Ryan", "Timmy", "Joey", "Bret", "Lung", "John", "Chow", "Sammy", "George", "Reena", "Shirley", "Leonard", "Phil", "Don", "Victoria", "Mathew", "Wilton", "Spencer", "Troy", "Tom", "Douglas", "Paton", "Kiyo", "Robin", "Miriam", "Preston", "Flint", "Gilbert", "Kelsey", "Richard", "Theresa", "Ross", "Tara", "Jimmy", "Bernie", "Colin", "James", "Harold", "Ned", "Salma", "Julia", "Sally", "Julie", "Garrett", "Peter", "Lao", "Frank", "Hope", "Ali", "Tony", "Tyler", "Bob", "Albert", "Gwen", "Li", "Charles", "Rob", "Rod", "Alice", "Alan", "Brent", "Sidney", "Caroline", "Elijah", "Ron", "Ping", "David", "Bonita", "Rachael", "Roy", "Andy", "Dirk", "Ann", "Krise", "Dudley", "Zach", "Rebecca", "Irwin", "Otis", "Connie", "Quentin", "Zeke", "Zuki", "Jonah", "Berke", "Glenn", "Walt", "Koji", "Dwayne", "Burt", "Andre", "Valerie", "Leroy", "Franklin", "Cody", "Jay", "Ralph", "Kara", "Beth", "Gina", "Ivan", "Theo", "Parry", "Joshua", "Alex", "Kenji", "Sayo", "Lois", "Allen", "Briana", "Bridget", "Russell", "Ken", "Ian", "Sean", "Fran", "Denis", "Georgia", "Willy", "Debra", "Bethany", "Edgar", "Haley", "Kate", "Stan", "Vance", "Sharon", "Aaron", "Jose", "Josh", "Boris", "Thomas", "Norman", "Jed", "Cale", "Norton", "Martin", "Megan", "Olivia", "Issac", "Jasper", "Hal", "Clyde", "Calvin", "Hillary", "Lloyd", "Lola", "Liz", "Duncan", "Scott", "Huey", "Tanya", "Arthur", "Eric", "Elliot", "Tommy", "Erik", "Edna", "Erin", "Martha", "Nob", "Daryl", "Harry", "Erick", "Andrew", "Allan", "William", "Kim", "Kenny", "Barry", "Markus", "Jerry", "Randall", "Wai", "Marc", "Timothy", "Irene", "Mark", "Nancy", "Greg", "Linda", "Warren", "Crissy", "Jessica", "Mary", "Billy", "Vincent", "Barney", "Carlene", "Herman", "Janice", "Marvin", "Hugh", "Jin", "Jim", "Jeremy", "Dale", "Hugo", "Harvey", "Elaine", "Stephen", "Michelle", "Blake", "Keigo", "Gregg", "Colette", "Danny", "Kazu", "Katie", "Naoko", "Cassie", "Masa", "Wendy", "Roxanne", "Dana", "Barny", "Cara", "Nikki", "Dylan", "Tiffany", "Reli", "Eusine", "Carrie", "Jill", "Lori", "Cybil", "Chad", "Jaime", "Carol", "Mikey", "Colton", "Joyce", "Nathan", "Darian", "Kendra", "Doris", "Ethan", "Edmond", "Kelly", "Dan", "Ajdnnw", "Steve", "Jeff", "Marcos", "Corey", "Clarissa", "Shane", "Grace", "Dillon", "Quinn", "Shannon", "Beverly", "Robert", "Angelica", "Jared", "Nate", "Joe", "Nico", "Yasu", "Kyle", "Nick", "Cal", "Arnold", "Eugene", "Derek", "Sam", "Lyle", "Raymond", "Susie", "Gaku", "Donald", "Arnie", "Virgil", "Jovan", "Jack", "Justin", "Kipp", "Bailey", "Jeffrey", "Gordon", "Walter", "Ethel", "Anthony", "Dick", "Ricky", "Ted", "Laura", "Roland", "Lamar", "Lewis", "Veronica", "Brock", "Misty", "Lt. Surge", "Erika", "Koga", "Janine", "Sabrina", "Blaine", "Giovanni", "Blue", "Falkner", "Bugsy", "Whitney", "Morty", "Chuck", "Jasmine", "Pryce", "Clair", "Roxanne", "Brawly", "Wattson", "Flannery", "Norman", "Winona", "Tate", "Liza", "Wallace", "Juan", "Roark", "Gardenia", "Maylene", "Crusher Wake", "Fantina", "Byron", "Candice", "Volkner", "Cilan", "Chili", "Cress", "Lenora", "Burgh", "Elesa", "Clay", "Skyla", "Brycen", "Drayden", "Iris", "Cheren", "Roxie", "Burgh", "Elesa", "Clay", "Marlon", "Red", "Blue", "Lance", "Steven", "Wallace", "Cynthia", "Alder", "23forces", "groudonger", "frunky5"};
         String name = names[new SecureRandom().nextInt(names.length)];
         String trnClass = "";

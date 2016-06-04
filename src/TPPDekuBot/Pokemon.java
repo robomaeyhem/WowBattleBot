@@ -16,7 +16,7 @@ import java.util.HashMap;
  *
  * @author Michael
  */
-public class Pokemon implements Serializable {
+public class Pokemon implements Serializable, Cloneable {
 
     private int id;
     private int level;
@@ -954,6 +954,7 @@ public class Pokemon implements Serializable {
 
     public void resetHP() {
         this.hp = maxHP;
+        this.status = Status.NORMAL;
     }
 
     public void heal() {
@@ -1391,4 +1392,10 @@ public class Pokemon implements Serializable {
     public String toString() {
         return this.name;
     }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+    
 }

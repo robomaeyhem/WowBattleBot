@@ -6,7 +6,7 @@ import java.io.ObjectInputStream;
 import java.security.SecureRandom;
 import java.util.*;
 
-public class Trainer {
+public class Trainer implements Cloneable {
 
     private ArrayList<Pokemon> pokemon;
     private ArrayList<Item> items;
@@ -107,7 +107,8 @@ public class Trainer {
             trnClass = "Pokemon Trainer";
         }
     }
-    public static String getTrainerClass(String input){
+
+    public static String getTrainerClass(String input) {
         try (FileInputStream f = new FileInputStream(BattleBot.BASE_PATH + "/trainerclasses.wdu"); ObjectInputStream o = new ObjectInputStream(f)) {
             HashMap<String, String> classes = (HashMap<String, String>) o.readObject();
             return (classes.containsKey(input.toLowerCase())) ? classes.get(input.toLowerCase()) : "Pokemon Trainer";
@@ -157,6 +158,15 @@ public class Trainer {
 
     public void addPokemon(Pokemon pokemon) {
         this.pokemon.add(pokemon);
+    }
+
+    public void addPokemonAtBeginning(Pokemon pokemon) {
+        ArrayList<Pokemon> newList = new ArrayList<>();
+        newList.add(pokemon);
+        for (Pokemon el : this.pokemon) {
+            newList.add(el);
+        }
+        this.pokemon = newList;
     }
 
     public void removePokemon(Pokemon pokemon) {
@@ -225,6 +235,12 @@ public class Trainer {
         return ai;
     }
 
+    public void heal() {
+        for (Pokemon el : this.pokemon) {
+            el.heal();
+        }
+    }
+
     public Region getRegion() {
         return homeRegion;
     }
@@ -281,7 +297,10 @@ public class Trainer {
         return this.homeRegion == other.homeRegion;
     }
 
-
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 
     @Override
     public String toString() {
@@ -307,6 +326,5 @@ public class Trainer {
         }
         return false;
     }
-    
 
 }

@@ -92,6 +92,10 @@ public class PWTBattle extends Battle {
                         p1move = p1msg.poll(60, TimeUnit.SECONDS);
                         if (p1move == null) {
                             b.sendMessage(channel, player1.getTrainerName() + " did not select a move in time. " + player2 + " wins!");
+                            player1.addPokemonAtBeginning(pokemon1);
+                            player2.addPokemonAtBeginning(pokemon2);
+                            player1.heal();
+                            player2.heal();
                             return player2;
                         }
                         p1move = p1move.toLowerCase();
@@ -144,6 +148,10 @@ public class PWTBattle extends Battle {
                         p2move = p2msg.poll(60, TimeUnit.SECONDS);
                         if (p2move == null) {
                             b.sendMessage(channel, player2.getTrainerName() + " did not select a move in time. " + player1 + " wins!");
+                            player1.addPokemonAtBeginning(pokemon1);
+                            player2.addPokemonAtBeginning(pokemon2);
+                            player1.heal();
+                            player2.heal();
                             return player1;
                         }
                         p2move = p2move.toLowerCase();
@@ -195,17 +203,33 @@ public class PWTBattle extends Battle {
                 if (p1forfeit) {
                     if (p2forfeit) {
                         b.sendMessage(channel, player1.getTrainerName() + " forfeits! But " + player2 + " forfeits as well! This match ends in a draw!");
+                        player1.addPokemonAtBeginning(pokemon1);
+                        player2.addPokemonAtBeginning(pokemon2);
+                        player1.heal();
+                        player2.heal();
                         return null;
                     } else {
                         b.sendMessage(channel, player1.getTrainerName() + " forfeits! " + player2 + " wins!");
+                        player1.addPokemonAtBeginning(pokemon1);
+                        player2.addPokemonAtBeginning(pokemon2);
+                        player1.heal();
+                        player2.heal();
                         return player2;
                     }
                 } else if (p2forfeit) {
                     if (p1forfeit) {
                         b.sendMessage(channel, player2.getTrainerName() + " forfeits! But " + player1 + " forfeits as well! This match ends in a draw!");
+                        player1.addPokemonAtBeginning(pokemon1);
+                        player2.addPokemonAtBeginning(pokemon2);
+                        player1.heal();
+                        player2.heal();
                         return null;
                     } else {
                         b.sendMessage(channel, player2.getTrainerName() + " forfeits! " + player1 + " wins!");
+                        player1.addPokemonAtBeginning(pokemon1);
+                        player2.addPokemonAtBeginning(pokemon2);
+                        player1.heal();
+                        player2.heal();
                         return player1;
                     }
                 }
@@ -297,6 +321,10 @@ public class PWTBattle extends Battle {
                     switchPokemon(player1, this.pokemon1, channel);
                     if (endBattle) {
                         b.sendMessage(channel, "Something went wrong this battle is now over all the Pokemon got stolen by Team Rocket RuleFive");
+                        player1.addPokemonAtBeginning(pokemon1);
+                        player2.addPokemonAtBeginning(pokemon2);
+                        player1.heal();
+                        player2.heal();
                         return null;
                     }
                     continue;
@@ -308,6 +336,10 @@ public class PWTBattle extends Battle {
                     switchPokemon(player2, this.pokemon2, channel);
                     if (endBattle) {
                         b.sendMessage(channel, "Something went wrong this battle is now over all the Pokemon got stolen by Team Rocket RuleFive");
+                        player1.addPokemonAtBeginning(pokemon1);
+                        player2.addPokemonAtBeginning(pokemon2);
+                        player1.heal();
+                        player2.heal();
                         return null;
                     }
                     continue;
@@ -315,26 +347,42 @@ public class PWTBattle extends Battle {
             }
             if (endBattle) {
                 b.sendMessage(channel, "Something went wrong this battle is now over all the Pokemon got stolen by Team Rocket RuleFive");
+                player1.addPokemonAtBeginning(pokemon1);
+                player2.addPokemonAtBeginning(pokemon2);
+                player1.heal();
+                player2.heal();
                 return null;
             }
         } while (continueBattle());
+        player1.addPokemonAtBeginning(pokemon1);
+        player2.addPokemonAtBeginning(pokemon2);
         if (pokemon1.isFainted()) {
             if (pokemon2.isFainted()) {
                 b.sendMessage(channel, player1.getTrainerName() + " is out of usable Pokemon! " + player2 + " is out of usable Pokemon as well! The result is a draw! RuleFive");
+                player1.heal();
+                player2.heal();
                 return null;
             }
             b.sendMessage(channel, player1.getTrainerName() + " is out of usable Pokemon! " + player2 + " wins! PogChamp");
+            player1.heal();
+            player2.heal();
             return player2;
         }
         if (pokemon2.isFainted()) {
             if (pokemon1.isFainted()) {
                 b.sendMessage(channel, player2.getTrainerName() + " is out of usable Pokemon! " + player1 + " is out of usable Pokemon as well! The result is a draw! RuleFive");
+                player1.heal();
+                player2.heal();
                 return null;
             }
             b.sendMessage(channel, player2.getTrainerName() + " is out of usable Pokemon! " + player1 + " wins! PogChamp");
+            player1.heal();
+            player2.heal();
             return player1;
         }
         System.err.println("nulled");
+        player1.heal();
+        player2.heal();
         return winner;
     }
 
@@ -362,21 +410,28 @@ public class PWTBattle extends Battle {
                             b.sendMessage(channel, player2.getTrainerName() + " did not select a new Pokemon in time. " + player1.getTrainerName() + " wins!");
                         }
                         endBattle = true;
+                        player1.addPokemonAtBeginning(pokemon1);
+                        player2.addPokemonAtBeginning(pokemon2);
+                        player1.heal();
+                        player2.heal();
                         return;
                     }
                     if (temp.startsWith("!switch") && temp.length() >= 8) {
                         if (!Character.isDigit(temp.charAt(7))) {
                             temp = "";
                             b.sendMessage(channel, "/w " + player.getTrainerName() + " Invalid Pokemon Position FUNgineer");
+                            continue;
                         }
                         switchTo = Integer.parseInt(temp.split("!switch", 2)[1].split(" ", 2)[0]);
                         if (switchTo > 2 || switchTo < 0) {
                             temp = "";
                             b.sendMessage(channel, "/w " + player.getTrainerName() + " Invalid Pokemon Position FUNgineer");
+                            continue;
                         }
                         if (player.getPokemon(switchTo).isFainted()) {
                             temp = "";
                             b.sendMessage(channel, "/w " + player.getTrainerName() + " You cannot switch to a fainted Pokemon FUNgineer");
+                            continue;
                         }
                         if (player.getTrainerName().equalsIgnoreCase(player1.getTrainerName())) {
                             p1msg = new LinkedBlockingQueue<>();
