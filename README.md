@@ -15,6 +15,8 @@ Command parameters with `<>` are required, parameters with `[]` are optional. Co
 | `!battle`  | Puts you in a battle with a Random Pokemon and gives you a Random Pokemon to fight.  |
 | `!randbat <@username> [num]`  | Challenges `username` to a battle. Change `num` to a number between 1 and 6 for a Multi-Pokemon battle.  |
 | `!safari` | Puts you in a Safari battle with a Random pokemon. Gives you a rock, bait, and Pokeballs to catch the random Pokemon. |
+| `!pwt` | Starts a Pokemon World Tournament. In the future, there will be more options for this, but for right now this defaults to a `Random` `8-player` Pokemon World Tournament.|
+| `!join` | Joins a Pokemon World Tournament during the joining phase. Only the first four people who join as of right now will get in. |
 | `!changeclass <class> | !switchclass <class>`| Changes your Trainer Class. Cannot be "Gym Leader", "Champion", "Elite Four" or any other protected class.
 | `!list` | Gets a list of your current Pokemon in battles with more than 1 Pokemon per team. Only works in Battle. |
 | `!switch<number>` | Switches your Pokemon to the `number` specified. `number` is gotten from the `!list` command. |
