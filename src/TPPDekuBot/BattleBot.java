@@ -477,7 +477,30 @@ public class BattleBot extends PircBot {
                 waitingPWT = true;
                 Thread t = new Thread(() -> {
                     try {
+                        ArrayList<Trainer> randoms = new ArrayList<>();
+                        Thread tet = new Thread(() -> {
+                            outer:
+                            while (waitingPWT) {
+                                Trainer rand = PWTournament.generateTrainer(PWTType.RANDOM, PWTClass.NORMAL);
+                                if (randoms.isEmpty()) {
+                                    randoms.add(rand);
+                                    System.err.println("Added " + rand + " " + rand.getPokemon());
+                                    continue;
+                                }
+                                for (Trainer el : randoms) {
+                                    if (el.getTrainerName().equalsIgnoreCase(rand.getTrainerName())) {
+                                        continue outer;
+                                    }
+                                }
+                                randoms.add(rand);
+                                System.err.println("Added " + rand + " " + rand.getPokemon());
+                            }
+                        });
+                        tet.start();
                         Thread.sleep(60000);
+                        while (randoms.size() < 7) {
+
+                        }
                         waitingPWT = false;
                         inPWT = true;
                         this.sendMessage(channel, "The " + PWTType.RANDOM + " Pokemon World Tournament is starting! Stand by while I generate Pokemon... the first match will begin soon!");
@@ -488,9 +511,11 @@ public class BattleBot extends PircBot {
                             pwtList.add(te);
                         }
                         Collections.shuffle(pwtList);
-                        PWTournament pwt = new PWTournament(PWTType.RANDOM, PWTClass.NORMAL, pwtList);
+                        PWTournament pwt = new PWTournament(PWTType.RANDOM, PWTClass.NORMAL, pwtList, randoms);
                         pwt.arrangeBracket();
                         pwt.doTourney(this, channel.getChannelName());
+                        pwtQueue = new ArrayList<>();
+                        inPWT = false;
                     } catch (Exception ex) {
                         StringWriter sw = new StringWriter();
                         PrintWriter pw = new PrintWriter(sw);

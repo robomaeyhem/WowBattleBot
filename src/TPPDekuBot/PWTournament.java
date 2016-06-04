@@ -11,18 +11,23 @@ public class PWTournament {
     private PWTClass pwtclass;
     private int partNum;
     private ArrayList<Trainer> participants;
+    private ArrayList<Trainer> bots;
 
-    public PWTournament(PWTType type, PWTClass pwtclass, ArrayList<Trainer> participants) {
+    public PWTournament(PWTType type, PWTClass pwtclass, ArrayList<Trainer> participants, ArrayList<Trainer> bots) {
         this.type = type;
         this.pwtclass = pwtclass;
         this.participants = participants;
+        this.bots = bots;
         partNum = 8;
         if (participants.size() < 4) {
             for (int i = 0; i < 3; i++) {
                 try {
                     participants.get(i);
                 } catch (IndexOutOfBoundsException ex) {
-                    participants.add(PWTournament.generateTrainer(type, pwtclass));
+                    int at = new SecureRandom().nextInt(bots.size());
+                    Trainer rand = bots.get(at);
+                    participants.add(rand);
+                    bots.remove(at);
                 }
             }
         }
@@ -72,22 +77,18 @@ public class PWTournament {
             Trainer el = old.get(i);
             if (!el.isAI() || Trainer.isUserBot(el.getTrainerName())) {
                 newBracket.add(el);
-                newBracket.add(PWTournament.generateTrainer(type, pwtclass));
+                int at = new SecureRandom().nextInt(bots.size());
+                Trainer add = bots.get(at);
+                newBracket.add(add);
+                bots.remove(at);
             }
         }
         while (newBracket.size() < 8) {
-            newBracket.add(PWTournament.generateTrainer(type, pwtclass));
-        }
-        for (int i = 0; i < newBracket.size(); i++) {
-            if (!newBracket.get(i).isAI()) {
-                continue;
-            }
-            for (int j = 0; j < newBracket.size(); j++) {
-                if (newBracket.get(i).equals(newBracket.get(j)) && i != j) {
-                    newBracket.set(j, PWTournament.generateTrainer(type, pwtclass));
-                }
-            }
-        }
+            int at = new SecureRandom().nextInt(bots.size());
+            Trainer add = bots.get(at);
+            newBracket.add(add);
+            bots.remove(at);
+        }        
         participants = newBracket;
     }
 
@@ -104,7 +105,7 @@ public class PWTournament {
             ArrayList<PWTBattle> battles = new ArrayList<>();
             for (int i = 0, j = i + 1; j < participants.size(); i++, j++) {
                 participants.get(i).heal();
-                participants.get(j).heal();                
+                participants.get(j).heal();
                 battles.add(new PWTBattle(b, participants.get(i), participants.get(j), type, pwtclass, pwtround));
                 i = j;
                 j++;
