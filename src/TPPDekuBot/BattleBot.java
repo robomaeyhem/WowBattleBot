@@ -52,6 +52,7 @@ public class BattleBot extends PircBot {
     public String lastMessage = "";
     public boolean waitingPlayer = false;
     public boolean waitingPWT = false;
+    public boolean inPWT = false;
     public String waitingOn = "";
     public static LinkedBlockingQueue<String> pokemonMessages = new LinkedBlockingQueue<>();
     public final LinkedBlockingQueue<String> player = new LinkedBlockingQueue<>();
@@ -428,6 +429,7 @@ public class BattleBot extends PircBot {
                     try {
                         Thread.sleep(60000);
                         waitingPWT = false;
+                        inPWT = true;
                         this.sendMessage(channel, "The " + PWTType.RANDOM + " Pokemon World Tournament is starting! Stand by while I generate Pokemon... the first match will begin soon!");
                         ArrayList<Trainer> pwtList = new ArrayList<>();
                         for (String el : pwtQueue) {
@@ -932,6 +934,6 @@ public class BattleBot extends PircBot {
     }
 
     public boolean isInBattle() {
-        return battle != null;
+        return battle != null || inPWT;
     }
 }

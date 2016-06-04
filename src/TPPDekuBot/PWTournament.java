@@ -111,7 +111,7 @@ public class PWTournament {
             ArrayList<Trainer> oldList = (ArrayList<Trainer>) participants.clone();
             participants = new ArrayList<>();
             for (PWTBattle el : battles) {
-                b.sendMessage(channel, pwtround.getText() + " match of the " + type + " tournament! This match is between " + el.player1 + " and " + el.player2 + "!");
+                b.sendMessage(channel, pwtround.getText() + "match of the " + type + " tournament! This match is between " + el.player1 + " and " + el.player2 + "!");
                 if ((el.player1.isAI() && !Trainer.isUserBot(el.player1.getTrainerName())) && (el.player2.isAI() && !Trainer.isUserBot(el.player2.getTrainerName()))) {
                     Trainer winner = new SecureRandom().nextBoolean() ? el.player1 : el.player2;
                     b.sendMessage(channel, "After a hard fought battle, " + el.player1 + " was victorious over " + el.player2 + "! PogChamp");
@@ -152,6 +152,7 @@ public class PWTournament {
         }
         Trainer grandWinner = participants.get(0);
         b.sendMessage(channel, grandWinner + " has won the " + type + " Pokemon World Tournament! PagChomp");
+        b.inPWT = false;
     }
 
     public static Trainer generateTrainer(PWTType type, PWTClass pwtclass) {
