@@ -239,6 +239,7 @@ public class Trainer implements Cloneable {
         for (Pokemon el : this.pokemon) {
             el.heal();
         }
+        this.pokemonLeft = this.pokemon.size();
     }
 
     public Region getRegion() {

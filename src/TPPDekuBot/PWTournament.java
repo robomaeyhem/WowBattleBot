@@ -104,12 +104,10 @@ public class PWTournament {
             ArrayList<PWTBattle> battles = new ArrayList<>();
             for (int i = 0, j = i + 1; j < participants.size(); i++, j++) {
                 participants.get(i).heal();
-                participants.get(j).heal();
-                Trainer p1 = (Trainer) participants.get(i).clone();
-                Trainer p2 = (Trainer) participants.get(j).clone();
+                participants.get(j).heal();                
+                battles.add(new PWTBattle(b, participants.get(i), participants.get(j), type, pwtclass, pwtround));
                 i = j;
                 j++;
-                battles.add(new PWTBattle(b, p1, p2, type, pwtclass, pwtround));
                 if ((battles.size() == 4 && pwtround == PWTRound.FIRST_ROUND) || (battles.size() == 2 && pwtround == PWTRound.SEMIFINALS) || (battles.size() == 1 && pwtround == PWTRound.FINALS)) {
                     break;
                 }
