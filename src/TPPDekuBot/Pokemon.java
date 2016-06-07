@@ -956,6 +956,7 @@ public class Pokemon implements Serializable, Cloneable {
         this.hp = maxHP;
         this.status = Status.NORMAL;        
         this.fainted = false;
+        this.moveStatus = Status.NORMAL;
     }
 
     public void heal() {

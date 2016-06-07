@@ -64,10 +64,14 @@ public class PWTBattle extends Battle {
         pokemon2 = player2.getPokemon(0);
         player1.removePokemon(0);
         player2.removePokemon(0);
+        p1msg = new LinkedBlockingQueue<>();
+        p2msg = new LinkedBlockingQueue<>();
         b.sendMessage(channel, player1.getTrainerName() + " sends out " + pokemon1.getName() + " (Level " + pokemon1.getLevel() + ")! " + player2.getTrainerName() + " sends out " + pokemon2.getName() + " (Level " + pokemon2.getLevel() + ")!");
         do {
             singlebattle:
             while (!pokemon1.isFainted() && !pokemon2.isFainted()) {
+                p1msg = new LinkedBlockingQueue<>();
+                p2msg = new LinkedBlockingQueue<>();
                 b.sendMessage(channel, "Waiting on communication...");
                 if (Trainer.isUserBot(player1.getTrainerName()) || !player1.isAI()) {
                     b.sendWhisper(player1.getTrainerName(), "What will " + pokemon1.getName() + " do? (!move1)" + pokemon1.getMove1().getName() + ", (!move2)" + pokemon1.getMove2().getName() + ", (!move3)" + pokemon1.getMove3().getName() + ", (!move4)" + pokemon1.getMove4().getName() + " (!help)Additional Commands (reply in Battle Dungeon)");
@@ -103,7 +107,7 @@ public class PWTBattle extends Battle {
                             if (p1move.length() >= 8) {
                                 if (Character.isDigit(p1move.charAt(7))) {
                                     p1switchTo = Integer.parseInt(p1move.split("!switch", 2)[1].split(" ", 2)[0]);
-                                    if (p1switchTo > 2 || p1switchTo < 0) {
+                                    if (p1switchTo >= 2 || p1switchTo < 0) {
                                         p1switchTo = -1;
                                         p1move = "";
                                         b.sendMessage(channel, "/w " + player1.getTrainerName() + " Invalid Pokemon Position FUNgineer");
@@ -159,7 +163,7 @@ public class PWTBattle extends Battle {
                             if (p2move.length() >= 8) {
                                 if (Character.isDigit(p2move.charAt(7))) {
                                     p2switchTo = Integer.parseInt(p2move.split("!switch", 2)[1].split(" ", 2)[0]);
-                                    if (p2switchTo > 2 || p2switchTo < 0) {
+                                    if (p2switchTo >= 2 || p2switchTo < 0) {
                                         p2switchTo = -1;
                                         p2move = "";
                                         b.sendMessage(channel, "/w " + player2.getTrainerName() + " Invalid Pokemon Position FUNgineer");
@@ -393,7 +397,9 @@ public class PWTBattle extends Battle {
      * @param playerPokemon Fainted Pokemon
      * @param channel Channel to send Message to
      */
-    public void switchPokemon(Trainer player, Pokemon playerPokemon, String channel) {
+    public void switchPokemon(Trainer player, Pokemon playerPokemon, String channel) {        
+        p1msg = new LinkedBlockingQueue<>();
+        p2msg = new LinkedBlockingQueue<>();
         b.sendMessage(channel, playerPokemon.getName() + " fainted! What Pokemon will " + player.getTrainerName() + " switch to?");
         LinkedBlockingQueue<String> feed = (player.getTrainerName().equalsIgnoreCase(player1.getTrainerName()) ? p1msg : p2msg);
         if (Trainer.isUserBot(player.getTrainerName()) || !player.isAI()) {
@@ -423,7 +429,7 @@ public class PWTBattle extends Battle {
                             continue;
                         }
                         switchTo = Integer.parseInt(temp.split("!switch", 2)[1].split(" ", 2)[0]);
-                        if (switchTo > 2 || switchTo < 0) {
+                        if (switchTo >= 2 || switchTo < 0) {
                             temp = "";
                             b.sendMessage(channel, "/w " + player.getTrainerName() + " Invalid Pokemon Position FUNgineer");
                             continue;
@@ -506,30 +512,24 @@ public class PWTBattle extends Battle {
     }
 
     public static File determineMusic(PWTBattle battle) {
-        if (battle.getRound() == PWTRound.FINALS) {
+        battle.b.music.clear();
+        if (battle.getRound() == PWTRound.FINALS && battle.getType() != PWTType.CHAMPIONS) {
             return new File(BattleBot.ROOT_PATH + "pwt\\pwt-final.mp3");
         }
         File toReturn = new File(BattleBot.ROOT_PATH + "pwt\\pwt-trainer.mp3");
         Trainer ai = null;
-        if (battle.player1.isAI()) {
-            ai = battle.player1;
-        } else if (battle.player2.isAI()) {
-            ai = battle.player2;
-        } else if (battle.player1.isAI() && battle.player2.isAI()) {
-            if (battle.player2.getTrnClass().contains("Champion") || battle.player2.getTrnClass().contains("Gym Leader")) {
-                ai = battle.player2;
-            } else if (battle.player1.getTrnClass().contains("Champion") || battle.player1.getTrnClass().contains("Gym Leader")) {
-                ai = battle.player1;
-            } else {
-                ai = new SecureRandom().nextBoolean() ? battle.player1 : battle.player2;
-            }
-        }
-        if (ai == null) {
-            if (battle.player2.getTrnClass().contains("Champion") || battle.player2.getTrnClass().contains("Gym Leader")) {
-                ai = battle.player2;
-            } else {
-                ai = battle.player1;
-            }
+        Trainer p1 = battle.player1;
+        Trainer p2 = battle.player2;
+        if (p1.getTrnClass().contains("Champion")) {
+            ai = p1;
+        } else if (p2.getTrnClass().contains("Champion")) {
+            ai = p2;
+        } else if (p1.getTrnClass().contains("Gym Leader")) {
+            ai = p1;
+        } else if (p2.getTrnClass().contains("Gym Leader")) {
+            ai = p2;
+        } else {
+            ai = new SecureRandom().nextBoolean() ? p1 : p2;
         }
         String trnClass = ai.getTrnClass();
         if (trnClass.contains("Champion")) {
@@ -591,7 +591,7 @@ public class PWTBattle extends Battle {
         Move mostPowerful = Move.selectBestMove(user, opponent);
         if (mostPowerful == null) {
             System.err.println("Move is null!!");
-            return "!move" + new SecureRandom().nextInt(4) + 1;
+            return "!move" + new SecureRandom().nextInt(3) + 1;
         }
         if (mostPowerful.equals(user.getMove1())) {
             return "!move1";

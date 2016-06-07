@@ -70,6 +70,7 @@ public class BattleBot extends PircBot {
         ISO_8601_DATE_TIME.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
     private static File logFile = new File(BASE_PATH + "BattleBot_Log.log");
+    public boolean playingVictoryPWT = false;
 
     public BattleBot(String BASE_PATH, String oAuth, String rootPath) {
         this.setName("Wow_BattleBot_OneHand");
@@ -474,6 +475,7 @@ public class BattleBot extends PircBot {
                 this.sendMessage(channel, sender.getNick() + " has started a new Random Pokemon World Tournament! Type !join to join. The PWT will start in 60 seconds.");
                 //this.sendMessage(channel,"Debug mode for PWT activated, wait 60 sec");
                 pwtQueue.add(sender.getNick().toLowerCase());
+                music.play(new File(ROOT_PATH + "\\pwt\\pwt-lobby.mp3"));
                 waitingPWT = true;
                 Thread t = new Thread(() -> {
                     try {
@@ -498,9 +500,24 @@ public class BattleBot extends PircBot {
                         });
                         tet.start();
                         Thread.sleep(60000);
-                        while (randoms.size() < 7) {
-
-                        }
+//                        while (randoms.size() < 7) {
+//                            outer:
+//                            while (waitingPWT) {
+//                                Trainer rand = PWTournament.generateTrainer(PWTType.RANDOM, PWTClass.NORMAL);
+//                                if (randoms.isEmpty()) {
+//                                    randoms.add(rand);
+//                                    System.err.println("Added " + rand + " " + rand.getPokemon());
+//                                    continue;
+//                                }
+//                                for (Trainer el : randoms) {
+//                                    if (el.getTrainerName().equalsIgnoreCase(rand.getTrainerName())) {
+//                                        continue outer;
+//                                    }
+//                                }
+//                                randoms.add(rand);
+//                                System.err.println("Added " + rand + " " + rand.getPokemon());
+//                            }
+//                        }
                         waitingPWT = false;
                         inPWT = true;
                         this.sendMessage(channel, "The " + PWTType.RANDOM + " Pokemon World Tournament is starting! Stand by while I generate Pokemon... the first match will begin soon!");
@@ -515,13 +532,16 @@ public class BattleBot extends PircBot {
                         pwt.arrangeBracket();
                         pwt.doTourney(this, channel.getChannelName());
                         pwtQueue = new ArrayList<>();
+                        waitingPWT = false;
                         inPWT = false;
                     } catch (Exception ex) {
                         StringWriter sw = new StringWriter();
                         PrintWriter pw = new PrintWriter(sw);
                         ex.printStackTrace(pw);
                         music.sendMessage(music.getChannel(), music.CHEF.mention() + " ```An error occurred in the PWT!!\n" + sw.toString() + "```");
-
+                        pwtQueue = new ArrayList<>();
+                        waitingPWT = false;
+                        inPWT = false;
                     }
                 });
                 t.start();
@@ -652,8 +672,10 @@ public class BattleBot extends PircBot {
                 });
                 t.start();
             } else if (message.toLowerCase().split("!test ", 2)[1].split(" ", 2)[0].equalsIgnoreCase("pwt")) {
-                Trainer t = PWTournament.generateTrainer(PWTType.RANDOM, PWTClass.NORMAL);
-                Trainer m = PWTournament.generateTrainer(PWTType.RANDOM, PWTClass.NORMAL);
+                Trainer t = new Trainer("Cynthia", "Sinnoh Champion", Region.SINNOH, Trainer.generatePokemon(3, 50), true);
+                Trainer m = new Trainer("23forces", "Elite Four", Region.getRandomRegion(), Trainer.generatePokemon(3, 50), true);
+                //String name, String trnClass, Region region, ArrayList<Pokemon> pokemon, boolean ai
+                this.sendMessage(channel, PWTRound.FIRST_ROUND.getText() + "match of the " + PWTType.RANDOM + " tournament! This match is between " + t + " and " + m + "!");
                 PWTBattle b = new PWTBattle(this, m, t, PWTType.RANDOM, PWTClass.NORMAL, PWTRound.FIRST_ROUND);
                 battle = b;
                 Thread th = new Thread(() -> {
@@ -771,6 +793,22 @@ public class BattleBot extends PircBot {
         //singleplayer safari
         if (message.contains("did not select an action in time, the Pokemon was stolen by Team Flare WutFace") || message.contains(" was caught! Kreygasm") || message.contains("You got away safely!") || (message.contains("The wild") && message.contains("ran away!"))) {
             this.music.clear();
+        }
+        if (message.contains("has won the") && message.contains("Pokemon World Tournament! PagChomp")) {
+            Thread t = new Thread(() -> {
+                music.play(new File(ROOT_PATH + "\\pwt\\pwt-grand-victory.mp3"));
+                playingVictoryPWT = true;
+                try {
+                    Thread.sleep(15000);
+                } catch (Exception ex) {
+
+                }
+                if (playingVictoryPWT) {
+                    playingVictoryPWT = false;
+                    music.clear();
+                }
+            });
+            t.start();
         }
     }
 
