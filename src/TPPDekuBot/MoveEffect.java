@@ -242,4 +242,19 @@ class MoveEffects {
             return "";
         }
     };
+    public static MoveEffect OHKO = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+        if (opponent.getLevel() <= user.getLevel()) {
+            int diff = user.getLevel() - opponent.getLevel();
+            diff = diff + 30;
+            int hit = new SecureRandom().nextInt(100) + 1;
+            if (hit > diff) {
+                opponent.setHP(0);
+                return "PogChamp IT'S A ONE HIT KO!! PogChamp " + opponent.getName() + " has 0hp left!";
+            } else {
+                return "But it failed!";
+            }
+        } else {
+            return "But it failed!";
+        }
+    };
 }
