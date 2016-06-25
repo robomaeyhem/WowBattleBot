@@ -246,12 +246,15 @@ class MoveEffects {
         if (opponent.getLevel() <= user.getLevel()) {
             int diff = user.getLevel() - opponent.getLevel();
             diff = diff + 30;
+            if (diff > 100) {
+                diff = 100;
+            }
             int hit = new SecureRandom().nextInt(100) + 1;
-            if (hit > diff) {
+            if (diff == 100 || hit > diff) {
                 opponent.setHP(0);
                 return "PogChamp IT'S A ONE HIT KO!! PogChamp " + opponent.getName() + " has 0hp left!";
             } else {
-                return "But it failed!";
+                return "The attack missed!";
             }
         } else {
             return "But it failed!";

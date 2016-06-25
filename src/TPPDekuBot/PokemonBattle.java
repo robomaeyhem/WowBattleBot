@@ -103,10 +103,10 @@ public class PokemonBattle extends Battle {
             return;
         }
         if (test) {
-            user = new Pokemon(363, 80);
-            computer = new Pokemon(170, 73);
+            user = new Pokemon(363, 50);
+            computer = new Pokemon(170, 51);
             HashMap<String, Move> moves = Pokemon.reloadMoves();
-            user.setMove1(moves.get("Toxic"));
+            user.setMove1(moves.get("Horn-drill"));
             user.setMove2(moves.get("Icy-wind"));
             user.setMove3(moves.get("Giga-impact"));
             user.setMove4(moves.get("Ice-beam"));
@@ -118,7 +118,7 @@ public class PokemonBattle extends Battle {
             computer.setMove4(moves.get("Blizzard"));
         }
         b.music.play(b.determineMusic(computer));
-        b.sendMessage(channel, (BattleBot.isLegendary(computer.getId()) ? "Woah! " : "") + "A wild " + computer.getName() + " (level " + (bigBrother && !fromChef ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙" : level2) + ") appeared! Go " + user.getName() + "! (Level " + (bigBrother && fromChef && user.getName().equalsIgnoreCase("Magikarp") && user.getMove1().getName().equalsIgnoreCase("Shadow-force") ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙" : level1) + ")");
+        b.sendMessage(channel, (BattleBot.isLegendary(computer.getId()) ? "Woah! " : "") + "A wild " + computer.getName() + " (level " + (bigBrother && !fromChef ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙" : computer.getLevel()) + ") appeared! Go " + user.getName() + "! (Level " + (bigBrother && fromChef && user.getName().equalsIgnoreCase("Magikarp") && user.getMove1().getName().equalsIgnoreCase("Shadow-force") ? "1͗̎̔ͪͫ̃͒͜͠҉̥̝̜ͅͅ0̴̵̞͖̪̻͎̦̯̒̔ͫ̾ͣ̃̅̉0̑̔̽̓͊̈̏ͧ̀̾͆͜͏̸̹̹͇̠̺̞̻̯̦͈̦̹̥͕̙" : user.getLevel()) + ")");
         System.err.println("User moves = " + user.getMove1().getName() + ", " + user.getMove2().getName() + ", " + user.getMove3().getName() + ", " + user.getMove4().getName() + ", ");
         System.err.println("Computer moves = " + computer.getMove1().getName() + ", " + computer.getMove2().getName() + ", " + computer.getMove3().getName() + ", " + computer.getMove4().getName() + ", ");
         try {

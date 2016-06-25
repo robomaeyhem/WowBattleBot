@@ -6,7 +6,7 @@ import java.util.*;
 public class MoveImporter {
 
     public static void main(String[] args) {
-        BattleBot.BASE_PATH = "D:\\a\\Wow_Deku\\";
+        BattleBot.BASE_PATH = "F:\\a\\Wow_Deku\\";
         HashMap<String, Move> moveList = new HashMap<>();
         moveList.put("Guard-swap", new Move("Guard-swap", Type.PSYCHIC, MoveCategory.STATUS, 0, 0, 10, null, -1));
         moveList.put("Take-down", new Move("Take-down", Type.NORMAL, MoveCategory.PHYSICAL, 90, 85, 20, MoveEffects.RECOIL_25, 100));

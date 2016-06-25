@@ -244,7 +244,6 @@ public class Pokemon implements Serializable, Cloneable {
     }
 
     public String attack(Pokemon opponent, Move move, boolean confused) {
-
         int attack = this.attack;
         int defense = opponent.getStat(Stats.DEFENSE);
         int spAttack = this.spAttack;
@@ -436,57 +435,70 @@ public class Pokemon implements Serializable, Cloneable {
                 return toReturn += " " + effect;
 
             }
-            if (effectiveness >= 2.0) {
-                toReturn += "\nIt's Super Effective!";
-            }
-            if (effectiveness > 0 && effectiveness < 1) {
-                toReturn += "\nIt's not very effective...";
-            }
-            if (effectiveness == 0) {
+            if (move.getPower() != 0) {
+                if (effectiveness >= 2.0) {
+                    toReturn += "\nIt's Super Effective!";
+                }
+                if (effectiveness > 0 && effectiveness < 1) {
+                    toReturn += "\nIt's not very effective...";
+                }
+                if (effectiveness == 0) {
+                    toReturn += "\nIt doesn't affect the opponent!";
+                    return toReturn;
+                }
+
+                double stab = 1.0;
+                if (this.type1 == move.getType() || this.type2 == move.getType()) {
+                    stab = 1.5;
+                }
+                double critical = 1.0;
+                int randomNum = rand.nextInt((16 - 1) + 1) + 1;
+                if (randomNum == 1) {
+                    critical = 1.5;
+                    toReturn += "\nCritical Hit!!";
+                }
+                rand = new SecureRandom();
+                double randModifier = 0.85 + (1.0 - 0.85) * rand.nextDouble();
+                double modifier = stab * effectiveness * critical * randModifier;
+                double damageBuf = 0.0;
+                if (move.getCategory() == MoveCategory.PHYSICAL) {
+                    damageBuf = (2.0 * (double) this.level + 10.0) / 250.0;
+                    damageBuf = damageBuf * ((double) attack / (double) defense);
+                    damageBuf = damageBuf * (double) move.getPower() + 2.0;
+                    damageBuf = (damageBuf * modifier);
+                } else if (move.getCategory() == MoveCategory.SPECIAL) {
+                    damageBuf = (2.0 * (double) level + 10.0) / 250.0;
+                    damageBuf = damageBuf * ((double) spAttack / (double) spDefense);
+                    damageBuf = damageBuf * (double) move.getPower() + 2.0;
+                    damageBuf = (damageBuf * modifier);
+                }
+                int damage = (int) damageBuf;
+                int damageBuffer = damage;
+                if (damageBuffer > opponent.getStat(Stats.HP)) {
+                    damageBuffer = opponent.getStat(Stats.HP);
+                }
+
+                String effect = "";
+                if (move.getEffectChance() != -1 && move.getEffect() != null) {
+                    int chance = rand.nextInt(100) + 1;
+                    if (chance <= move.getEffectChance() || move.getEffectChance() == 100) {
+                        effect = move.getEffect().run(this, opponent, damageBuffer, move);
+                    }
+                }
+
+                opponent.damage(damage);
+                toReturn += "\n" + opponent.getName() + " lost " + damageBuffer + "hp! " + opponent.getName() + " has " + opponent.getStat(Stats.HP) + "hp left!";
+            } else if (effectiveness == 0) {
                 toReturn += "\nIt doesn't affect the opponent!";
                 return toReturn;
             }
-            double stab = 1.0;
-            if (this.type1 == move.getType() || this.type2 == move.getType()) {
-                stab = 1.5;
-            }
-            double critical = 1.0;
-            int randomNum = rand.nextInt((16 - 1) + 1) + 1;
-            if (randomNum == 1) {
-                critical = 1.5;
-                toReturn += "\nCritical Hit!!";
-            }
-            rand = new SecureRandom();
-            double randModifier = 0.85 + (1.0 - 0.85) * rand.nextDouble();
-            double modifier = stab * effectiveness * critical * randModifier;
-            double damageBuf = 0.0;
-            if (move.getCategory() == MoveCategory.PHYSICAL) {
-                damageBuf = (2.0 * (double) this.level + 10.0) / 250.0;
-                damageBuf = damageBuf * ((double) attack / (double) defense);
-                damageBuf = damageBuf * (double) move.getPower() + 2.0;
-                damageBuf = (damageBuf * modifier);
-            } else if (move.getCategory() == MoveCategory.SPECIAL) {
-                damageBuf = (2.0 * (double) level + 10.0) / 250.0;
-                damageBuf = damageBuf * ((double) spAttack / (double) spDefense);
-                damageBuf = damageBuf * (double) move.getPower() + 2.0;
-                damageBuf = (damageBuf * modifier);
-            }
-            int damage = (int) damageBuf;
-            int damageBuffer = damage;
-            if (damageBuffer > opponent.getStat(Stats.HP)) {
-                damageBuffer = opponent.getStat(Stats.HP);
-            }
-
             String effect = "";
             if (move.getEffectChance() != -1 && move.getEffect() != null) {
                 int chance = rand.nextInt(100) + 1;
                 if (chance <= move.getEffectChance() || move.getEffectChance() == 100) {
-                    effect = move.getEffect().run(this, opponent, damageBuffer, move);
+                    effect = move.getEffect().run(this, opponent, 0, move);
                 }
             }
-
-            opponent.damage(damage);
-            toReturn += "\n" + opponent.getName() + " lost " + damageBuffer + "hp! " + opponent.getName() + " has " + opponent.getStat(Stats.HP) + "hp left!";
             if (effect != null && !effect.isEmpty()) {
                 toReturn += " " + effect;
             }
@@ -954,7 +966,7 @@ public class Pokemon implements Serializable, Cloneable {
 
     public void resetHP() {
         this.hp = maxHP;
-        this.status = Status.NORMAL;        
+        this.status = Status.NORMAL;
         this.fainted = false;
         this.moveStatus = Status.NORMAL;
     }
@@ -1399,5 +1411,5 @@ public class Pokemon implements Serializable, Cloneable {
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
-    
+
 }
