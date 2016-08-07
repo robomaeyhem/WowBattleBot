@@ -103,12 +103,12 @@ public class PokemonBattle extends Battle {
             return;
         }
         if (test) {
-            user = new Pokemon(363, 50);
+            user = new Pokemon(363, 70);
             computer = new Pokemon(170, 51);
             HashMap<String, Move> moves = Pokemon.reloadMoves();
             user.setMove1(moves.get("Horn-drill"));
-            user.setMove2(moves.get("Icy-wind"));
-            user.setMove3(moves.get("Giga-impact"));
+            user.setMove2(moves.get("Double-edge"));
+            user.setMove3(moves.get("Toxic"));
             user.setMove4(moves.get("Ice-beam"));
             user.setStat(Stats.SPEED, 1000);
             user.setStat(Stats.HP, 10000);

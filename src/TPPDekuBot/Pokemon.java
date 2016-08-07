@@ -255,10 +255,10 @@ public class Pokemon implements Serializable, Cloneable {
                 default:
                 case NORMAL:
                     break;
-                case ATTACK_NEXT_TURN:
+                case ATTACK_NEXT_TURN://TODO: Make these more descriptive
                     if (moveBuffer == null) {
                         moveBuffer = move;
-                        switch (move.getName()) {//todo
+                        switch (move.getName()) {//TODO: More moves
                             case "Fly":
                                 break;
                             case "Bounce":
@@ -488,21 +488,25 @@ public class Pokemon implements Serializable, Cloneable {
 
                 opponent.damage(damage);
                 toReturn += "\n" + opponent.getName() + " lost " + damageBuffer + "hp! " + opponent.getName() + " has " + opponent.getStat(Stats.HP) + "hp left!";
+                if (effect != null && !effect.isEmpty()) {
+                    toReturn += " " + effect;
+                }
             } else if (effectiveness == 0) {
                 toReturn += "\nIt doesn't affect the opponent!";
                 return toReturn;
-            }
-            String effect = "";
-            if (move.getEffectChance() != -1 && move.getEffect() != null) {
-                int chance = rand.nextInt(100) + 1;
-                if (chance <= move.getEffectChance() || move.getEffectChance() == 100) {
-                    effect = move.getEffect().run(this, opponent, 0, move);
+            } else {
+                String effect = "";
+                if (move.getEffectChance() != -1 && move.getEffect() != null) {
+                    int chance = rand.nextInt(100) + 1;
+                    if (chance <= move.getEffectChance() || move.getEffectChance() == 100) {
+                        effect = move.getEffect().run(this, opponent, 0, move);
+                    }
                 }
+                if (effect != null && !effect.isEmpty()) {
+                    toReturn += " " + effect;
+                }
+                return toReturn;
             }
-            if (effect != null && !effect.isEmpty()) {
-                toReturn += " " + effect;
-            }
-            return toReturn;
         } finally {
             if (null != this.getStatus()) {
                 switch (this.getStatus()) {
