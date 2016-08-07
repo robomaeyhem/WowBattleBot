@@ -200,10 +200,10 @@ public class BattleBot extends PircBot {
                 int check = Integer.parseInt(message.charAt(6) + "");
                 if (sender.getNick().equalsIgnoreCase(mpB.getPlayer1())) {
                     Pokemon p = mpB.player1.getPokemon(check);
-                    this.sendMessage(channel, "/w " + sender.getNick() + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
+                    this.sendMessage(channel, "/w " + sender.getNick() + " Status of " + p.getName() + " (" + p.getType1() + ((p.getType2() != Type.NONE) ? "/" + p.getType2() : "") + "): " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
                 } else if (sender.getNick().equalsIgnoreCase(mpB.getPlayer2())) {
                     Pokemon p = mpB.player2.getPokemon(check);
-                    this.sendMessage(channel, "/w " + sender.getNick() + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
+                    this.sendMessage(channel, "/w " + sender.getNick() + " Status of " + p.getName() + " (" + p.getType1() + ((p.getType2() != Type.NONE) ? "/" + p.getType2() : "") + "): " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
                 }
             }
             if (message.toLowerCase().startsWith("!help") && (isInBattle() && battle instanceof MultiplayerBattle) && (sender.getNick().equalsIgnoreCase(mpB.getPlayer1()) || sender.getNick().equalsIgnoreCase(mpB.getPlayer2()))) {
@@ -249,10 +249,10 @@ public class BattleBot extends PircBot {
                 int check = Integer.parseInt(message.charAt(6) + "");
                 if (sender.getNick().equalsIgnoreCase(mpB.player1.getTrainerName())) {
                     Pokemon p = mpB.player1.getPokemon(check);
-                    this.sendMessage(channel, "/w " + sender.getNick() + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
+                    this.sendMessage(channel, "/w " + sender.getNick() + " Status of " + p.getName() + " (" + p.getType1() + ((p.getType2() != Type.NONE) ? "/" + p.getType2() : "") + "): " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
                 } else if (sender.getNick().equalsIgnoreCase(mpB.player2.getTrainerName())) {
                     Pokemon p = mpB.player2.getPokemon(check);
-                    this.sendMessage(channel, "/w " + sender.getNick() + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
+                    this.sendMessage(channel, "/w " + sender.getNick() + " Status of " + p.getName() + " (" + p.getType1() + ((p.getType2() != Type.NONE) ? "/" + p.getType2() : "") + "): " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
                 }
             }
             if (message.toLowerCase().startsWith("!help") && (isInBattle() && battle instanceof PWTBattle) && (sender.getNick().equalsIgnoreCase(mpB.player1.getTrainerName())) || sender.getNick().equalsIgnoreCase(mpB.player2.getTrainerName())) {
@@ -387,10 +387,10 @@ public class BattleBot extends PircBot {
                 int check = Integer.parseInt(message.charAt(6) + "");
                 if (sender.getNick().equalsIgnoreCase(mpB.getPlayer1())) {
                     Pokemon p = mpB.player1.getPokemon(check);
-                    this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
+                    this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " Status of " + p.getName() + " (" + p.getType1() + ((p.getType2() != Type.NONE) ? "/" + p.getType2() : "") + "): " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
                 } else if (sender.getNick().equalsIgnoreCase(mpB.getPlayer2())) {
                     Pokemon p = mpB.player2.getPokemon(check);
-                    this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
+                    this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " Status of " + p.getName() + " (" + p.getType1() + ((p.getType2() != Type.NONE) ? "/" + p.getType2() : "") + "): " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
                 }
             }
             if (message.toLowerCase().startsWith("!help") && (isInBattle() && battle instanceof MultiplayerBattle) && (sender.getNick().equalsIgnoreCase(mpB.getPlayer1()) || sender.getNick().equalsIgnoreCase(mpB.getPlayer2()))) {
@@ -435,10 +435,10 @@ public class BattleBot extends PircBot {
                 int check = Integer.parseInt(message.charAt(6) + "");
                 if (sender.getNick().equalsIgnoreCase(mpB.player1.getTrainerName())) {
                     Pokemon p = mpB.player1.getPokemon(check);
-                    this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
+                    this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " Status of " + p.getName() + " (" + p.getType1() + ((p.getType2() != Type.NONE) ? "/" + p.getType2() : "") + "): " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
                 } else if (sender.getNick().equalsIgnoreCase(mpB.player2.getTrainerName())) {
                     Pokemon p = mpB.player2.getPokemon(check);
-                    this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " Status of " + p.getName() + ": " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
+                    this.sendMessage(channel.getChannelName(), "/w " + sender.getNick() + " Status of " + p.getName() + " (" + p.getType1() + ((p.getType2() != Type.NONE) ? "/" + p.getType2() : "") + "): " + p.getStat(Stats.HP) + " out of " + p.getMaxHP() + "hp left. Has these moves: " + p.getMove1().getName() + ", " + p.getMove2().getName() + ", " + p.getMove3().getName() + ", " + p.getMove4().getName());
                 }
             }
             if (message.toLowerCase().startsWith("!help") && (isInBattle() && battle instanceof PWTBattle) && (sender.getNick().equalsIgnoreCase(mpB.player1.getTrainerName())) || sender.getNick().equalsIgnoreCase(mpB.player2.getTrainerName())) {

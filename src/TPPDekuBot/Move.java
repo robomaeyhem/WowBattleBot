@@ -85,24 +85,7 @@ public /*abstract*/ class Move implements Serializable {
     public MoveEffect getEffect() {
         return effect;
     }
-
-//    public void doMove(Pokemon user, Pokemon opponent) {
-//        preMove(user, opponent);
-//        switch (this.category) {
-//            case PHYSICAL:
-//                break;
-//            case SPECIAL:
-//                break;
-//            case STATUS:
-//                break;
-//        }
-//        postMove(user, opponent);
-//
-//    }
-//
-//    abstract int preMove(Pokemon user, Pokemon opponent);
-//
-//    abstract String postMove(Pokemon user, Pokemon opponent);
+    
     public static Move getMove(Pokemon pokemon, int id) {
         Move toReturn = null;
         switch (id) {

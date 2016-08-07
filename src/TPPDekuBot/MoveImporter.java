@@ -234,7 +234,7 @@ public class MoveImporter {
         moveList.put("Magnet-rise", new Move("Magnet-rise", Type.ELECTRIC, MoveCategory.STATUS, 0, 0, 10, null, -1));
         moveList.put("Reflect", new Move("Reflect", Type.PSYCHIC, MoveCategory.STATUS, 0, 0, 20, null, -1));
         moveList.put("Wonder-room", new Move("Wonder-room", Type.PSYCHIC, MoveCategory.STATUS, 0, 0, 10, null, -1));
-        moveList.put("Splash", new Move("Splash", Type.NORMAL, MoveCategory.STATUS, 0, 0, 40, null, -1));
+        moveList.put("Splash", new Move("Splash", Type.NORMAL, MoveCategory.STATUS, 0, 100, 40, MoveEffects.SPLASH, 100));
         moveList.put("Reversal", new Move("Reversal", Type.FIGHTING, MoveCategory.PHYSICAL, 0, 100, 15, null, -1));
         moveList.put("Crush-claw", new Move("Crush-claw", Type.NORMAL, MoveCategory.PHYSICAL, 75, 95, 10, null, -1));
         moveList.put("Transform", new Move("Transform", Type.NORMAL, MoveCategory.STATUS, 0, 0, 10, null, -1));

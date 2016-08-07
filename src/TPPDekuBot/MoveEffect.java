@@ -260,4 +260,7 @@ class MoveEffects {
             return "But it failed!";
         }
     };
+    public static MoveEffect SPLASH = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+        return "ThunBeast But nothing happened...";
+    };
 }
