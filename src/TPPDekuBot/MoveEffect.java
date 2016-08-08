@@ -263,4 +263,151 @@ class MoveEffects {
     public static MoveEffect SPLASH = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         return "ThunBeast But nothing happened...";
     };
+    public static MoveEffect HURRICANE = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        String toReturn = user.getName() + " used Hurricane! ";
+        int hitChance = new SecureRandom().nextInt(100);
+        int target = 0;
+        switch (battle.getWeather()) {
+            case NORMAL:
+            default:
+                target = 70;
+                break;
+            case RAIN:
+            case RAIN_HEAVY:
+                target = -1;
+                break;
+            case SUN_EXTREME:
+                target = 50;
+                break;
+        }
+        if (hitChance >= target && target != -1) {
+            return "The attack missed!";
+        }
+        int power = 110;
+        if (opponent.getMoveStatus() == Status.ATTACK_NEXT_TURN) {
+            power = 220;
+        }
+        SecureRandom rand = new SecureRandom();
+        int effective1 = Pokemon.effectiveness(move.getType(), opponent.getType1());
+        int effective2 = Pokemon.effectiveness(move.getType(), opponent.getType2());
+        double effectiveness = 1.0;
+        if (effective2 == -5) {
+            switch (effective1) {
+                case 0:
+                    effectiveness = 0.0;
+                    break;
+                case -1:
+                    effectiveness = 0.5;
+                    break;
+                case 1:
+                    effectiveness = 1.0;
+                    break;
+                case 2:
+                    effectiveness = 2.0;
+                    break;
+                default:
+                    effectiveness = 1.0;
+                    break;
+            }
+        } else {
+            switch (effective1) {
+                case 0:
+                    effectiveness = 0.0;
+                    break;
+                case -1:
+                    switch (effective2) {
+                        case 0:
+                            effectiveness = 0.0;
+                            break;
+                        case -1:
+                            effectiveness = 0.25;
+                            break;
+                        case 1:
+                            effectiveness = 0.5;
+                            break;
+                        case 2:
+                            effectiveness = 1.0;
+                            break;
+                    }
+                    break;
+                case 1:
+                    switch (effective2) {
+                        case 0:
+                            effectiveness = 0.0;
+                            break;
+                        case -1:
+                            effectiveness = 0.5;
+                            break;
+                        case 1:
+                            effectiveness = 1.0;
+                            break;
+                        case 2:
+                            effectiveness = 2.0;
+                            break;
+                    }
+                    break;
+                case 2:
+                    switch (effective2) {
+                        case 0:
+                            effectiveness = 0.0;
+                            break;
+                        case -1:
+                            effectiveness = 1.0;
+                            break;
+                        case 1:
+                            effectiveness = 2.0;
+                            break;
+                        case 2:
+                            effectiveness = 4.0;
+                            break;
+                    }
+                    break;
+            }
+        }
+        if (effectiveness >= 2.0) {
+            toReturn += "\nIt's Super Effective!";
+        }
+        if (effectiveness > 0 && effectiveness < 1) {
+            toReturn += "\nIt's not very effective...";
+        }
+        if (effectiveness == 0) {
+            toReturn += "\nIt doesn't affect the opponent!";
+            return toReturn;
+        }
+
+        double stab = 1.0;
+        if (user.getType1() == move.getType() || user.getType2() == move.getType()) {
+            stab = 1.5;
+        }
+        double critical = 1.0;
+        int randomNum = rand.nextInt((16 - 1) + 1) + 1;
+        if (randomNum == 1) {
+            critical = 1.5;
+            toReturn += "\nCritical Hit!!";
+        }
+        rand = new SecureRandom();
+        double randModifier = 0.85 + (1.0 - 0.85) * rand.nextDouble();
+        double modifier = stab * effectiveness * critical * randModifier;
+        double damageBuf = 0;
+        damageBuf = (2.0 * (double) user.getLevel() + 10.0) / 250.0;
+        damageBuf = damageBuf * ((double) user.getStat(Stats.SP_ATTACK) / (double) user.getStat(Stats.SP_DEFENSE));
+        damageBuf = damageBuf * (double) move.getPower() + 2.0;
+        damageBuf = (damageBuf * modifier);
+        damage = (int) damageBuf;
+        int damageBuffer = damage;
+        if (damageBuffer > opponent.getStat(Stats.HP)) {
+            damageBuffer = opponent.getStat(Stats.HP);
+        }
+        opponent.damage(damage);
+        toReturn += opponent.getName() + " lost " + damage + "hp! ";
+        if (!opponent.isConfused()) {
+            int confChance = new SecureRandom().nextInt(100);
+            if (confChance <= 30) {
+                opponent.setConfused(true);
+                toReturn += opponent.getName() + " was confused!";
+            }
+        }
+        toReturn += opponent.getName() + " has " + opponent.getStat(Stats.HP) + "hp left!";
+        return toReturn;
+    };
 }

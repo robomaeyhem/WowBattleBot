@@ -123,7 +123,7 @@ public class MoveImporter {
         moveList.put("Barrier", new Move("Barrier", Type.PSYCHIC, MoveCategory.STATUS, 0, 0, 20, null, -1));
         moveList.put("Metal-claw", new Move("Metal-claw", Type.STEEL, MoveCategory.PHYSICAL, 50, 95, 35, null, -1));
         moveList.put("Drill-run", new Move("Drill-run", Type.GROUND, MoveCategory.PHYSICAL, 80, 95, 10, null, -1));
-        moveList.put("Secret-power", new Move("Secret-power", Type.NORMAL, MoveCategory.PHYSICAL, 70, 100, 20, MoveEffects.FLINCH, 30));
+        moveList.put("Secret-power", new Move("Secret-power", Type.NORMAL, MoveCategory.PHYSICAL, 70, 100, 20, MoveEffects.PARALYZE, 30));
         moveList.put("Confuse-ray", new Move("Confuse-ray", Type.GHOST, MoveCategory.STATUS, 0, 100, 10, MoveEffects.CONFUSE_TARGET, 100));
         moveList.put("Hydro-pump", new Move("Hydro-pump", Type.WATER, MoveCategory.SPECIAL, 110, 80, 5, null, -1));
         moveList.put("Icicle-crash", new Move("Icicle-crash", Type.ICE, MoveCategory.PHYSICAL, 85, 90, 10, MoveEffects.FLINCH, 30));
@@ -368,7 +368,7 @@ public class MoveImporter {
         moveList.put("Lucky-chant", new Move("Lucky-chant", Type.NORMAL, MoveCategory.STATUS, 0, 0, 30, null, -1));
         moveList.put("Nightmare", new Move("Nightmare", Type.GHOST, MoveCategory.STATUS, 0, 100, 15, null, -1));
         moveList.put("Low-sweep", new Move("Low-sweep", Type.FIGHTING, MoveCategory.PHYSICAL, 65, 100, 20, null, -1));
-        moveList.put("Hurricane", new Move("Hurricane", Type.FLYING, MoveCategory.SPECIAL, 110, 70, 10, null, -1));
+        moveList.put("Hurricane", new Move("Hurricane", Type.FLYING, MoveCategory.SPECIAL, 0, 0, 10, MoveEffects.HURRICANE, 100));
         moveList.put("Mat-block", new Move("Mat-block", Type.FIGHTING, MoveCategory.STATUS, 0, 0, 10, null, -1));
         moveList.put("Hidden-power (Normal)", new Move("Hidden-power (Normal)", Type.NORMAL, MoveCategory.SPECIAL, 60, 100, 15, null, -1));
         moveList.put("Guillotine", new Move("Guillotine", Type.NORMAL, MoveCategory.PHYSICAL, 0, 100, 5, MoveEffects.OHKO, 100));
