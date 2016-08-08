@@ -264,7 +264,7 @@ class MoveEffects {
         return "ThunBeast But nothing happened...";
     };
     public static MoveEffect HURRICANE = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
-        String toReturn = user.getName() + " used Hurricane! ";
+        String toReturn = "";
         int hitChance = new SecureRandom().nextInt(100);
         int target = 0;
         switch (battle.getWeather()) {
@@ -388,10 +388,10 @@ class MoveEffects {
         rand = new SecureRandom();
         double randModifier = 0.85 + (1.0 - 0.85) * rand.nextDouble();
         double modifier = stab * effectiveness * critical * randModifier;
-        double damageBuf = 0;
+        double damageBuf = 0.0;
         damageBuf = (2.0 * (double) user.getLevel() + 10.0) / 250.0;
         damageBuf = damageBuf * ((double) user.getStat(Stats.SP_ATTACK) / (double) user.getStat(Stats.SP_DEFENSE));
-        damageBuf = damageBuf * (double) move.getPower() + 2.0;
+        damageBuf = damageBuf * (double) power + 2.0;
         damageBuf = (damageBuf * modifier);
         damage = (int) damageBuf;
         int damageBuffer = damage;
@@ -399,12 +399,12 @@ class MoveEffects {
             damageBuffer = opponent.getStat(Stats.HP);
         }
         opponent.damage(damage);
-        toReturn += opponent.getName() + " lost " + damage + "hp! ";
+        toReturn += " "+opponent.getName() + " lost " + damage + "hp! ";
         if (!opponent.isConfused()) {
             int confChance = new SecureRandom().nextInt(100);
             if (confChance <= 30) {
                 opponent.setConfused(true);
-                toReturn += opponent.getName() + " was confused!";
+                toReturn += opponent.getName() + " was confused! ";
             }
         }
         toReturn += opponent.getName() + " has " + opponent.getStat(Stats.HP) + "hp left!";
