@@ -625,7 +625,7 @@ public class MoveImporter {
         moveList.put("Fake-out", new Move("Fake-out", Type.NORMAL, MoveCategory.PHYSICAL, 40, 100, 10, MoveEffects.FLINCH, 100));
         moveList.put("Assist", new Move("Assist", Type.NORMAL, MoveCategory.STATUS, 0, 0, 20, null, -1));
         moveList.put("Pain-split", new Move("Pain-split", Type.NORMAL, MoveCategory.STATUS, 0, 0, 20, null, -1));
-        try (FileOutputStream f = new FileOutputStream("D:\\a\\Wow_Deku\\pokemonMoves.dat"); ObjectOutputStream o = new ObjectOutputStream(f)) {
+        try (FileOutputStream f = new FileOutputStream("F:\\a\\Wow_Deku\\pokemonMoves.dat"); ObjectOutputStream o = new ObjectOutputStream(f)) {
             o.writeObject(moveList);
         } catch (Exception ex) {
         }
