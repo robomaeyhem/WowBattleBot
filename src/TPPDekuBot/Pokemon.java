@@ -239,11 +239,9 @@ public class Pokemon implements Serializable, Cloneable {
         return this.maxHP;
     }
 
-    public String attack(Pokemon opponent, Move move) {
-        return attack(opponent, move, false);
-    }
+    
 
-    public String attack(Pokemon opponent, Move move, boolean confused) {
+    public String attack(Pokemon opponent, Move move) {
         int attack = this.attack;
         int defense = opponent.getStat(Stats.DEFENSE);
         int spAttack = this.spAttack;
@@ -308,7 +306,7 @@ public class Pokemon implements Serializable, Cloneable {
                     }
                     break;
             }
-            if (this.isConfused() && !confused) {
+            if (this.isConfused()) {
                 rand = new SecureRandom();
                 int hit = rand.nextInt((100 - 1) + 1) + 1;
                 if (hit > 50) {
