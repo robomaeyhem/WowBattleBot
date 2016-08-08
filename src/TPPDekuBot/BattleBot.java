@@ -884,7 +884,7 @@ public class BattleBot extends PircBot {
      * @return True if name is on the unchangable list, false otherwise.
      */
     public boolean isForcedClass(String input) {
-        String[] forced = {"frunky5", "wow_deku_onehand", "23forces", "groudonger"};
+        String[] forced = {"frunky5", "wow_deku_onehand", "23forces", "groudonger", "wow_deku_onehand"};
         for (String el : forced) {
             if (el.equalsIgnoreCase(input)) {
                 return true;
