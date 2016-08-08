@@ -1328,18 +1328,18 @@ public class Pokemon implements Serializable, Cloneable {
      */
     private boolean validMove(Move move) {
         if (move == null) {
-            return false;
+            return true;
         }
         if (move.getName().equalsIgnoreCase("Fling")) {
-            return false;
+            return true;
         }
         if (move.getCategory() == MoveCategory.STATUS) {
-            return move.hasMoveEffect();
+            return move.getEffect() == null;
         }
         if (move.getPower() == 0 || move.getAccuracy() == 0) {
-            return move.hasMoveEffect();
+            return move.getEffect() == null;
         }
-        return true;
+        return false;
     }
 
     public void assignMoves() {
