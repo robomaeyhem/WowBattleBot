@@ -67,8 +67,8 @@ public class MoveImporter {
         moveList.put("Bounce", new Move("Bounce", Type.FLYING, MoveCategory.PHYSICAL, 85, 85, 5, null, -1));
         moveList.put("Oblivion-wing", new Move("Oblivion-wing", Type.FLYING, MoveCategory.SPECIAL, 80, 100, 10, null, -1));
         moveList.put("Amnesia", new Move("Amnesia", Type.PSYCHIC, MoveCategory.STATUS, 0, 0, 20, null, -1));
-        moveList.put("Dizzy-punch", new Move("Dizzy-punch", Type.NORMAL, MoveCategory.PHYSICAL, 70, 100, 10, null, -1));
-        moveList.put("Psybeam", new Move("Psybeam", Type.PSYCHIC, MoveCategory.SPECIAL, 65, 100, 20, null, -1));
+        moveList.put("Dizzy-punch", new Move("Dizzy-punch", Type.NORMAL, MoveCategory.PHYSICAL, 70, 100, 10, MoveEffects.CONFUSE_TARGET, 20));
+        moveList.put("Psybeam", new Move("Psybeam", Type.PSYCHIC, MoveCategory.SPECIAL, 65, 100, 20, MoveEffects.CONFUSE_TARGET, 10));
         moveList.put("Fire-blast", new Move("Fire-blast", Type.FIRE, MoveCategory.SPECIAL, 110, 85, 5, MoveEffects.BURN, 10));
         moveList.put("Dig", new Move("Dig", Type.GROUND, MoveCategory.PHYSICAL, 80, 100, 10, null, -1));
         moveList.put("Submission", new Move("Submission", Type.FIGHTING, MoveCategory.PHYSICAL, 80, 80, 20, MoveEffects.RECOIL_25, 100));
@@ -116,7 +116,7 @@ public class MoveImporter {
         moveList.put("Solar-beam", new Move("Solar-beam", Type.GRASS, MoveCategory.SPECIAL, 120, 100, 10, null, -1));
         moveList.put("Sunny-day", new Move("Sunny-day", Type.FIRE, MoveCategory.STATUS, 0, 0, 5, null, -1));
         moveList.put("Acid", new Move("Acid", Type.POISON, MoveCategory.SPECIAL, 40, 100, 30, null, -1));
-        moveList.put("Teeter-dance", new Move("Teeter-dance", Type.NORMAL, MoveCategory.STATUS, 0, 100, 20, null, -1));
+        moveList.put("Teeter-dance", new Move("Teeter-dance", Type.NORMAL, MoveCategory.STATUS, 0, 100, 20, MoveEffects.CONFUSE_TARGET,100));
         moveList.put("Fury-cutter", new Move("Fury-cutter", Type.BUG, MoveCategory.PHYSICAL, 40, 95, 20, null, -1));
         moveList.put("Hammer-arm", new Move("Hammer-arm", Type.FIGHTING, MoveCategory.PHYSICAL, 100, 90, 10, null, -1));
         moveList.put("Bolt-strike", new Move("Bolt-strike", Type.ELECTRIC, MoveCategory.PHYSICAL, 130, 85, 5, MoveEffects.PARALYZE, 20));
@@ -212,7 +212,7 @@ public class MoveImporter {
         moveList.put("Razor-leaf", new Move("Razor-leaf", Type.GRASS, MoveCategory.PHYSICAL, 55, 95, 25, null, -1));
         moveList.put("Arm-thrust", new Move("Arm-thrust", Type.FIGHTING, MoveCategory.PHYSICAL, 15, 100, 20, null, -1));
         moveList.put("Magnet-bomb", new Move("Magnet-bomb", Type.STEEL, MoveCategory.PHYSICAL, 60, 0, 20, null, -1));
-        moveList.put("Water-pulse", new Move("Water-pulse", Type.WATER, MoveCategory.SPECIAL, 60, 100, 20, null, -1));
+        moveList.put("Water-pulse", new Move("Water-pulse", Type.WATER, MoveCategory.SPECIAL, 60, 100, 20, MoveEffects.CONFUSE_TARGET,20));
         moveList.put("Low-kick", new Move("Low-kick", Type.FIGHTING, MoveCategory.PHYSICAL, 0, 100, 20, null, -1));
         moveList.put("Autotomize", new Move("Autotomize", Type.STEEL, MoveCategory.STATUS, 0, 0, 15, null, -1));
         moveList.put("Diamond-storm", new Move("Diamond-storm", Type.ROCK, MoveCategory.PHYSICAL, 100, 95, 5, null, -1));
@@ -253,7 +253,7 @@ public class MoveImporter {
         moveList.put("Gear-grind", new Move("Gear-grind", Type.STEEL, MoveCategory.PHYSICAL, 50, 85, 15, null, -1));
         moveList.put("Slash", new Move("Slash", Type.NORMAL, MoveCategory.PHYSICAL, 70, 100, 20, null, -1));
         moveList.put("Pin-missile", new Move("Pin-missile", Type.BUG, MoveCategory.PHYSICAL, 25, 95, 20, null, -1));
-        moveList.put("Rock-climb", new Move("Rock-climb", Type.NORMAL, MoveCategory.PHYSICAL, 90, 85, 20, null, -1));
+        moveList.put("Rock-climb", new Move("Rock-climb", Type.NORMAL, MoveCategory.PHYSICAL, 90, 85, 20, MoveEffects.CONFUSE_TARGET, 20));
         moveList.put("Sweet-scent", new Move("Sweet-scent", Type.NORMAL, MoveCategory.STATUS, 0, 100, 20, null, -1));
         moveList.put("Luster-purge", new Move("Luster-purge", Type.PSYCHIC, MoveCategory.SPECIAL, 70, 100, 5, null, -1));
         moveList.put("Shadow-claw", new Move("Shadow-claw", Type.GHOST, MoveCategory.PHYSICAL, 70, 100, 15, null, -1));
@@ -338,7 +338,7 @@ public class MoveImporter {
         moveList.put("Double-edge", new Move("Double-edge", Type.NORMAL, MoveCategory.PHYSICAL, 120, 100, 15, MoveEffects.RECOIL_33, 100));
         moveList.put("Avalanche", new Move("Avalanche", Type.ICE, MoveCategory.PHYSICAL, 60, 100, 10, null, -1));
         moveList.put("Outrage", new Move("Outrage", Type.DRAGON, MoveCategory.PHYSICAL, 120, 100, 10, null, -1));
-        moveList.put("Supersonic", new Move("Supersonic", Type.NORMAL, MoveCategory.STATUS, 0, 55, 20, null, -1));
+        moveList.put("Supersonic", new Move("Supersonic", Type.NORMAL, MoveCategory.STATUS, 0, 55, 20, MoveEffects.CONFUSE_TARGET, 100));
         moveList.put("Dive", new Move("Dive", Type.WATER, MoveCategory.PHYSICAL, 80, 100, 10, null, -1));
         moveList.put("Leaf-blade", new Move("Leaf-blade", Type.GRASS, MoveCategory.PHYSICAL, 90, 100, 15, null, -1));
         moveList.put("Twineedle", new Move("Twineedle", Type.BUG, MoveCategory.PHYSICAL, 25, 100, 20, MoveEffects.POISON, 100));
@@ -408,7 +408,7 @@ public class MoveImporter {
         moveList.put("Revenge", new Move("Revenge", Type.FIGHTING, MoveCategory.PHYSICAL, 60, 100, 10, null, -1));
         moveList.put("Petal-blizzard", new Move("Petal-blizzard", Type.GRASS, MoveCategory.PHYSICAL, 90, 100, 15, null, -1));
         moveList.put("Coil", new Move("Coil", Type.POISON, MoveCategory.STATUS, 0, 0, 20, null, -1));
-        moveList.put("Dynamic-punch", new Move("Dynamic-punch", Type.FIGHTING, MoveCategory.PHYSICAL, 100, 50, 5, null, -1));
+        moveList.put("Dynamic-punch", new Move("Dynamic-punch", Type.FIGHTING, MoveCategory.PHYSICAL, 100, 50, 5, MoveEffects.CONFUSE_TARGET, 100));
         moveList.put("Ice-beam", new Move("Ice-beam", Type.ICE, MoveCategory.SPECIAL, 90, 100, 10, MoveEffects.FREEZE, 10));
         moveList.put("Mega-drain", new Move("Mega-drain", Type.GRASS, MoveCategory.SPECIAL, 40, 100, 15, MoveEffects.HEAL_HALF, 100));
         moveList.put("Mud-slap", new Move("Mud-slap", Type.GROUND, MoveCategory.SPECIAL, 20, 100, 10, null, -1));
@@ -504,7 +504,7 @@ public class MoveImporter {
         moveList.put("Roost", new Move("Roost", Type.FLYING, MoveCategory.STATUS, 0, 0, 10, null, -1));
         moveList.put("Dark-void", new Move("Dark-void", Type.DARK, MoveCategory.STATUS, 0, 80, 10, MoveEffects.SLEEP, 100));
         moveList.put("Sleep-talk", new Move("Sleep-talk", Type.NORMAL, MoveCategory.STATUS, 0, 0, 10, null, -1));
-        moveList.put("Signal-beam", new Move("Signal-beam", Type.BUG, MoveCategory.SPECIAL, 75, 100, 15, null, -1));
+        moveList.put("Signal-beam", new Move("Signal-beam", Type.BUG, MoveCategory.SPECIAL, 75, 100, 15, MoveEffects.CONFUSE_TARGET, 10));
         moveList.put("Moonblast", new Move("Moonblast", Type.FAIRY, MoveCategory.SPECIAL, 95, 100, 15, null, -1));
         moveList.put("Tackle", new Move("Tackle", Type.NORMAL, MoveCategory.PHYSICAL, 50, 100, 35, null, -1));
         moveList.put("Synchronoise", new Move("Synchronoise", Type.PSYCHIC, MoveCategory.SPECIAL, 120, 100, 10, null, -1));
@@ -592,7 +592,7 @@ public class MoveImporter {
         moveList.put("Flying-press", new Move("Flying-press", Type.FIGHTING, MoveCategory.PHYSICAL, 80, 95, 10, null, -1));
         moveList.put("Bone-club", new Move("Bone-club", Type.GROUND, MoveCategory.PHYSICAL, 65, 85, 20, MoveEffects.FLINCH, 10));
         moveList.put("Trump-card", new Move("Trump-card", Type.NORMAL, MoveCategory.SPECIAL, 0, 0, 5, null, -1));
-        moveList.put("Confusion", new Move("Confusion", Type.PSYCHIC, MoveCategory.SPECIAL, 50, 100, 25, null, -1));
+        moveList.put("Confusion", new Move("Confusion", Type.PSYCHIC, MoveCategory.SPECIAL, 50, 100, 25, MoveEffects.CONFUSE_TARGET, 10));
         moveList.put("Gust", new Move("Gust", Type.FLYING, MoveCategory.SPECIAL, 40, 100, 35, null, -1));
         moveList.put("Megahorn", new Move("Megahorn", Type.BUG, MoveCategory.PHYSICAL, 120, 85, 10, null, -1));
         moveList.put("V-create", new Move("V-create", Type.FIRE, MoveCategory.PHYSICAL, 180, 95, 5, null, -1));
@@ -615,7 +615,7 @@ public class MoveImporter {
         moveList.put("Meteor-mash", new Move("Meteor-mash", Type.STEEL, MoveCategory.PHYSICAL, 90, 90, 10, null, -1));
         moveList.put("Grassy-terrain", new Move("Grassy-terrain", Type.GRASS, MoveCategory.STATUS, 0, 0, 10, null, -1));
         moveList.put("Draining-kiss", new Move("Draining-kiss", Type.FAIRY, MoveCategory.SPECIAL, 50, 100, 10, null, -1));
-        moveList.put("Sweet-kiss", new Move("Sweet-kiss", Type.FAIRY, MoveCategory.STATUS, 0, 75, 10, null, -1));
+        moveList.put("Sweet-kiss", new Move("Sweet-kiss", Type.FAIRY, MoveCategory.STATUS, 0, 75, 10, MoveEffects.CONFUSE_TARGET,100));
         moveList.put("Secret-sword", new Move("Secret-sword", Type.FIGHTING, MoveCategory.SPECIAL, 85, 100, 10, null, -1));
         moveList.put("Shock-wave", new Move("Shock-wave", Type.ELECTRIC, MoveCategory.SPECIAL, 60, 0, 20, null, -1));
         moveList.put("Heal-block", new Move("Heal-block", Type.PSYCHIC, MoveCategory.STATUS, 0, 100, 15, null, -1));
