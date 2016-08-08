@@ -397,7 +397,7 @@ public class PWTBattle extends Battle {
      * @param playerPokemon Fainted Pokemon
      * @param channel Channel to send Message to
      */
-    public void switchPokemon(Trainer player, Pokemon playerPokemon, String channel) {        
+    public void switchPokemon(Trainer player, Pokemon playerPokemon, String channel) {
         p1msg = new LinkedBlockingQueue<>();
         p2msg = new LinkedBlockingQueue<>();
         b.sendMessage(channel, playerPokemon.getName() + " fainted! What Pokemon will " + player.getTrainerName() + " switch to?");
@@ -494,7 +494,7 @@ public class PWTBattle extends Battle {
 
     private void doMove(String channel, String move, Pokemon user, Pokemon opponent) {
         int m = Integer.parseInt(move);
-        b.sendMessage(channel, user.attack(opponent, user.getMoveByNumber(m)).replace("\n", " "));
+        b.sendMessage(channel, user.attack(opponent, user.getMoveByNumber(m), this).replace("\n", " "));
     }
 
     public boolean continueBattle() {

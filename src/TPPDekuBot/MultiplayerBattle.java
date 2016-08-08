@@ -84,7 +84,7 @@ public class MultiplayerBattle extends Battle {
 
     private void doMove(String channel, String move, Pokemon user, Pokemon opponent) {
         int m = Integer.parseInt(move);
-        b.sendMessage(channel, user.attack(opponent, user.getMoveByNumber(m)).replace("\n", " "));
+        b.sendMessage(channel, user.attack(opponent, user.getMoveByNumber(m), this).replace("\n", " "));
     }
 
     private void switchPlayer1(String channel) {

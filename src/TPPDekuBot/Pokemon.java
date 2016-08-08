@@ -239,7 +239,7 @@ public class Pokemon implements Serializable, Cloneable {
         return this.maxHP;
     }
 
-    public String attack(Pokemon opponent, Move move) {
+    public String attack(Pokemon opponent, Move move, Battle b) {
         int attack = this.attack;
         int defense = opponent.getStat(Stats.DEFENSE);
         int spAttack = this.spAttack;
@@ -426,7 +426,7 @@ public class Pokemon implements Serializable, Cloneable {
                 if (move.getEffectChance() != -1 && move.getEffect() != null) {
                     int chance = rand.nextInt(100) + 1;
                     if (chance <= move.getEffectChance() || move.getEffectChance() == 100) {
-                        effect = move.getEffect().run(this, opponent, 0, move);
+                        effect = move.getEffect().run(this, opponent, 0, move, b);
                     }
                 }
                 return toReturn += " " + effect;
@@ -479,7 +479,7 @@ public class Pokemon implements Serializable, Cloneable {
                 if (move.getEffectChance() != -1 && move.getEffect() != null) {
                     int chance = rand.nextInt(100) + 1;
                     if (chance <= move.getEffectChance() || move.getEffectChance() == 100) {
-                        effect = move.getEffect().run(this, opponent, damageBuffer, move);
+                        effect = move.getEffect().run(this, opponent, damageBuffer, move, b);
                     }
                 }
 
@@ -496,7 +496,7 @@ public class Pokemon implements Serializable, Cloneable {
                 if (move.getEffectChance() != -1 && move.getEffect() != null) {
                     int chance = rand.nextInt(100) + 1;
                     if (chance <= move.getEffectChance() || move.getEffectChance() == 100) {
-                        effect = move.getEffect().run(this, opponent, 0, move);
+                        effect = move.getEffect().run(this, opponent, 0, move, b);
                     }
                 }
                 if (effect != null && !effect.isEmpty()) {

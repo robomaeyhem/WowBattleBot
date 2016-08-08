@@ -241,22 +241,22 @@ public class PokemonBattle extends Battle {
     }
 
     private void doComputerMove(Pokemon user, Pokemon computer) {
-        b.sendMessage(channel, computer.attack(user, Move.selectBestMove(computer, user)).replace("\n", " "));
+        b.sendMessage(channel, computer.attack(user, Move.selectBestMove(computer, user), this).replace("\n", " "));
     }
 
     private void doUsersMove(Pokemon user, Pokemon computer, String move) {
         switch (move) {
             case "1":
-                b.sendMessage(channel, user.attack(computer, user.getMove1()).replace("\n", " "));
+                b.sendMessage(channel, user.attack(computer, user.getMove1(), this).replace("\n", " "));
                 break;
             case "2":
-                b.sendMessage(channel, user.attack(computer, user.getMove2()).replace("\n", " "));
+                b.sendMessage(channel, user.attack(computer, user.getMove2(), this).replace("\n", " "));
                 break;
             case "3":
-                b.sendMessage(channel, user.attack(computer, user.getMove3()).replace("\n", " "));
+                b.sendMessage(channel, user.attack(computer, user.getMove3(), this).replace("\n", " "));
                 break;
             case "4":
-                b.sendMessage(channel, user.attack(computer, user.getMove4()).replace("\n", " "));
+                b.sendMessage(channel, user.attack(computer, user.getMove4(), this).replace("\n", " "));
                 break;
             case "run":
                 b.sendMessage(channel, "You got away safely!");

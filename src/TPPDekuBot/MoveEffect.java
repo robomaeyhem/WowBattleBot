@@ -5,17 +5,17 @@ import java.security.SecureRandom;
 
 public interface MoveEffect extends Serializable {
 
-    String run(Pokemon user, Pokemon opponent, int damage, Move move);
+    String run(Pokemon user, Pokemon opponent, int damage, Move move, Battle battle);
 }
 
 class MoveEffects {
 
-    public static MoveEffect FLINCH = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect FLINCH = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         opponent.setFlinch(true);
         return "";
     };
 
-    public static MoveEffect HEAL_HALF = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect HEAL_HALF = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         int amt = damage / 2;
         if (amt > user.getMaxHP() || (user.getStat(Stats.HP) + amt) > user.getMaxHP()) {
             amt = (user.getMaxHP() - user.getStat(Stats.HP));
@@ -25,11 +25,11 @@ class MoveEffects {
         }
         return amt == 0 ? user.getName() + "'s HP is already full!" : (user.getName() + " gained " + amt + " HP!");
     };
-    public static MoveEffect EXPLOSION = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect EXPLOSION = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         user.setHP(0);
         return (user.getName() + " fainted! KAPOW ");
     };
-    public static MoveEffect RECOIL_25 = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect RECOIL_25 = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         int amt = damage / 4;
         if (amt > user.getStat(Stats.HP)) {
             amt = user.getStat(Stats.HP);
@@ -37,7 +37,7 @@ class MoveEffects {
         user.damage(amt);
         return user.getName() + " lost " + amt + "hp due to Recoil!";
     };
-    public static MoveEffect RECOIL_33 = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect RECOIL_33 = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         int amt = damage / 3;
         if (amt > user.getStat(Stats.HP)) {
             amt = user.getStat(Stats.HP);
@@ -45,7 +45,7 @@ class MoveEffects {
         user.damage(amt);
         return user.getName() + " lost " + amt + "hp due to Recoil!";
     };
-    public static MoveEffect RECOIL_50 = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect RECOIL_50 = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         int amt = damage / 2;
         if (amt > user.getStat(Stats.HP)) {
             amt = user.getStat(Stats.HP);
@@ -53,7 +53,7 @@ class MoveEffects {
         user.damage(amt);
         return user.getName() + " lost " + amt + "hp due to Recoil!";
     };
-    public static MoveEffect STRUGGLE = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect STRUGGLE = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         int amt = user.getMaxHP() / 4;
         if (amt > user.getStat(Stats.HP)) {
             amt = user.getStat(Stats.HP);
@@ -61,11 +61,11 @@ class MoveEffects {
         user.damage(amt);
         return user.getName() + " lost " + amt + "hp due to Recoil!";
     };
-    public static MoveEffect RECHARGE = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect RECHARGE = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         user.setMoveStatus(Status.NO_MOVE_THIS_TURN);
         return "";
     };
-    public static MoveEffect SLEEP = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect SLEEP = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         if (opponent.getStatus() == Status.SLEEP) {
             return opponent.getName() + " is already asleep!";
         }
@@ -75,7 +75,7 @@ class MoveEffects {
         }
         return "But it failed!";
     };
-    public static MoveEffect TOXIC = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect TOXIC = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         if (opponent.getType1() == Type.STEEL || opponent.getType2() == Type.STEEL || opponent.getType1() == Type.POISON || opponent.getType2() == Type.POISON) {
             return "But it failed!";
         }
@@ -86,7 +86,7 @@ class MoveEffects {
             return "But it failed!";
         }
     };
-    public static MoveEffect BURN = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect BURN = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         if (opponent.getStatus() == Status.NORMAL && (opponent.getType1() != Type.FIRE || opponent.getType2() != Type.FIRE) && !opponent.isFainted()) {
             opponent.setStatus(Status.BURN);
             return opponent.getName() + " was burned!";
@@ -96,7 +96,7 @@ class MoveEffects {
             return "";
         }
     };
-    public static MoveEffect PARALYZE = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect PARALYZE = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         if (opponent.getStatus() == Status.NORMAL && (opponent.getType1() != Type.ELECTRIC || opponent.getType2() != Type.ELECTRIC) && !opponent.isFainted()) {
             opponent.setStatus(Status.PARALYSIS);
             return opponent.getName() + " was paralyzed!";
@@ -106,7 +106,7 @@ class MoveEffects {
             return "";
         }
     };
-    public static MoveEffect FREEZE = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect FREEZE = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         if (opponent.getStatus() == Status.NORMAL && (opponent.getType1() != Type.ICE || opponent.getType2() != Type.ICE) && !opponent.isFainted()) {
             opponent.setStatus(Status.FREEZE);
             return opponent.getName() + " was frozen solid!";
@@ -116,7 +116,7 @@ class MoveEffects {
             return "";
         }
     };
-    public static MoveEffect CONFUSE_TARGET = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect CONFUSE_TARGET = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         if (opponent.isConfused()) {
             return opponent.getName() + " is already confused!";
         } else {
@@ -124,7 +124,7 @@ class MoveEffects {
             return opponent.getName() + " was confused!";
         }
     };
-    public static MoveEffect POISON = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect POISON = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         if (opponent.getType1() == Type.STEEL || opponent.getType2() == Type.STEEL || opponent.getType1() == Type.POISON || opponent.getType2() == Type.POISON) {
             if (move.getCategory() == MoveCategory.STATUS) {
                 return "But it failed!";
@@ -141,7 +141,7 @@ class MoveEffects {
             return "";
         }
     };
-    public static MoveEffect TRI_ATTACK = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect TRI_ATTACK = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         if (opponent.getStatus() != Status.NORMAL) {
             int rand = new SecureRandom().nextInt(2);
             Status status = null;
@@ -242,7 +242,7 @@ class MoveEffects {
             return "";
         }
     };
-    public static MoveEffect OHKO = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect OHKO = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         if (opponent.getLevel() <= user.getLevel()) {
             int diff = user.getLevel() - opponent.getLevel();
             diff = diff + 30;
@@ -260,7 +260,7 @@ class MoveEffects {
             return "But it failed!";
         }
     };
-    public static MoveEffect SPLASH = (Pokemon user, Pokemon opponent, int damage, Move move) -> {
+    public static MoveEffect SPLASH = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         return "ThunBeast But nothing happened...";
     };
 }
