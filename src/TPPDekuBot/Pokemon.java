@@ -317,7 +317,7 @@ public class Pokemon implements Serializable, Cloneable {
                     damageBuf = (damageBuf * randModifier);
                     int damage = (int) damageBuf;
                     this.damage(damage);
-                    toReturn = "It hit itself in confusion! " + this.getName() + " lost " + damage + "hp! " + this.getName() + " has " + this.getStat(Stats.HP) + "hp left!";
+                    toReturn += "It hit itself in confusion! " + this.getName() + " lost " + damage + "hp! " + this.getName() + " has " + this.getStat(Stats.HP) + "hp left!";
                     return toReturn;
                 }
             }

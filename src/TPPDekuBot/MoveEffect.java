@@ -10,6 +10,145 @@ public interface MoveEffect extends Serializable {
 
 class MoveEffects {
 
+    /**
+     * Calculates and returns the amount of damage for a specific move.
+     *
+     * @param user User Pokemon who is using the move.
+     * @param opponent Pokemon who is receiving the move.
+     * @param move Move the User is using.
+     * @param power Power of the move. Specify this in case of moves that vary
+     * with power due to certain conditions.
+     * @param category Move category.
+     * @param crit Critical Hit or not
+     * @return Damage move will do.
+     */
+    private static int calcDamage(Pokemon user, Pokemon opponent, Move move, int power, MoveCategory category, boolean crit) {
+        if (category == MoveCategory.STATUS) {
+            return 0;
+        }
+        SecureRandom rand = new SecureRandom();
+        double effectiveness = getEffectiveness(move, opponent);
+        double stab = 1.0;
+        if (user.getType1() == move.getType() || user.getType2() == move.getType()) {
+            stab = 1.5;
+        }
+        double critical = crit ? 1.5 : 1;
+        rand = new SecureRandom();
+        double randModifier = 0.85 + (1.0 - 0.85) * rand.nextDouble();
+        double modifier = stab * effectiveness * critical * randModifier;
+        double damageBuf = 0.0;
+        damageBuf = (2.0 * (double) user.getLevel() + 10.0) / 250.0;
+        damageBuf = damageBuf * ((double) user.getStat((category == MoveCategory.PHYSICAL) ? Stats.ATTACK : Stats.SP_ATTACK) / (double) user.getStat((category == MoveCategory.PHYSICAL) ? Stats.DEFENSE : Stats.SP_DEFENSE));
+        damageBuf = damageBuf * (double) power + 2.0;
+        damageBuf = (damageBuf * modifier);
+        int damage = (int) damageBuf;
+        int damageBuffer = damage;
+        if (damageBuffer > opponent.getStat(Stats.HP)) {
+            damageBuffer = opponent.getStat(Stats.HP);
+        }
+        return damage;
+    }
+
+    /**
+     * Gets the effectiveness of the move against the opponent.
+     *
+     * @param move Move being used
+     * @param opponent Pokemon to apply the move to
+     * @return >=2 is Super Effective, >0 and &lt;1 is Not Very Effective, 0 is
+     * No effect, 1 is normal effectiveness.
+     */
+    private static double getEffectiveness(Move move, Pokemon opponent) {
+        int effective1 = Pokemon.effectiveness(move.getType(), opponent.getType1());
+        int effective2 = Pokemon.effectiveness(move.getType(), opponent.getType2());
+        double effectiveness = 1.0;
+        if (effective2 == -5) {
+            switch (effective1) {
+                case 0:
+                    effectiveness = 0.0;
+                    break;
+                case -1:
+                    effectiveness = 0.5;
+                    break;
+                case 1:
+                    effectiveness = 1.0;
+                    break;
+                case 2:
+                    effectiveness = 2.0;
+                    break;
+                default:
+                    effectiveness = 1.0;
+                    break;
+            }
+        } else {
+            switch (effective1) {
+                case 0:
+                    effectiveness = 0.0;
+                    break;
+                case -1:
+                    switch (effective2) {
+                        case 0:
+                            effectiveness = 0.0;
+                            break;
+                        case -1:
+                            effectiveness = 0.25;
+                            break;
+                        case 1:
+                            effectiveness = 0.5;
+                            break;
+                        case 2:
+                            effectiveness = 1.0;
+                            break;
+                    }
+                    break;
+                case 1:
+                    switch (effective2) {
+                        case 0:
+                            effectiveness = 0.0;
+                            break;
+                        case -1:
+                            effectiveness = 0.5;
+                            break;
+                        case 1:
+                            effectiveness = 1.0;
+                            break;
+                        case 2:
+                            effectiveness = 2.0;
+                            break;
+                    }
+                    break;
+                case 2:
+                    switch (effective2) {
+                        case 0:
+                            effectiveness = 0.0;
+                            break;
+                        case -1:
+                            effectiveness = 1.0;
+                            break;
+                        case 1:
+                            effectiveness = 2.0;
+                            break;
+                        case 2:
+                            effectiveness = 4.0;
+                            break;
+                    }
+                    break;
+            }
+        }
+        return effectiveness;
+    }
+
+    private static String getEffectivenessText(double effectiveness) {
+        if (effectiveness >= 2.0) {
+            return "\nIt's Super Effective!";
+        }
+        if (effectiveness > 0 && effectiveness < 1) {
+            return "\nIt's not very effective...";
+        }
+        if (effectiveness == 0) {
+            return "\nIt doesn't affect the opponent!";
+        }
+        return "";
+    }
     public static MoveEffect FLINCH = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         opponent.setFlinch(true);
         return "";
@@ -69,7 +208,7 @@ class MoveEffects {
         if (opponent.getStatus() == Status.SLEEP) {
             return opponent.getName() + " is already asleep!";
         }
-        if (opponent.getStatus() != Status.NORMAL) {
+        if (opponent.getStatus() == Status.NORMAL) {
             opponent.goToSleep();
             return opponent.getName() + " fell asleep!";
         }
@@ -288,118 +427,18 @@ class MoveEffects {
             power = 220;
         }
         SecureRandom rand = new SecureRandom();
-        int effective1 = Pokemon.effectiveness(move.getType(), opponent.getType1());
-        int effective2 = Pokemon.effectiveness(move.getType(), opponent.getType2());
-        double effectiveness = 1.0;
-        if (effective2 == -5) {
-            switch (effective1) {
-                case 0:
-                    effectiveness = 0.0;
-                    break;
-                case -1:
-                    effectiveness = 0.5;
-                    break;
-                case 1:
-                    effectiveness = 1.0;
-                    break;
-                case 2:
-                    effectiveness = 2.0;
-                    break;
-                default:
-                    effectiveness = 1.0;
-                    break;
-            }
-        } else {
-            switch (effective1) {
-                case 0:
-                    effectiveness = 0.0;
-                    break;
-                case -1:
-                    switch (effective2) {
-                        case 0:
-                            effectiveness = 0.0;
-                            break;
-                        case -1:
-                            effectiveness = 0.25;
-                            break;
-                        case 1:
-                            effectiveness = 0.5;
-                            break;
-                        case 2:
-                            effectiveness = 1.0;
-                            break;
-                    }
-                    break;
-                case 1:
-                    switch (effective2) {
-                        case 0:
-                            effectiveness = 0.0;
-                            break;
-                        case -1:
-                            effectiveness = 0.5;
-                            break;
-                        case 1:
-                            effectiveness = 1.0;
-                            break;
-                        case 2:
-                            effectiveness = 2.0;
-                            break;
-                    }
-                    break;
-                case 2:
-                    switch (effective2) {
-                        case 0:
-                            effectiveness = 0.0;
-                            break;
-                        case -1:
-                            effectiveness = 1.0;
-                            break;
-                        case 1:
-                            effectiveness = 2.0;
-                            break;
-                        case 2:
-                            effectiveness = 4.0;
-                            break;
-                    }
-                    break;
-            }
-        }
-        if (effectiveness >= 2.0) {
-            toReturn += "\nIt's Super Effective!";
-        }
-        if (effectiveness > 0 && effectiveness < 1) {
-            toReturn += "\nIt's not very effective...";
-        }
-        if (effectiveness == 0) {
-            toReturn += "\nIt doesn't affect the opponent!";
-            return toReturn;
-        }
-
-        double stab = 1.0;
-        if (user.getType1() == move.getType() || user.getType2() == move.getType()) {
-            stab = 1.5;
-        }
-        double critical = 1.0;
+        double effectiveness = getEffectiveness(move, opponent);
+        toReturn += getEffectivenessText(effectiveness);
         int randomNum = rand.nextInt((16 - 1) + 1) + 1;
+        boolean crit = false;
         if (randomNum == 1) {
-            critical = 1.5;
+            crit = true;
             toReturn += "\nCritical Hit!!";
         }
-        rand = new SecureRandom();
-        double randModifier = 0.85 + (1.0 - 0.85) * rand.nextDouble();
-        double modifier = stab * effectiveness * critical * randModifier;
-        double damageBuf = 0.0;
-        damageBuf = (2.0 * (double) user.getLevel() + 10.0) / 250.0;
-        damageBuf = damageBuf * ((double) user.getStat(Stats.SP_ATTACK) / (double) user.getStat(Stats.SP_DEFENSE));
-        damageBuf = damageBuf * (double) power + 2.0;
-        damageBuf = (damageBuf * modifier);
-        damage = (int) damageBuf;
-        int damageBuffer = damage;
-        if (damageBuffer > opponent.getStat(Stats.HP)) {
-            damageBuffer = opponent.getStat(Stats.HP);
-        }
+        damage = calcDamage(user, opponent, move, power, MoveCategory.SPECIAL, crit);
         opponent.damage(damage);
-        toReturn += " "+opponent.getName() + " lost " + damage + "hp! ";
+        toReturn += " " + opponent.getName() + " lost " + damage + "hp! ";
+        toReturn += opponent.getName() + " has " + opponent.getStat(Stats.HP) + "hp left!";
         if (!opponent.isConfused()) {
             int confChance = new SecureRandom().nextInt(100);
             if (confChance <= 30) {
@@ -407,7 +446,6 @@ class MoveEffects {
                 toReturn += opponent.getName() + " was confused! ";
             }
         }
-        toReturn += opponent.getName() + " has " + opponent.getStat(Stats.HP) + "hp left!";
         return toReturn;
     };
 }
