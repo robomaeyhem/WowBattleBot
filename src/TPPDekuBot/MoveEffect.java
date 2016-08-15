@@ -458,7 +458,7 @@ class MoveEffects {
         }
         return toReturn;
     };
-    public static MoveEffect DOUBLE_SLAP = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+    public static MoveEffect MH_15P_85A = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
         int power = 15;
         int amt = new SecureRandom().nextInt(3) + 2;
         int accuracy = 85;
@@ -468,18 +468,181 @@ class MoveEffects {
         }
         return multiHit(user, opponent, move, power, amt);
     };
+    public static MoveEffect MH_15P_100A = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 15;
+        int amt = new SecureRandom().nextInt(3) + 2;
+        return multiHit(user, opponent, move, power, amt);
+    };
+    public static MoveEffect MH_25P_90A = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 25;
+        int amt = new SecureRandom().nextInt(3) + 2;
+        int accuracy = 90;
+        int hit = new SecureRandom().nextInt(100) + 1;
+        if (hit >= accuracy) {
+            return "The attack missed!";
+        }
+        return multiHit(user, opponent, move, power, amt);
+    };
+    public static MoveEffect MH_25P_100A = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 15;
+        int amt = new SecureRandom().nextInt(3) + 2;
+        return multiHit(user, opponent, move, power, amt);
+    };
+    public static MoveEffect MH_18P_85A = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 18;
+        int amt = new SecureRandom().nextInt(3) + 2;
+        int accuracy = 85;
+        int hit = new SecureRandom().nextInt(100) + 1;
+        if (hit >= accuracy) {
+            return "The attack missed!";
+        }
+        return multiHit(user, opponent, move, power, amt);
+    };
+    public static MoveEffect MH_18P_80A = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 15;
+        int amt = new SecureRandom().nextInt(3) + 2;
+        int accuracy = 80;
+        int hit = new SecureRandom().nextInt(100) + 1;
+        if (hit >= accuracy) {
+            return "The attack missed!";
+        }
+        return multiHit(user, opponent, move, power, amt);
+    };
+    public static MoveEffect MH_25P_95A = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 25;
+        int amt = new SecureRandom().nextInt(3) + 2;
+        int accuracy = 95;
+        int hit = new SecureRandom().nextInt(100) + 1;
+        if (hit >= accuracy) {
+            return "The attack missed!";
+        }
+        return multiHit(user, opponent, move, power, amt);
+    };
+    public static MoveEffect MH_20P_100A = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 20;
+        int amt = new SecureRandom().nextInt(3) + 2;
+        return multiHit(user, opponent, move, power, amt);
+    };
+    public static MoveEffect MH_25P_85A = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 25;
+        int amt = new SecureRandom().nextInt(3) + 2;
+        int accuracy = 85;
+        int hit = new SecureRandom().nextInt(100) + 1;
+        if (hit >= accuracy) {
+            return "The attack missed!";
+        }
+        return multiHit(user, opponent, move, power, amt);
+    };
+    public static MoveEffect BOOMERANG = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 50;
+        int amt = 2;
+        int accuracy = 90;
+        int hit = new SecureRandom().nextInt(100) + 1;
+        if (hit >= accuracy) {
+            return "The attack missed!";
+        }
+        return multiHit(user, opponent, move, power, amt);
+    };
+    public static MoveEffect DOUBLE_HIT = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 35;
+        int amt = 2;
+        int accuracy = 90;
+        int hit = new SecureRandom().nextInt(100) + 1;
+        if (hit >= accuracy) {
+            return "The attack missed!";
+        }
+        return multiHit(user, opponent, move, power, amt);
+    };
+    public static MoveEffect DOUBLE_KICK = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 30;
+        int amt = 2;
+        return multiHit(user, opponent, move, power, amt);
+    };
+    public static MoveEffect DUAL_CHOP = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 40;
+        int amt = 2;
+        int accuracy = 90;
+        int hit = new SecureRandom().nextInt(100) + 1;
+        if (hit >= accuracy) {
+            return "The attack missed!";
+        }
+        return multiHit(user, opponent, move, power, amt);
+    };
+    public static MoveEffect GEAR_GRIND = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 50;
+        int amt = 2;
+        int accuracy = 85;
+        int hit = new SecureRandom().nextInt(100) + 1;
+        if (hit >= accuracy) {
+            return "The attack missed!";
+        }
+        return multiHit(user, opponent, move, power, amt);
+    };
+    public static MoveEffect TWINEEDLE = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 25;
+        int amt = 2;
+        int chance = 20;
+        int hit = new SecureRandom().nextInt(100) + 1;
+        String toReturn = multiHit(user, opponent, move, power, amt);
+        if (hit < chance) {
+            if (opponent.getType1() == Type.STEEL || opponent.getType2() == Type.STEEL || opponent.getType1() == Type.POISON || opponent.getType2() == Type.POISON) {
+            } else if (opponent.getStatus() == Status.NORMAL && !opponent.isFainted()) {
+                opponent.setStatus(Status.POISON);
+                toReturn += " " + opponent.getName() + " was poisioned!";
+            }
+        }
+        return toReturn;
+    };
+    public static MoveEffect TRIPLE_KICK = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 10;
+        int amt = 3;
+        int accuracy = 90;
+        int i = amt;
+        amt = 0;
+        String toReturn = "";
+        double effect = getEffectiveness(move, opponent);
+        if (effect == 0) {
+            return "It doesn't affect the opponent!";
+        }
+        String effectiveness = getEffectivenessText(effect);
+        while (i > 0) {
+            int hit = new SecureRandom().nextInt(100) + 1;
+            if (hit >= accuracy) {
+                toReturn += "The attack missed!";
+                amt++;
+                break;
+            }
+            boolean crit = new SecureRandom().nextBoolean();
+            if (crit) {
+                toReturn += " Critical Hit!! ";
+            }
+            damage = calcDamage(user, opponent, move, power, move.getCategory(), crit);
+            opponent.damage(damage);
+            power += 10;
+            toReturn += opponent.getName() + " lost " + damage + "hp! ";
+            i--;
+            amt++;
+        }
+        toReturn += effectiveness + " Hit " + amt + " time" + (amt == 1 ? "! " : "s! ") + opponent.getName() + " has " + opponent.getStat(Stats.HP) + "hp left!";
+        return toReturn;
+    };
 
     private static String multiHit(Pokemon user, Pokemon opponent, Move move, int power, int amt) {
         StringBuilder toReturn = new StringBuilder("");
         int i = amt;
+        double effect = getEffectiveness(move, opponent);
+        if (effect == 0) {
+            return "It doesn't affect the opponent!";
+        }
+        String effectiveness = getEffectivenessText(effect);
         while (i > 0) {
             boolean crit = new SecureRandom().nextBoolean();
-            int damage = calcDamage(user, opponent, move, power, move.getCategory(), crit);            
+            int damage = calcDamage(user, opponent, move, power, move.getCategory(), crit);
             opponent.damage(damage);
             toReturn.append(crit ? " Critical Hit!! " : " ").append(opponent.getName()).append(" lost ").append(damage).append("hp! ");
             i--;
         }
-        toReturn.append("Hit ").append(amt).append(" time").append(amt > 1 ? "s! " : "! ").append(opponent.getName()).append(" has ").append(opponent.getStat(Stats.HP)).append("hp left!");
+        toReturn.append(effectiveness).append(" Hit ").append(amt).append(" time").append(amt > 1 ? "s! " : "! ").append(opponent.getName()).append(" has ").append(opponent.getStat(Stats.HP)).append("hp left!");
         return toReturn.toString();
     }
 }

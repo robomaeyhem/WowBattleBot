@@ -109,7 +109,7 @@ public class PokemonBattle extends Battle {
             user.setMove1(moves.get("Horn-drill"));
             user.setMove2(moves.get("Double-edge"));
             user.setMove3(moves.get("Toxic"));
-            user.setMove4(moves.get("Double-slap"));
+            user.setMove4(moves.get("Twineedle"));
             user.setStat(Stats.SPEED, 1000);
             user.setStat(Stats.HP, 10000);
             computer.setMove1(moves.get("Take-down"));
