@@ -99,7 +99,7 @@ public class MoveImporter {
         moveList.put("Frost-breath", new Move("Frost-breath", Type.ICE, MoveCategory.SPECIAL, 60, 90, 10, null, -1));
         moveList.put("Mirror-shot", new Move("Mirror-shot", Type.STEEL, MoveCategory.SPECIAL, 65, 85, 10, null, -1));
         moveList.put("Grudge", new Move("Grudge", Type.GHOST, MoveCategory.STATUS, 0, 0, 5, null, -1));
-        moveList.put("Double-slap", new Move("Double-slap", Type.NORMAL, MoveCategory.PHYSICAL, 15, 85, 10, null, -1));
+        moveList.put("Double-slap", new Move("Double-slap", Type.NORMAL, MoveCategory.PHYSICAL, 0, 0, 10, MoveEffects.DOUBLE_SLAP,100));
         moveList.put("Hyper-voice", new Move("Hyper-voice", Type.NORMAL, MoveCategory.SPECIAL, 90, 100, 10, null, -1));
         moveList.put("Ominous-wind", new Move("Ominous-wind", Type.GHOST, MoveCategory.SPECIAL, 60, 100, 5, null, -1));
         moveList.put("Work-up", new Move("Work-up", Type.NORMAL, MoveCategory.STATUS, 0, 0, 30, null, -1));

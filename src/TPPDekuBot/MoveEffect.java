@@ -5,6 +5,16 @@ import java.security.SecureRandom;
 
 public interface MoveEffect extends Serializable {
 
+    /**
+     * Defines a Move Effect for a particular move.
+     *
+     * @param user User who used the move.
+     * @param opponent Opponent who received the move.
+     * @param damage Damage done to the opponent in terms of HP lost.
+     * @param move Move used.
+     * @param battle Battle Object (for getting Weather, user teams, etc)
+     * @return Text for the BattleBot to return to the user.
+     */
     String run(Pokemon user, Pokemon opponent, int damage, Move move, Battle battle);
 }
 
@@ -448,4 +458,28 @@ class MoveEffects {
         }
         return toReturn;
     };
+    public static MoveEffect DOUBLE_SLAP = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        int power = 15;
+        int amt = new SecureRandom().nextInt(3) + 2;
+        int accuracy = 85;
+        int hit = new SecureRandom().nextInt(100) + 1;
+        if (hit >= accuracy) {
+            return "The attack missed!";
+        }
+        return multiHit(user, opponent, move, power, amt);
+    };
+
+    private static String multiHit(Pokemon user, Pokemon opponent, Move move, int power, int amt) {
+        StringBuilder toReturn = new StringBuilder("");
+        int i = amt;
+        while (i > 0) {
+            boolean crit = new SecureRandom().nextBoolean();
+            int damage = calcDamage(user, opponent, move, power, move.getCategory(), crit);            
+            opponent.damage(damage);
+            toReturn.append(crit ? " Critical Hit!! " : " ").append(opponent.getName()).append(" lost ").append(damage).append("hp! ");
+            i--;
+        }
+        toReturn.append("Hit ").append(amt).append(" time").append(amt > 1 ? "s! " : "! ").append(opponent.getName()).append(" has ").append(opponent.getStat(Stats.HP)).append("hp left!");
+        return toReturn.toString();
+    }
 }
