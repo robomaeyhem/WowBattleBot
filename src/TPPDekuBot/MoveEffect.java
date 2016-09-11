@@ -627,6 +627,24 @@ class MoveEffects {
         return toReturn;
     };
 
+    public static MoveEffect PAIN_SPLIT = (Pokemon user, Pokemon opponent, int damage, Move move, Battle battle) -> {
+        if (opponent.getMoveStatus() == Status.ATTACK_NEXT_TURN) {
+            return "The attack missed!";
+        }
+        int totalHP = (user.getStat(Stats.HP) + opponent.getStat(Stats.HP)) / 2;
+        if (user.getMaxHP() < (totalHP)) {
+            user.setStat(Stats.HP, user.getMaxHP());
+        } else {
+            user.setStat(Stats.HP, totalHP);
+        }
+        if (opponent.getMaxHP() < (totalHP)) {
+            opponent.setStat(Stats.HP, opponent.getMaxHP());
+        } else {
+            opponent.setStat(Stats.HP, totalHP);
+        }
+        return "The battlers shared their pain! " + user.getName() + " now has " + user.getStat(Stats.HP) + "hp! " + opponent.getName() + " now has " + opponent.getStat(Stats.HP) + "hp!";
+    };
+
     private static String multiHit(Pokemon user, Pokemon opponent, Move move, int power, int amt) {
         StringBuilder toReturn = new StringBuilder("");
         int i = amt;
